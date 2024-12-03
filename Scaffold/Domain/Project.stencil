@@ -1,0 +1,66 @@
+//
+//  Project.swift
+//
+//  Created by {{ author }} on {{ currentDate }}
+//
+
+import ProjectDescription
+import DependencyPlugin
+
+let project = Project(
+    name: "{{ name }}",
+    targets: [
+
+        // Tests
+        .target(
+            name: "Domain{{ name }}Tests",
+            destinations: .iOS,
+            product: .unitTests,
+            bundleId: "\(Project.Environment.bundlePrefix).domain.{{ name }}.tests",
+            sources: ["Tests/**"],
+            dependencies: [
+                .domain(implements: .{{ name }}),
+                .domain(testing: .{{ name }}),
+            ]
+        ),
+
+
+        // Domain
+        .target(
+            name: "Domain{{ name }}",
+            destinations: .iOS,
+            product: .staticLibrary,
+            bundleId: "\(Project.Environment.bundlePrefix).domain.{{ name }}",
+            sources: ["Sources/**"],
+            dependencies: [
+                .domain(interface: .{{ name }}),
+            ]
+        ),
+
+
+        // Testing
+        .target(
+            name: "Domain{{ name }}Testing",
+            destinations: .iOS,
+            product: .framework,
+            bundleId: "\(Project.Environment.bundlePrefix).domain.{{ name }}.testing",
+            sources: ["Testing/**"],
+            dependencies: [
+                .domain(interface: .{{ name }}),
+            ]
+        ),
+
+
+        // Interface
+        .target(
+            name: "Domain{{ name }}Interface",
+            destinations: .iOS,
+            product: .framework,
+            bundleId: "\(Project.Environment.bundlePrefix).domain.{{ name }}.interface",
+            sources: ["Interface/**"],
+            dependencies: [
+                
+            ]
+        ),
+    ]
+)

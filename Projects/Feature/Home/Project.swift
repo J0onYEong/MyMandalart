@@ -1,79 +1,79 @@
 //
 //  Project.swift
 //
-//  Created by {{ author }} on {{ currentDate }}
+//  Created by choijunios on 2024/12/03
 //
 
 import ProjectDescription
 import DependencyPlugin
 
 let project = Project(
-    name: "{{ name }}",
+    name: "Home",
     targets: [
         
         // Example
         .target(
-            name: "Feature{{ name }}Example",
+            name: "FeatureHomeExample",
             destinations: .iOS,
             product: .app,
-            bundleId: "\(Project.Environment.bundlePrefix).feature.{{ name }}.example",
+            bundleId: "\(Project.Environment.bundlePrefix).feature.Home.example",
             infoPlist: .example_app,
             sources: ["Example/Sources/**"],
             resources: ["Example/Resources/**"],
             dependencies: [
-                .feature(implements: .{{ name }}),
-                .feature(testing: .{{ name }}),
+                .feature(implements: .Home),
+                .feature(testing: .Home),
             ]
         ),
 
 
         // Tests
         .target(
-            name: "Feature{{ name }}Tests",
+            name: "FeatureHomeTests",
             destinations: .iOS,
             product: .unitTests,
-            bundleId: "\(Project.Environment.bundlePrefix).feature.{{ name }}.tests",
+            bundleId: "\(Project.Environment.bundlePrefix).feature.Home.tests",
             sources: ["Tests/**"],
             dependencies: [
-                .feature(implements: .{{ name }}),
-                .feature(testing: .{{ name }}),
+                .feature(implements: .Home),
+                .feature(testing: .Home),
             ]
         ),
 
 
         // Feature
         .target(
-            name: "Feature{{ name }}",
+            name: "FeatureHome",
             destinations: .iOS,
             product: .staticFramework,
-            bundleId: "\(Project.Environment.bundlePrefix).feature.{{ name }}",
+            bundleId: "\(Project.Environment.bundlePrefix).feature.Home",
             sources: ["Feature/Sources/**"],
             resources: ["Feature/Resources/**"],
             dependencies: [
-                .feature(interface: .{{ name }}),
+                .feature(interface: .Home),
             ]
         ),
 
 
         // Testing
         .target(
-            name: "Feature{{ name }}Testing",
+            name: "FeatureHomeTesting",
             destinations: .iOS,
             product: .framework,
-            bundleId: "\(Project.Environment.bundlePrefix).feature.{{ name }}.testing",
+            bundleId: "\(Project.Environment.bundlePrefix).feature.Home.testing",
             sources: ["Testing/**"],
             dependencies: [
-                .feature(interface: .{{ name }}),
+                .feature(interface: .Home),
             ]
         ),
 
 
         // Interface
         .target(
-            name: "Feature{{ name }}Interface",
+            name: "FeatureHomeInterface",
             destinations: .iOS,
             product: .framework,
-            bundleId: "\(Project.Environment.bundlePrefix).feature.{{ name }}.interface",
+            bundleId: "\(Project.Environment.bundlePrefix).feature.Home.interface",
             sources: ["Interface/**"],
             dependencies: [
                 

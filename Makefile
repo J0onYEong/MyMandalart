@@ -11,3 +11,12 @@ Feature:
 	--current-date "$(CURRENT_DATE)";
 	@rm Pipfile >/dev/null 2>&1;
 	@tuist edit
+
+Domain:
+	@mkdir -p Projects/Domain/${name};
+	@tuist scaffold Domain \
+	--name ${name} \
+	--author "$(USER_NAME)" \
+	--current-date "$(CURRENT_DATE)";
+	@rm Pipfile >/dev/null 2>&1;
+	@tuist edit
