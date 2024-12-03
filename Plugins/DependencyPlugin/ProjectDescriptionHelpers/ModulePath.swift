@@ -82,7 +82,6 @@ public extension ModulePath {
         
         case Util
         case DesignSystem
-        case ThirdPartyLib
         
         public static let categoryName: String = "Shared"
         
