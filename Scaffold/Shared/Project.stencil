@@ -1,34 +1,34 @@
 //
 //  Project.swift
 //
-//  Created by choijunios on 2024/12/03
+//  Created by {{ author }} on {{ currentDate }}
 //
 
 import ProjectDescription
 import DependencyPlugin
 
 let project = Project(
-    name: "DesignSystem",
+    name: "{{ name }}",
     targets: [
 
         // Shared
         .target(
-            name: "SharedDesignSystem",
+            name: "Shared{{ name }}",
             destinations: .iOS,
             product: .staticLibrary,
-            bundleId: "\(Project.Environment.bundlePrefix).shared.DesignSystem",
+            bundleId: "\(Project.Environment.bundlePrefix).shared.{{ name }}",
             sources: ["Sources/**"],
             dependencies: [
-                .shared(interface: .DesignSystem),
+                .shared(interface: .{{ name }}),
             ]
         ),
 
         // Interface
         .target(
-            name: "SharedDesignSystemInterface",
+            name: "Shared{{ name }}Interface",
             destinations: .iOS,
             product: .framework,
-            bundleId: "\(Project.Environment.bundlePrefix).shared.DesignSystem.interface",
+            bundleId: "\(Project.Environment.bundlePrefix).shared.{{ name }}.interface",
             sources: ["Interface/**"],
             dependencies: [
                 

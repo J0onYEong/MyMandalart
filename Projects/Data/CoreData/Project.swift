@@ -13,50 +13,50 @@ let project = Project(
 
         // Tests
         .target(
-            name: "DomainCoreDataTests",
+            name: "DataCoreDataTests",
             destinations: .iOS,
             product: .unitTests,
-            bundleId: "\(Project.Environment.bundlePrefix).domain.CoreData.tests",
+            bundleId: "\(Project.Environment.bundlePrefix).data.CoreData.tests",
             sources: ["Tests/**"],
             dependencies: [
-                .domain(implements: .CoreData),
-                .domain(testing: .CoreData),
+                .data(implements: .CoreData),
+                .data(testing: .CoreData),
             ]
         ),
 
 
-        // Domain
+        // Data
         .target(
-            name: "DomainCoreData",
+            name: "DataCoreData",
             destinations: .iOS,
             product: .staticLibrary,
-            bundleId: "\(Project.Environment.bundlePrefix).domain.CoreData",
+            bundleId: "\(Project.Environment.bundlePrefix).data.CoreData",
             sources: ["Sources/**"],
             dependencies: [
-                .domain(interface: .CoreData),
+                .data(interface: .CoreData),
             ]
         ),
 
 
         // Testing
         .target(
-            name: "DomainCoreDataTesting",
+            name: "DataCoreDataTesting",
             destinations: .iOS,
             product: .framework,
-            bundleId: "\(Project.Environment.bundlePrefix).domain.CoreData.testing",
+            bundleId: "\(Project.Environment.bundlePrefix).data.CoreData.testing",
             sources: ["Testing/**"],
             dependencies: [
-                .domain(interface: .CoreData),
+                .data(interface: .CoreData),
             ]
         ),
 
 
         // Interface
         .target(
-            name: "DomainCoreDataInterface",
+            name: "DataCoreDataInterface",
             destinations: .iOS,
             product: .framework,
-            bundleId: "\(Project.Environment.bundlePrefix).domain.CoreData.interface",
+            bundleId: "\(Project.Environment.bundlePrefix).data.CoreData.interface",
             sources: ["Interface/**"],
             dependencies: [
                 

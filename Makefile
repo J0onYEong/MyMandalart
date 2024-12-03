@@ -14,19 +14,17 @@ Feature:
 
 Domain:
 	@mkdir -p Projects/Domain/${name};
-	@tuist scaffold DefaultModule \
+	@tuist scaffold Domain \
 	--name ${name} \
 	--author "$(USER_NAME)" \
-	--current-date "$(CURRENT_DATE)" \
-	--layer "Domain";
+	--current-date "$(CURRENT_DATE)";
 	@rm Pipfile >/dev/null 2>&1;
 	@tuist edit
 	
 Data:
 	@mkdir -p Projects/Data/${name};
-	@tuist scaffold DefaultModule \
+	@tuist scaffold Data \
 	--name ${name} \
-	--layer "Data" \
 	--author "$(USER_NAME)" \
 	--current-date "$(CURRENT_DATE)";
 	@rm Pipfile >/dev/null 2>&1;
@@ -34,9 +32,8 @@ Data:
 
 Shared:
 	@mkdir -p Projects/Shared/${name};
-	@tuist scaffold DefaultModule \
+	@tuist scaffold Shared \
 	--name ${name} \
-	--layer "Shared" \
 	--author "$(USER_NAME)" \
 	--current-date "$(CURRENT_DATE)";
 	@rm Pipfile >/dev/null 2>&1;

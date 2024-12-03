@@ -1,62 +1,62 @@
 //
 //  Project.swift
 //
-//  Created by choijunios on 2024/12/03
+//  Created by {{ author }} on {{ currentDate }}
 //
 
 import ProjectDescription
 import DependencyPlugin
 
 let project = Project(
-    name: "Util",
+    name: "{{ name }}",
     targets: [
 
         // Tests
         .target(
-            name: "DomainUtilTests",
+            name: "Data{{ name }}Tests",
             destinations: .iOS,
             product: .unitTests,
-            bundleId: "\(Project.Environment.bundlePrefix).domain.Util.tests",
+            bundleId: "\(Project.Environment.bundlePrefix).data.{{ name }}.tests",
             sources: ["Tests/**"],
             dependencies: [
-                .domain(implements: .Util),
-                .domain(testing: .Util),
+                .data(implements: .{{ name }}),
+                .data(testing: .{{ name }}),
             ]
         ),
 
 
-        // Domain
+        // Data
         .target(
-            name: "DomainUtil",
+            name: "Data{{ name }}",
             destinations: .iOS,
             product: .staticLibrary,
-            bundleId: "\(Project.Environment.bundlePrefix).domain.Util",
+            bundleId: "\(Project.Environment.bundlePrefix).data.{{ name }}",
             sources: ["Sources/**"],
             dependencies: [
-                .domain(interface: .Util),
+                .data(interface: .{{ name }}),
             ]
         ),
 
 
         // Testing
         .target(
-            name: "DomainUtilTesting",
+            name: "Data{{ name }}Testing",
             destinations: .iOS,
             product: .framework,
-            bundleId: "\(Project.Environment.bundlePrefix).domain.Util.testing",
+            bundleId: "\(Project.Environment.bundlePrefix).data.{{ name }}.testing",
             sources: ["Testing/**"],
             dependencies: [
-                .domain(interface: .Util),
+                .data(interface: .{{ name }}),
             ]
         ),
 
 
         // Interface
         .target(
-            name: "DomainUtilInterface",
+            name: "Data{{ name }}Interface",
             destinations: .iOS,
             product: .framework,
-            bundleId: "\(Project.Environment.bundlePrefix).domain.Util.interface",
+            bundleId: "\(Project.Environment.bundlePrefix).data.{{ name }}.interface",
             sources: ["Interface/**"],
             dependencies: [
                 
