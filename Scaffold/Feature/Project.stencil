@@ -1,0 +1,83 @@
+//
+//  Project.swift
+//
+//  Created by {{ author }} on {{ currentDate }}
+//
+
+import ProjectDescription
+import DependencyPlugin
+
+let project = Project(
+    name: "{{ name }}Feature",
+    targets: [
+        
+        // Example
+        .target(
+            name: "Feature{{ name }}Example",
+            destinations: .iOS,
+            product: .app,
+            bundleId: "\(Project.Environment.bundlePrefix).feature.{{ name }}.example",
+            infoPlist: .example_app,
+            sources: ["Example/Sources/**"],
+            resources: ["Example/Resources/**"],
+            dependencies: [
+                .feature(implements: .{{ name }}),
+                .feature(testing: .{{ name }}),
+            ]
+        ),
+
+
+        // Tests
+        .target(
+            name: "Feature{{ name }}Tests",
+            destinations: .iOS,
+            product: .unitTests,
+            bundleId: "\(Project.Environment.bundlePrefix).feature.{{ name }}.tests",
+            sources: ["Tests/**"],
+            dependencies: [
+                .feature(implements: .{{ name }}),
+                .feature(testing: .{{ name }}),
+            ]
+        ),
+
+
+        // Feature
+        .target(
+            name: "Feature{{ name }}",
+            destinations: .iOS,
+            product: .staticFramework,
+            bundleId: "\(Project.Environment.bundlePrefix).feature.{{ name }}",
+            sources: ["Feature/Sources/**"],
+            resources: ["Feature/Resources/**"],
+            dependencies: [
+                .feature(interface: .{{ name }}),
+            ]
+        ),
+
+
+        // Testing
+        .target(
+            name: "Feature{{ name }}Testing",
+            destinations: .iOS,
+            product: .framework,
+            bundleId: "\(Project.Environment.bundlePrefix).feature.{{ name }}.testing",
+            sources: ["Testing/**"],
+            dependencies: [
+                .feature(interface: .{{ name }}),
+            ]
+        ),
+
+
+        // Interface
+        .target(
+            name: "Feature{{ name }}Interface",
+            destinations: .iOS,
+            product: .framework,
+            bundleId: "\(Project.Environment.bundlePrefix).feature.{{ name }}.interface",
+            sources: ["Interface/**"],
+            dependencies: [
+                
+            ]
+        ),
+    ]
+)

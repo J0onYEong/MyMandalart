@@ -32,25 +32,37 @@ public extension TargetDependency {
     
     static func feature(implements module: ModulePath.Feature) -> Self {
         
-        return .project(target: ModulePath.Feature.categoryName + module.rawValue, path: .feature(implementation: module))
+        return .project(
+            target: ModulePath.Feature.categoryName + module.rawValue,
+            path: .feature(implementation: module)
+        )
     }
     
     
     static func feature(interface module: ModulePath.Feature) -> Self {
         
-        return .project(target: ModulePath.Feature.categoryName + module.rawValue + "Interface", path: .feature(implementation: module))
+        return .project(
+            target: ModulePath.Feature.categoryName + module.rawValue + "Interface",
+            path: .feature(implementation: module)
+        )
     }
     
     
     static func feature(tests module: ModulePath.Feature) -> Self {
         
-        return .project(target: ModulePath.Feature.categoryName + module.rawValue + "Tests", path: .feature(implementation: module))
+        return .project(
+            target: ModulePath.Feature.categoryName + module.rawValue + "Tests",
+            path: .feature(implementation: module)
+        )
     }
     
     
     static func feature(testing module: ModulePath.Feature) -> Self {
         
-        return .project(target: ModulePath.Feature.categoryName + module.rawValue + "Testing", path: .feature(implementation: module))
+        return .project(
+            target: ModulePath.Feature.categoryName + module.rawValue + "Testing",
+            path: .feature(implementation: module)
+        )
     }
     
 }
@@ -61,31 +73,46 @@ public extension TargetDependency {
     
     static var domain: Self {
         
-        return .project(target: ModulePath.Domain.categoryName, path: .domain)
+        return .project(
+            target: ModulePath.Domain.categoryName,
+            path: .domain
+        )
     }
     
     
     static func domain(implements module: ModulePath.Domain) -> Self {
         
-        return .project(target: ModulePath.Domain.categoryName + module.rawValue, path: .domain(implementation: module))
+        return .project(
+            target: ModulePath.Domain.categoryName + module.rawValue,
+            path: .domain(implementation: module)
+        )
     }
     
     
     static func domain(interface module: ModulePath.Domain) -> Self {
         
-        return .project(target: ModulePath.Domain.categoryName + module.rawValue + "Interface", path: .domain(implementation: module))
+        return .project(
+            target: ModulePath.Domain.categoryName + module.rawValue + "Interface",
+            path: .domain(implementation: module)
+        )
     }
     
     
     static func domain(tests module: ModulePath.Domain) -> Self {
         
-        return .project(target: ModulePath.Domain.categoryName + module.rawValue + "Tests", path: .domain(implementation: module))
+        return .project(
+            target: ModulePath.Domain.categoryName + module.rawValue + "Tests",
+            path: .domain(implementation: module)
+        )
     }
     
     
     static func domain(testing module: ModulePath.Domain) -> Self {
         
-        return .project(target: ModulePath.Domain.categoryName + module.rawValue + "Testing", path: .domain(implementation: module))
+        return .project(
+            target: ModulePath.Domain.categoryName + module.rawValue + "Testing",
+            path: .domain(implementation: module)
+        )
     }
     
 }
@@ -97,19 +124,28 @@ public extension TargetDependency {
     
     static var shared: Self {
         
-        return .project(target: ModulePath.Shared.categoryName, path: .shared)
+        return .project(
+            target: ModulePath.Shared.categoryName,
+            path: .shared
+        )
     }
     
     
     static func shared(implements module: ModulePath.Shared) -> Self {
         
-        return .project(target: ModulePath.Shared.categoryName + module.rawValue, path: .shared(implementation: module))
+        return .project(
+            target: ModulePath.Shared.categoryName + module.rawValue,
+            path: .shared(implementation: module)
+        )
     }
     
     
     static func shared(interface module: ModulePath.Shared) -> Self {
         
-        return .project(target: ModulePath.Shared.categoryName + module.rawValue + "Interface", path: .shared(implementation: module))
+        return .project(
+            target: ModulePath.Shared.categoryName + module.rawValue + "Interface",
+            path: .shared(implementation: module)
+        )
     }
     
 }
@@ -120,31 +156,46 @@ public extension TargetDependency {
     
     static var data: Self {
         
-        return .project(target: ModulePath.Data.categoryName, path: .data)
+        return .project(
+            target: ModulePath.Data.categoryName,
+            path: .data
+        )
     }
     
     
     static func data(implements module: ModulePath.Data) -> Self {
         
-        return .project(target: ModulePath.Data.categoryName + module.rawValue, path: .data(implementation: module))
+        return .project(
+            target: ModulePath.Data.categoryName + module.rawValue,
+            path: .data(implementation: module)
+        )
     }
     
     
     static func data(interface module: ModulePath.Data) -> Self {
         
-        return .project(target: ModulePath.Data.categoryName + module.rawValue + "Interface", path: .data(implementation: module))
+        return .project(
+            target: ModulePath.Data.categoryName + module.rawValue + "Interface",
+            path: .data(implementation: module)
+        )
     }
     
     
     static func data(tests module: ModulePath.Data) -> Self {
         
-        return .project(target: ModulePath.Data.categoryName + module.rawValue + "Tests", path: .data(implementation: module))
+        return .project(
+            target: ModulePath.Data.categoryName + module.rawValue + "Tests",
+            path: .data(implementation: module)
+        )
     }
     
     
     static func data(testing module: ModulePath.Data) -> Self {
         
-        return .project(target: ModulePath.Data.categoryName + module.rawValue + "Testing", path: .data(implementation: module))
+        return .project(
+            target: ModulePath.Data.categoryName + module.rawValue + "Testing",
+            path: .data(implementation: module)
+        )
     }
     
 }
