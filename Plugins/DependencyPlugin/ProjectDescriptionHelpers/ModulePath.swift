@@ -98,6 +98,7 @@ public extension ModulePath {
         
         case RxSwift
         case RxCocoa
+        case RxTest
         case ReactorKit
         case Swinject
         

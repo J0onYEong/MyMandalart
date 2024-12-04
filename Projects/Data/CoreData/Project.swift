@@ -21,6 +21,7 @@ let project = Project(
             dependencies: [
                 .data(implements: .CoreData),
                 .data(testing: .CoreData),
+                .thirdParty(library: .RxTest),
             ]
         ),
 
