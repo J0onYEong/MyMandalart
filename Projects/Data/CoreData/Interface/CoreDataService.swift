@@ -12,5 +12,8 @@ import RxSwift
 public protocol CoreDataService {
     
     func fetch<Entity: NSManagedObject>(predicate: NSPredicate?) -> Single<[Entity]>
+    
+    
+    func save(closure: @escaping (NSManagedObjectContext, (Result<Void, Error>) -> Void) -> Void) -> Single<Void>
 }
 

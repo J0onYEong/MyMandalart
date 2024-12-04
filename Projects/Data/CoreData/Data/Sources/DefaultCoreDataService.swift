@@ -21,7 +21,7 @@ public class DefaultCoreDataService: CoreDataService {
         prepareContainer()
     }
     
-    public func fetch<Entity: NSManagedObject>(predicate: NSPredicate?) -> Single<[Entity]> {
+    public func fetch<Entity>(predicate: NSPredicate?) -> Single<[Entity]> where Entity : NSManagedObject {
         
         Single.create { [weak self] promise in
             
@@ -30,19 +30,49 @@ public class DefaultCoreDataService: CoreDataService {
             let fetchRequest = Entity.fetchRequest() as! NSFetchRequest<Entity>
             fetchRequest.predicate = predicate
             
-            container.performBackgroundTask { context in
+            let context = container.newBackgroundContext()
+            
+            do {
                 
-                do {
+                let entities = try context.fetch(fetchRequest)
+                promise(.success(entities))
+                
+            } catch {
+                promise(.failure(error))
+            }
+            
+            return Disposables.create {
+                
+                context.reset()
+            }
+        }
+    }
+    
+    public func save(closure: @escaping (NSManagedObjectContext, (Result<Void, Error>) -> Void) -> Void) -> Single<Void> {
+        
+        Single.create { [weak self] promise in
+            
+            guard let self else { return Disposables.create() }
+            
+            let context = container.newBackgroundContext()
+            
+            closure(context) { result in
+                
+                switch result {
+                case .success:
                     
-                    let entities = try context.fetch(fetchRequest)
-                    promise(.success(entities))
+                    promise(.success(()))
                     
-                } catch {
+                case .failure(let error):
+                    
                     promise(.failure(error))
                 }
             }
             
-            return Disposables.create()
+            return Disposables.create {
+                
+                context.reset()
+            }
         }
     }
 }
