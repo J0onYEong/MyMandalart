@@ -199,3 +199,14 @@ public extension TargetDependency {
     }
     
 }
+
+
+// MARK: TargetDependency + ThirdParty
+
+public extension TargetDependency {
+    
+    static func thirdParty(library module: ModulePath.ThirdParty) -> Self {
+        
+        return .external(name: module.rawValue, condition: nil)
+    }
+}

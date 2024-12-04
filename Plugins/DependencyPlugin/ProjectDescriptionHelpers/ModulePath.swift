@@ -88,3 +88,18 @@ public extension ModulePath {
     }
     
 }
+
+
+// MARK: Third party
+
+public extension ModulePath {
+    
+    enum ThirdParty: String, CaseIterable {
+        
+        case RxSwift
+        case RxCocoa
+        case ReactorKit
+        
+        public static let categoryName: String = "ThirdParty"
+    }
+}
