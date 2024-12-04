@@ -34,6 +34,7 @@ let project = Project(
             sources: ["Sources/**"],
             dependencies: [
                 .domain(interface: .Mandarat),
+                .thirdParty(library: .RxSwift),
             ]
         ),
 
