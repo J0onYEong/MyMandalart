@@ -28,5 +28,8 @@ let package = Package(
         
         // RxSwift, RxCocoa, etc
         .package(url: "https://github.com/ReactiveX/RxSwift.git", from: "6.8.0"),
+        
+        // Swinject
+        .package(url: "https://github.com/Swinject/Swinject.git", from: "2.9.1"),
     ]
 )

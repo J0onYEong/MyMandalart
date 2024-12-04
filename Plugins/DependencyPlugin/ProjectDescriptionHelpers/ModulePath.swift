@@ -80,7 +80,7 @@ public extension ModulePath {
     
     enum Shared: String, CaseIterable {
         
-        case Util
+        case Core
         case DesignSystem
         
         public static let categoryName: String = "Shared"
@@ -99,6 +99,7 @@ public extension ModulePath {
         case RxSwift
         case RxCocoa
         case ReactorKit
+        case Swinject
         
         public static let categoryName: String = "ThirdParty"
     }
