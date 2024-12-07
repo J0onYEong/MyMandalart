@@ -13,6 +13,8 @@ public class DefaultMandaratUseCase: MandaratUseCase {
     
     private let mandaratRepository: MandaratRepository
     
+    private let disposeBag: DisposeBag = .init()
+    
     public init(mandaratRepository: MandaratRepository) {
         
         self.mandaratRepository = mandaratRepository
@@ -28,4 +30,17 @@ public class DefaultMandaratUseCase: MandaratUseCase {
         mandaratRepository.requestSubMandarat(root: mainMandarat)
     }
     
+    public func saveMainMandarat(mainMandarat: MainMandaratVO) {
+        
+        mandaratRepository
+            .requestSaveMainMandarat(mainMandarat: mainMandarat)
+            .subscribe(onFailure: { error in
+                
+                // 부가적인 에러처리
+                
+                print(error.localizedDescription)
+                
+            })
+            .disposed(by: disposeBag)
+    }
 }
