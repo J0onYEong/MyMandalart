@@ -31,5 +31,8 @@ let package = Package(
         
         // Swinject
         .package(url: "https://github.com/Swinject/Swinject.git", from: "2.9.1"),
+        
+        // SnapKit
+        .package(url: "https://github.com/SnapKit/SnapKit.git", from: "5.7.1"),
     ]
 )

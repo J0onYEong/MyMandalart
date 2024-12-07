@@ -7,9 +7,11 @@
 
 import UIKit
 
+import SharedDesignSystem
+
 import ReactorKit
 
-class MainMandaratView: UIView, View {
+final class MainMandaratView: UIView, View {
     
     // View
     

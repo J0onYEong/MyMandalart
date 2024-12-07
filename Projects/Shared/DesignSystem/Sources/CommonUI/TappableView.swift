@@ -9,7 +9,7 @@ import UIKit
 
 import RxSwift
 
-public class TappableView: UIView {
+open class TappableView: UIView {
     
     private let tapRecognizer: UITapGestureRecognizer = .init()
     

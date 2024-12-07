@@ -52,10 +52,12 @@ let project = Project(
             dependencies: [
                 .feature(interface: .Home),
                 
+                .shared(implements: .DesignSystem),
                 .shared(implements: .DependencyInjector),
                 
                 .thirdParty(library: .RxCocoa),
                 .thirdParty(library: .ReactorKit),
+                .thirdParty(library: .SnapKit),
             ]
         ),
 
