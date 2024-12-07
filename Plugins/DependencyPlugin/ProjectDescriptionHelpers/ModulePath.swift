@@ -87,6 +87,7 @@ public extension ModulePath {
         
         case Core
         case DesignSystem
+        case DependencyInjector
         
         public static let categoryName: String = "Shared"
         

@@ -51,6 +51,9 @@ let project = Project(
             resources: ["Feature/Resources/**"],
             dependencies: [
                 .feature(interface: .Home),
+                
+                .shared(implements: .DependencyInjector),
+                
                 .thirdParty(library: .RxCocoa),
                 .thirdParty(library: .ReactorKit),
             ]
