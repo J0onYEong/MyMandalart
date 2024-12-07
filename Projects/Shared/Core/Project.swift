@@ -32,7 +32,6 @@ let project = Project(
             sources: ["Interface/**"],
             dependencies: [
                 
-                .thirdParty(library: .Swinject)
             ]
         ),
     ]

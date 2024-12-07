@@ -1,6 +1,6 @@
 //
 //  DependencyInjector.swift
-//  Core
+//  App
 //
 //  Created by choijunios on 12/5/24.
 //

@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23507" systemVersion="23F79" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
     <entity name="MainMandaratEntity" representedClassName="MainMandaratEntity" syncable="YES" codeGenerationType="class">
-        <attribute name="attribute" optional="YES"/>
-        <attribute name="attribute1" optional="YES"/>
         <attribute name="hexColor" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="String"/>
         <attribute name="imageURL" optional="YES" attributeType="String"/>

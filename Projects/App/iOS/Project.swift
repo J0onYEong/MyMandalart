@@ -17,6 +17,7 @@ let project = Project(
             resources: ["Resources/**"],
             dependencies: [
                 
+                .thirdParty(library: .Swinject)
             ]
         )
     ]

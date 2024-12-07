@@ -6,17 +6,16 @@
 //
 
 import DomainMandaratInterface
-import SharedCore
 
 import RxSwift
 
 public class DefaultMandaratUseCase: MandaratUseCase {
     
-    // Service locator
-    @Inject private var mandaratRepository: MandaratRepository
+    private let mandaratRepository: MandaratRepository
     
-    public init() {
+    public init(mandaratRepository: MandaratRepository) {
         
+        self.mandaratRepository = mandaratRepository
     }
     
     public func requestMainMandarats() -> RxSwift.Single<[DomainMandaratInterface.MainMandaratVO]> {
