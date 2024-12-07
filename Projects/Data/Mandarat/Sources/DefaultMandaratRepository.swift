@@ -21,6 +21,8 @@ public class DefaultMandaratRepository: MandaratRepository {
         self.coreDataService = coreDataService
     }
     
+    // MARK: Fetching
+    
     public func requestMainMandarat() -> RxSwift.Single<[DomainMandaratInterface.MainMandaratVO]> {
             
         let entityPublisher: Single<[MainMandaratEntity]> = coreDataService.fetch(predicate: nil)
@@ -52,5 +54,35 @@ public class DefaultMandaratRepository: MandaratRepository {
     public func requestSubMandarat(root: any Identifiable) -> RxSwift.Single<[DomainMandaratInterface.SubMandaratVO]> {
         
         return .just([])
+    }
+    
+    
+    // MARK: Saving
+    public func requestSaveMainMandarat(mainMandarat: MainMandaratVO) -> Single<Void> {
+        
+        coreDataService.save { [mainMandarat] context, completion in
+            
+            let mainMandaratEntity = MainMandaratEntity(context: context)
+            let positionEntity = MandaratPositionEntity(context: context)
+            
+            let mandaratPos = mainMandarat.position.matrixCoordinate
+            positionEntity.xpos = mandaratPos.0
+            positionEntity.ypos = mandaratPos.1
+            
+            mainMandaratEntity.id = mainMandarat.id
+            mainMandaratEntity.title = mainMandarat.title
+            mainMandaratEntity.position = positionEntity
+            mainMandaratEntity.hexColor = mainMandarat.hexColor
+            mainMandaratEntity.story = mainMandarat.description
+            mainMandaratEntity.imageURL = mainMandarat.imageURL
+            
+            do {
+                try context.save()
+                completion(.success(()))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+        
     }
 }

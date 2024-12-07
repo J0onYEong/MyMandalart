@@ -31,7 +31,7 @@ class CoreDataServiceTests: XCTestCase {
         let saveExpectation = expectation(description: "Save Entity")
         coreDataService.save { context, completion in
             
-            let entity = NSEntityDescription.insertNewObject(forEntityName: testEntityName, into: context) as! MainMandarat
+            let entity = NSEntityDescription.insertNewObject(forEntityName: testEntityName, into: context) as! MainMandaratEntity
             
             entity.title = testProperty
             
@@ -54,7 +54,7 @@ class CoreDataServiceTests: XCTestCase {
         // Then: 저장된 데이터를 fetch하고, 저장 전후의 데이터를 비교합니다.
         let fetchExpectation = expectation(description: "Fetch Entity")
         coreDataService.fetch(predicate: nil)
-            .subscribe(onSuccess: { (entities: [MainMandarat]) in
+            .subscribe(onSuccess: { (entities: [MainMandaratEntity]) in
                 guard let fetchedEntity = entities.first else {
                     XCTFail("No entities found")
                     return
