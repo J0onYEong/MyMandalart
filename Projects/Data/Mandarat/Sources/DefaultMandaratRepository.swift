@@ -23,7 +23,7 @@ public class DefaultMandaratRepository: MandaratRepository {
     
     public func requestMainMandarat() -> RxSwift.Single<[DomainMandaratInterface.MainMandaratVO]> {
             
-        let entityPublisher: Single<[MainMandarat]> = coreDataService.fetch(predicate: nil)
+        let entityPublisher: Single<[MainMandaratEntity]> = coreDataService.fetch(predicate: nil)
         
         return entityPublisher
             .map { coreDataEntities in
@@ -33,10 +33,12 @@ public class DefaultMandaratRepository: MandaratRepository {
                 coreDataEntities
                     .map { coreDataEntity in
                         
-                        MainMandaratVO(
-                            id: coreDataEntity.id ?? "",
-                            title: coreDataEntity.title ?? "",
-                            position: .ONE_ONE,
+                        let mandaratPos: MandaratPositionEntity! = coreDataEntity.position
+                        
+                        return MainMandaratVO(
+                            id: coreDataEntity.id!,
+                            title: coreDataEntity.title!,
+                            position: .init(x: mandaratPos.xpos, y: mandaratPos.ypos)!,
                             hexColor: coreDataEntity.hexColor,
                             description: coreDataEntity.story,
                             imageURL: coreDataEntity.imageURL

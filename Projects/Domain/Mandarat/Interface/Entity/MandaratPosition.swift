@@ -22,7 +22,7 @@ public enum MandaratPosition: CaseIterable {
     case TRD_TWO
     case TRD_TRD
     
-    init?(x: Int, y: Int) {
+    public init?(x: Int16, y: Int16) {
         
         for positionCase in MandaratPosition.allCases {
             
@@ -37,7 +37,7 @@ public enum MandaratPosition: CaseIterable {
         return nil
     }
     
-    public var matrixCoordinate: (Int, Int) {
+    public var matrixCoordinate: (Int16, Int16) {
         
         switch self {
         case .ONE_ONE:

@@ -81,7 +81,7 @@ private extension DefaultCoreDataService {
     
     func prepareContainer() {
         
-        let bundle = DataCoreDataResources.bundle
+        let bundle = DataCoreDataInterfaceResources.bundle
         let modelURL = bundle.url(forResource: "Default", withExtension: ".momd")!
         let model = NSManagedObjectModel(contentsOf: modelURL)!
         let container = NSPersistentContainer(name: "DefaultStorage", managedObjectModel: model)
