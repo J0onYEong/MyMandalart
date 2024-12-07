@@ -65,6 +65,11 @@ public extension ModulePath {
     
     enum Data: String, CaseIterable {
         
+        // Repository
+        case Mandarat
+        
+        
+        // DataSource
         case CoreData
         
         public static let categoryName: String = "Data"
