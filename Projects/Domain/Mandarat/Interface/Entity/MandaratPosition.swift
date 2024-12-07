@@ -5,7 +5,7 @@
 //  Created by choijunios on 12/4/24.
 //
 
-public enum MandaratPosition {
+public enum MandaratPosition: CaseIterable {
     
     // Row1
     case ONE_ONE
@@ -21,6 +21,21 @@ public enum MandaratPosition {
     case TRD_ONE
     case TRD_TWO
     case TRD_TRD
+    
+    init?(x: Int, y: Int) {
+        
+        for positionCase in MandaratPosition.allCases {
+            
+            if positionCase.matrixCoordinate == (x, y) {
+                
+                self = positionCase
+                
+                return
+            }
+        }
+        
+        return nil
+    }
     
     public var matrixCoordinate: (Int, Int) {
         
