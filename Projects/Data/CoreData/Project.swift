@@ -30,10 +30,9 @@ let project = Project(
         .target(
             name: "DataCoreData",
             destinations: .iOS,
-            product: .staticFramework,
+            product: .staticLibrary,
             bundleId: "\(Project.Environment.bundlePrefix).data.CoreData",
-            sources: ["Data/Sources/**"],
-            resources: ["Data/Resources/**"],
+            sources: ["Data/**"],
             dependencies: [
                 .data(interface: .CoreData),
             ]
@@ -59,7 +58,8 @@ let project = Project(
             destinations: .iOS,
             product: .framework,
             bundleId: "\(Project.Environment.bundlePrefix).data.CoreData.interface",
-            sources: ["Interface/**"],
+            sources: ["Interface/Sources/**"],
+            resources: ["Interface/Resources/**"],
             dependencies: [
                 .domain(interface: .Mandarat),
                 .shared(implements: .Core),

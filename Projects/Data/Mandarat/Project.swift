@@ -60,6 +60,7 @@ let project = Project(
             sources: ["Interface/**"],
             dependencies: [
                 
+                .domain(interface: .Mandarat),
                 .data(interface: .CoreData),
                 .thirdParty(library: .RxSwift),
             ]
