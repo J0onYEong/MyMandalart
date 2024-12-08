@@ -17,17 +17,24 @@ class MainMandaratViewModel: Reactor {
     let initialState: State
     
     
-    init(mandarat: MainMandaratVO?) {
+    init() {
         
-        self.initialState = .init(
-            mandarat: mandarat
-        )
+        self.initialState = .init()
     }
     
     
     func reduce(state: State, mutation: Action) -> State {
         
-        return state
+        switch mutation {
+        case .mandaratDataFromOutside(let mainMandaratVO):
+            
+            var newState = state
+            newState.mandarat = mainMandaratVO
+            
+            return newState
+        default:
+            return state
+        }
     }
 }
 
@@ -37,6 +44,9 @@ extension MainMandaratViewModel {
         
         // Event
         case addMandaratButtonClicked
+        case mandaratDataFromOutside(MainMandaratVO)
+        
+        // Side effect
         
     }
     

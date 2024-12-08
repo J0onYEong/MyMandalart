@@ -23,6 +23,8 @@ class AddMandaratView: TappableView {
         return imageView
     }()
     
+    // Public interface
+    public let present: PublishSubject<Bool> = .init()
     
     private let disposeBag: DisposeBag = .init()
     
@@ -32,6 +34,7 @@ class AddMandaratView: TappableView {
         setLayer()
         setLayout()
         setTapEffect()
+        setEventReactor()
     }
     required init?(coder: NSCoder) { nil }
     
@@ -42,6 +45,8 @@ class AddMandaratView: TappableView {
     }
     
     private func setLayout() {
+        
+        addSubview(plusIconView)
         
         plusIconView
             .snp.makeConstraints { make in
@@ -58,9 +63,24 @@ class AddMandaratView: TappableView {
         self.tap
             .subscribe(onNext: { _ in
                 
+                // Animation for tap event
                 
             })
             .disposed(by: disposeBag)
+    }
+    
+    private func setEventReactor() {
+        
+        // MARK: 뷰를 숨김
+        present
+            .asDriver(onErrorJustReturn: false)
+            .drive(onNext: { [weak self] isPresent in
+                
+                self?.isHidden = !isPresent
+                
+            })
+            .disposed(by: disposeBag)
+                   
     }
 }
 

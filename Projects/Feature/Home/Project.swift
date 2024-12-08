@@ -84,6 +84,7 @@ let project = Project(
             sources: ["Interface/**"],
             dependencies: [
                 
+                .domain(interface: .Mandarat)
             ]
         ),
     ]

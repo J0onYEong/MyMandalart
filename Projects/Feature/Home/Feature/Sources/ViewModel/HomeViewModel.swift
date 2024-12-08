@@ -41,7 +41,12 @@ class HomeViewModel: Reactor {
     func reduce(state: State, mutation: Action) -> State {
         
         switch mutation {
+        case .fetchedMainMandarat(let mainMandarats):
             
+            var newState = state
+            newState.mainMandarats = mainMandarats
+            
+            return newState
             
         default:
             return state
@@ -63,6 +68,6 @@ extension HomeViewModel {
     
     struct State {
         
-        
+        var mainMandarats: [MainMandaratVO] = []
     }
 }

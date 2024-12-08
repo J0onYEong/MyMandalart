@@ -6,6 +6,9 @@
 
 import UIKit
 
+@testable import FeatureHomeTesting
+@testable import FeatureHome
+
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var window: UIWindow?
@@ -14,8 +17,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         guard let windowScene = scene as? UIWindowScene else { return }
         
-        
         window = UIWindow(windowScene: windowScene)
+        
+        let viewModel: HomeViewModel = .init(mandaratUseCase: MockMandaratUseCase())
+        window?.rootViewController = HomeViewController(reactor: viewModel)
         window?.makeKeyAndVisible()
     }
 }
