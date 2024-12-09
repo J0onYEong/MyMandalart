@@ -19,17 +19,14 @@ public class FocusTextView: UIView, UITextViewDelegate {
     private var focusLineLayer1: CAShapeLayer?
     private var focusLineLayer2: CAShapeLayer?
     
-    private let placeholderText: String
-    private let focusColor: CGColor
+    private let placeholderText: String = ""
+    private var focusColor: CGColor = UIColor.black.cgColor
     
     private let disposeBag: DisposeBag = .init()
     
     public var rx: Reactive<UITextView> { textView.rx }
     
-    public init(placeholderText: String, focusColor: UIColor) {
-        
-        self.placeholderText = placeholderText
-        self.focusColor = focusColor.cgColor
+    public init() {
         
         super.init(frame: .zero)
         
@@ -42,6 +39,17 @@ public class FocusTextView: UIView, UITextViewDelegate {
         subscribeToFocusEvent()
     }
     public required init?(coder: NSCoder) { nil }
+    
+    public func setPlaceholderText(_ text: String) {
+        placeHolderLabel.text = text
+    }
+    
+    public func setFocusLineColor(_ color: UIColor) {
+        self.focusColor = color.cgColor
+        
+        focusLineLayer1?.strokeColor = self.focusColor
+        focusLineLayer2?.strokeColor = self.focusColor
+    }
     
     
     private func setTextView() {

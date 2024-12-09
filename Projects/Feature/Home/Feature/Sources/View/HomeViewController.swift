@@ -16,7 +16,11 @@ class HomeViewController: UIViewController, View {
     
     // Sub view
     private var mainMandaratViews: [MandaratPosition: MainMandaratView] = [:]
-    
+    private let editMandaratView: EditMainMandaratView = .init(
+        reactor: EditMainMandaratViewModel(
+            initialState: .init(titleText: "", descriptionText: "")
+        )
+    )
     
     
     var disposeBag: DisposeBag = .init()
@@ -37,7 +41,8 @@ class HomeViewController: UIViewController, View {
         super.viewDidLoad()
         
         view.backgroundColor = .white
-        setMainMandaratViewLayout()
+        
+        setLayout()
         
         // MARK: Action: View did load
         reactor.action.onNext(.viewDidLoad)
@@ -49,7 +54,17 @@ class HomeViewController: UIViewController, View {
         
     }
     
-    private func setMainMandaratViewLayout() {
+    private func setLayout() {
+        
+        setMainMandaratViewLayout()
+        
+        setEditMandaratViewLayout()
+    }
+}
+
+private extension HomeViewController {
+    
+    func setMainMandaratViewLayout() {
         
         // MARK: Main mandarat views
         let mandaratRows: [[MandaratPosition]] = [
@@ -97,6 +112,15 @@ class HomeViewController: UIViewController, View {
             
             // y position
             make.centerY.equalToSuperview()
+        }
+    }
+    
+    func setEditMandaratViewLayout() {
+        
+        view.addSubview(editMandaratView)
+        editMandaratView.snp.makeConstraints { make in
+            
+            make.edges.equalToSuperview()
         }
     }
 }

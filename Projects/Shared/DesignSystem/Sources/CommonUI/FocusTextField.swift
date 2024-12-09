@@ -18,17 +18,14 @@ public class FocusTextField: UIView {
     private var focusLineLayer1: CAShapeLayer?
     private var focusLineLayer2: CAShapeLayer?
     
-    private let placeholderText: String
-    private let focusColor: CGColor
+    private let placeholderText: String = ""
+    private var focusColor: CGColor = UIColor.black.cgColor
     
     private let disposeBag: DisposeBag = .init()
     
     public var rx: Reactive<UITextField> { textField.rx }
     
-    public init(placeholderText: String, focusColor: UIColor) {
-        
-        self.placeholderText = placeholderText
-        self.focusColor = focusColor.cgColor
+    public init() {
         
         super.init(frame: .zero)
         
@@ -42,6 +39,16 @@ public class FocusTextField: UIView {
     }
     public required init?(coder: NSCoder) { nil }
     
+    public func setPlaceholderText(_ text: String) {
+        textField.placeholder = text
+    }
+    
+    public func setFocusLineColor(_ color: UIColor) {
+        self.focusColor = color.cgColor
+        
+        focusLineLayer1?.strokeColor = self.focusColor
+        focusLineLayer2?.strokeColor = self.focusColor
+    }
     
     private func setTextField() {
         
@@ -59,8 +66,6 @@ public class FocusTextField: UIView {
             make.bottom.equalToSuperview().inset(10)
             make.leading.equalToSuperview().inset(15)
             make.trailing.equalToSuperview().inset(15)
-            
-            make.width.equalTo(100)
         }
     }
     
@@ -280,8 +285,8 @@ fileprivate extension Reactive where Base == UITextField {
 #Preview {
     
     let stack: UIStackView = .init(arrangedSubviews: [
-        FocusTextField(placeholderText: "Test1", focusColor: .black),
-        FocusTextField(placeholderText: "Test2", focusColor: .black),
+        FocusTextField(),
+        FocusTextField(),
     ])
     stack.axis = .vertical
     
