@@ -60,6 +60,10 @@ public class FocusTextView: UIView, UITextViewDelegate {
     }
     
     
+    public override func becomeFirstResponder() -> Bool {
+        textView.becomeFirstResponder()
+    }
+    
     private func setTextView() {
         
         textView.delegate = self

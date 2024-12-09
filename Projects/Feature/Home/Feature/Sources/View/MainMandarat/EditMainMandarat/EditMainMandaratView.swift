@@ -46,14 +46,18 @@ class EditMainMandaratView: UIView, View {
         }
     }
     
-    public func appearTransition() {
+    public func onAppearTask() {
         
+        // MARK: Animation
         backgroundView.alpha = 0.0
         
         UIView.animate(withDuration: 0.35) {
             
             self.backgroundView.alpha = 1
         }
+            
+        // MARK: Keyboard
+        titleInputView.becomeFirstResponder()
     }
     
     private func setBackgroundView() {

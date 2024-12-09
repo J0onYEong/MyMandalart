@@ -38,8 +38,9 @@ class HomeViewController: UIViewController, View {
         
         setLayout()
         
-        // MARK: Action: View did load
-        reactor?.action.onNext(.viewDidLoad)
+        reactor?.sendEvent(.viewDidLoad)
+        
+        subscribeToKeyboardEvent()
     }
     
     
@@ -68,7 +69,7 @@ class HomeViewController: UIViewController, View {
                 
                 if isPresent {
                     
-                    vc.editMandaratView.appearTransition()
+                    vc.editMandaratView.onAppearTask()
                 }
             })
             .disposed(by: disposeBag)
@@ -162,5 +163,54 @@ private extension HomeViewController {
             
             self.mainMandaratViews[position]!
         }
+    }
+}
+
+private extension HomeViewController {
+    
+    func subscribeToKeyboardEvent() {
+        
+        NotificationCenter.default.rx
+            .notification(UIApplication.keyboardWillShowNotification)
+            .withUnretained(self)
+            .subscribe(onNext: { vc, notfication in
+                
+                guard
+                    let keyboardFrame = notfication.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect,
+                    let keyboardDisplayDuration = notfication.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double
+                else { return }
+                
+                UIView.animate(withDuration: keyboardDisplayDuration) {
+                    
+                    vc.editMandaratView.snp.updateConstraints { make in
+                        
+                        make.bottom.equalToSuperview().inset(CGFloat(keyboardFrame.height))
+                    }
+                    
+                    vc.view.layoutIfNeeded()
+                }
+            })
+            .disposed(by: disposeBag)
+        
+        NotificationCenter.default.rx
+            .notification(UIApplication.keyboardWillHideNotification)
+            .withUnretained(self)
+            .subscribe(onNext: { vc, notfication in
+                
+                guard
+                    let keyboardDisplayDuration = notfication.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double
+                else { return }
+                
+                UIView.animate(withDuration: keyboardDisplayDuration) {
+                    
+                    vc.editMandaratView.snp.updateConstraints { make in
+                        
+                        make.bottom.equalToSuperview()
+                    }
+                    
+                    vc.view.layoutIfNeeded()
+                }
+            })
+            .disposed(by: disposeBag)
     }
 }

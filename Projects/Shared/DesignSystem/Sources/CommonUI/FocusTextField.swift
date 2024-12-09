@@ -50,6 +50,10 @@ public class FocusTextField: UIView {
         focusLineLayer2?.strokeColor = self.focusColor
     }
     
+    public override func becomeFirstResponder() -> Bool {
+        textField.becomeFirstResponder()
+    }
+    
     private func setTextField() {
         
         textField.placeholder = placeholderText

@@ -27,6 +27,11 @@ class HomeViewModel: Reactor {
         createMainMandaratReactors()
     }
     
+    public func sendEvent(_ action: Action) {
+        
+        self.action.onNext(action)
+    }
+    
     func mutate(action: Action) -> Observable<Action> {
         
         switch action {
