@@ -14,23 +14,41 @@ class HomeViewModel: Reactor {
     // 의존성 주입
     private let mandaratUseCase: MandaratUseCase
     
-    private(set) var initialState: State = .init()
+    let initialState: State = .init()
+    
+    // Sub reactors
+    private(set) var mainMandaratViewReactors: [MandaratPosition: MainMandaratViewModel] = [:]
+    let editMainMandaratReactor: EditMainMandaratViewModel = .init()
     
     init(mandaratUseCase: MandaratUseCase) {
         
         self.mandaratUseCase = mandaratUseCase
+            
+        createMainMandaratReactors()
     }
     
     func mutate(action: Action) -> Observable<Action> {
         
         switch action {
         case .viewDidLoad:
+            
             return mandaratUseCase
                 .requestMainMandarats()
                 .asObservable()
                 .map { mainMandarats in
                     
                     Action.fetchedMainMandarat(mainMandarats)
+                }
+            
+        case .addMainMandaratButtonClicked(let position):
+            
+            return state
+                .map(\.mainMandaratVO)
+                .map { mandaratVODict in
+                    mandaratVODict[position]
+                }
+                .map { mandaratVO in
+                    Action.openEditMainMandaratView(mandaratVO)
                 }
             
         default:
@@ -44,7 +62,19 @@ class HomeViewModel: Reactor {
         case .fetchedMainMandarat(let mainMandarats):
             
             var newState = state
-            newState.mainMandarats = mainMandarats
+            mainMandarats.forEach { mainMandaratVO in
+                
+                let position = mainMandaratVO.position
+                newState.mainMandaratVO[position] = mainMandaratVO
+                
+            }
+            return newState
+            
+        case .openEditMainMandaratView(let mainMandaratVO):
+            
+            var newState = state
+            newState.presentEditMainMandaratView = true
+            editMainMandaratReactor.editWithPreviousData(mainMandaratVO)
             
             return newState
             
@@ -60,14 +90,44 @@ extension HomeViewModel {
     enum Action {
         
         // Event
+        case addMainMandaratButtonClicked(MandaratPosition)
         case viewDidLoad
         
         // Side effect
+        case openEditMainMandaratView(MainMandaratVO?)
         case fetchedMainMandarat([MainMandaratVO])
     }
     
     struct State {
+    
+        var mainMandaratVO: [MandaratPosition: MainMandaratVO] = [:]
+        var presentEditMainMandaratView: Bool = false
+    }
+}
+
+extension HomeViewModel: MainMandaratViewModelDelegate {
+    
+    func mainMandarat(buttonClicked position: MandaratPosition) {
         
-        var mainMandarats: [MainMandaratVO] = []
+        self.action.onNext(.addMainMandaratButtonClicked(position))
+    }
+}
+
+// MARK: Create main mandarat reactors
+private extension HomeViewModel {
+    
+    func createMainMandaratReactors() {
+        
+        // MARK: MainMandaratViewModels
+        var mainMandaratReactors: [MandaratPosition: MainMandaratViewModel] = [:]
+        
+        MandaratPosition.allCases.forEach { position in
+            
+            let reactor: MainMandaratViewModel = .init(position: position)
+            reactor.delegate = self
+            mainMandaratReactors[position] = reactor
+        }
+        
+        self.mainMandaratViewReactors = mainMandaratReactors
     }
 }

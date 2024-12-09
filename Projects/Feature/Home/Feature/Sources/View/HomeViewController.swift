@@ -16,24 +16,18 @@ class HomeViewController: UIViewController, View {
     
     // Sub view
     private var mainMandaratViews: [MandaratPosition: MainMandaratView] = [:]
-    private let editMandaratView: EditMainMandaratView = .init(
-        reactor: EditMainMandaratViewModel(
-            initialState: .init(titleText: "", descriptionText: "")
-        )
-    )
+    private let editMandaratView: EditMainMandaratView = .init()
     
     
     var disposeBag: DisposeBag = .init()
-    private let reactor: HomeViewModel
     
     init(reactor: HomeViewModel) {
         
-        self.reactor = reactor
-        
         super.init(nibName: nil, bundle: nil)
         
-        // #1. Create main mandarat views
-        createMainMandarats()
+        createMainMandaratViews()
+        
+        self.reactor = reactor
     }
     required init?(coder: NSCoder) { nil }
     
@@ -45,13 +39,39 @@ class HomeViewController: UIViewController, View {
         setLayout()
         
         // MARK: Action: View did load
-        reactor.action.onNext(.viewDidLoad)
+        reactor?.action.onNext(.viewDidLoad)
     }
     
     
     func bind(reactor: HomeViewModel) {
         
+        // Bind edit main mandarat view
+        editMandaratView.bind(reactor: reactor.editMainMandaratReactor)
         
+        
+        // Bind reactors to MainMandaratViews
+        MandaratPosition.allCases.forEach { position in
+            
+            let mainMandaratReactor = reactor.mainMandaratViewReactors[position]!
+            
+            mainMandaratViews[position]?.bind(reactor: mainMandaratReactor)
+        }
+        
+        
+        // Bind HomeViewModel
+        reactor.state
+            .map(\.presentEditMainMandaratView)
+            .withUnretained(self)
+            .subscribe(onNext: { vc, isPresent in
+                
+                vc.editMandaratView.isHidden = !isPresent
+                
+                if isPresent {
+                    
+                    vc.editMandaratView.appearTransition()
+                }
+            })
+            .disposed(by: disposeBag)
     }
     
     private func setLayout() {
@@ -128,13 +148,10 @@ private extension HomeViewController {
 // MARK: MainMandarats
 private extension HomeViewController {
     
-    func createMainMandarats() {
+    func createMainMandaratViews() {
         
         MandaratPosition.allCases.forEach { mandaratPosition in
-            
-            let reactor: MainMandaratViewModel = .init()
-            let view = MainMandaratView(reactor: reactor)
-            
+            let view = MainMandaratView()
             self.mainMandaratViews[mandaratPosition] = view
         }
     }

@@ -15,13 +15,12 @@ final class MainMandaratView: UIView, View {
     
     // View
     private let addMandaratView: AddMandaratView = .init()
-    private let reactor: MainMandaratViewModel
     
     var disposeBag: DisposeBag = .init()
     
-    init(reactor: MainMandaratViewModel) {
-        
-        self.reactor = reactor
+    var reactor: MainMandaratViewModel?
+    
+    init() {
         
         super.init(frame: .zero)
         
@@ -31,10 +30,21 @@ final class MainMandaratView: UIView, View {
     
     func bind(reactor: MainMandaratViewModel) {
         
+        self.reactor = reactor
+        
+        // Add MainMandarat button clicked
+        addMandaratView.tap
+            .map { _ in
+                return Reactor.Action.addMandaratButtonClicked
+            }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+            
+        
         // Presentation for add mandarat
         reactor.state
             .map(\.isAvailable)
-            .bind(to: addMandaratView.present)
+            .bind(to: addMandaratView.rx.isHidden)
             .disposed(by: disposeBag)
     }
     

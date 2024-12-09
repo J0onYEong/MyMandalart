@@ -5,6 +5,8 @@
 //  Created by choijunios on 12/9/24.
 //
 
+import DomainMandaratInterface
+
 import ReactorKit
 import RxSwift
 
@@ -12,9 +14,17 @@ class EditMainMandaratViewModel: Reactor {
     
     let initialState: State
     
-    init(initialState: State) {
+    init() {
         
-        self.initialState = initialState
+        // Set initial state
+        self.initialState = .init(
+            titleText: "",
+            descriptionText: ""
+        )
+    }
+    
+    public func editWithPreviousData(_ mainMandaratVO: MainMandaratVO?) {
+        action.onNext(.editRequestFromOutside(mainMandarat: mainMandaratVO))
     }
     
     func reduce(state: State, mutation: Action) -> State {
@@ -45,6 +55,8 @@ extension EditMainMandaratViewModel {
     enum Action {
         
         // Event
+        case editRequestFromOutside(mainMandarat: MainMandaratVO?)
+        
         case editTitleText(text: String)
         case editDescriptionText(text: String)
         

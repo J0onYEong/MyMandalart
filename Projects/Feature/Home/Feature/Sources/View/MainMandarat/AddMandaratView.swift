@@ -34,7 +34,6 @@ class AddMandaratView: TappableView {
         setLayer()
         setLayout()
         setTapEffect()
-        setEventReactor()
     }
     required init?(coder: NSCoder) { nil }
     
@@ -67,20 +66,6 @@ class AddMandaratView: TappableView {
                 
             })
             .disposed(by: disposeBag)
-    }
-    
-    private func setEventReactor() {
-        
-        // MARK: 뷰를 숨김
-        present
-            .asDriver(onErrorJustReturn: false)
-            .drive(onNext: { [weak self] isPresent in
-                
-                self?.isHidden = !isPresent
-                
-            })
-            .disposed(by: disposeBag)
-                   
     }
 }
 

@@ -19,17 +19,15 @@ class EditMainMandaratView: UIView, View {
     // Sub View
     private let backgroundView: TappableView = .init()
     private let titleInputView: FocusTextField = .init()
-    private let descriptionInputView: FocusTextField = .init()
+    private let descriptionInputView: FocusTextView = .init()
     private let inputContainerBackView: UIView = .init()
     
     private var isLayerIsSetted = false
     
-    let reactor: EditMainMandaratViewModel
+    var reactor: EditMainMandaratViewModel?
     var disposeBag: DisposeBag = .init()
     
-    init(reactor: EditMainMandaratViewModel) {
-        
-        self.reactor = reactor
+    init() {
         
         super.init(frame: .zero)
         
@@ -62,7 +60,6 @@ class EditMainMandaratView: UIView, View {
         
         backgroundView.backgroundColor = UIColor.gray.withAlphaComponent(0.7)
     }
-    
     
     private func setLayout() {
         
@@ -110,6 +107,8 @@ class EditMainMandaratView: UIView, View {
     }
     
     func bind(reactor: EditMainMandaratViewModel) {
+        
+        self.reactor = reactor
 
         // titleInputView
         reactor.state
@@ -131,16 +130,16 @@ class EditMainMandaratView: UIView, View {
         reactor.state
             .map(\.descriptionText)
             .take(1)
-            .bind(to: descriptionInputView.rx.text)
+            .bind(to: descriptionInputView.text)
             .disposed(by: disposeBag)
         
-        descriptionInputView.rx.text
-            .compactMap({ $0 })
-            .map { text in
-                return Reactor.Action.editDescriptionText(text: text)
-            }
-            .bind(to: reactor.action)
-            .disposed(by: disposeBag)
+//        descriptionInputView.rx.text
+//            .compactMap({ $0 })
+//            .map { text in
+//                return Reactor.Action.editDescriptionText(text: text)
+//            }
+//            .bind(to: reactor.action)
+//            .disposed(by: disposeBag)
     }
 }
 

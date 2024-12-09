@@ -15,9 +15,13 @@ import RxSwift
 class MainMandaratViewModel: Reactor {
     
     let initialState: State
+    private let position: MandaratPosition
     
+    public weak var delegate: MainMandaratViewModelDelegate?
     
-    init() {
+    init(position: MandaratPosition) {
+        
+        self.position = position
         
         self.initialState = .init()
     }
@@ -26,6 +30,12 @@ class MainMandaratViewModel: Reactor {
     func reduce(state: State, mutation: Action) -> State {
         
         switch mutation {
+        case .addMandaratButtonClicked:
+            
+            delegate?.mainMandarat(buttonClicked: position)
+            
+            return state
+            
         case .mandaratDataFromOutside(let mainMandaratVO):
             
             var newState = state
