@@ -1,5 +1,5 @@
 //
-//  FocusTextField.swift
+//  FocusTextView.swift
 //  DesignSystem
 //
 //  Created by choijunios on 12/9/24.
@@ -11,9 +11,10 @@ import RxCocoa
 import RxSwift
 import SnapKit
 
-public class FocusTextField: UIView {
+public class FocusTextView: UIView, UITextViewDelegate {
     
-    private let textField: UITextField = .init()
+    private let textView: UITextView = .init()
+    private let placeHolderLabel: UILabel = .init()
     
     private var focusLineLayer1: CAShapeLayer?
     private var focusLineLayer2: CAShapeLayer?
@@ -23,7 +24,7 @@ public class FocusTextField: UIView {
     
     private let disposeBag: DisposeBag = .init()
     
-    public var rx: Reactive<UITextField> { textField.rx }
+    public var rx: Reactive<UITextView> { textView.rx }
     
     public init(placeholderText: String, focusColor: UIColor) {
         
@@ -32,28 +33,35 @@ public class FocusTextField: UIView {
         
         super.init(frame: .zero)
         
-        setTextField()
+        setTextView()
         
         setLayer()
         
-        setTextFieldLayout()
+        setLayout()
         
         subscribeToFocusEvent()
     }
     public required init?(coder: NSCoder) { nil }
     
     
-    private func setTextField() {
+    private func setTextView() {
         
-        textField.placeholder = placeholderText
+        placeHolderLabel.text = self.placeholderText
+        placeHolderLabel.textColor = UIColor.gray.withAlphaComponent(0.5)
+        
         
     }
     
-    private func setTextFieldLayout() {
+    private func setLayer() {
         
-        addSubview(textField)
+        layer.cornerRadius = 15
+    }
+    
+    private func setLayout() {
         
-        textField.snp.makeConstraints { make in
+        addSubview(textView)
+        
+        textView.snp.makeConstraints { make in
             
             make.top.equalToSuperview().inset(10)
             make.bottom.equalToSuperview().inset(10)
@@ -62,33 +70,29 @@ public class FocusTextField: UIView {
             
             make.width.equalTo(100)
         }
-    }
-    
-    private func setLayer() {
         
-        layer.cornerRadius = 15
+        textView.addSubview(placeHolderLabel)
+        
+        placeHolderLabel.snp.makeConstraints { make in
+            
+            make.top.equalToSuperview()
+            make.leading.equalToSuperview()
+        }
     }
-    
     
     // MARK: ReactiveUI
     private func subscribeToFocusEvent() {
         
-        textField.rx.isFirstResponder
-            .withUnretained(self)
-            .subscribe(onNext: { view, isFirstResponder in
-                
-                if isFirstResponder {
-                    
-                    view.startFocusLineAnimation(
+        textView.rx.isFirstResponder
+            .subscribe(onNext: { [weak self] isFocused in
+                guard let self = self else { return }
+                if isFocused {
+                    self.startFocusLineAnimation(
                         duration: 0.2,
-                        endPosForX: view.layer.cornerRadius
+                        endPosForX: self.layer.cornerRadius
                     )
-                    
                 } else {
-                    
-                    view.dismissFocusLineAnimation(
-                        duration: 0.2
-                    )
+                    self.dismissFocusLineAnimation(duration: 0.2)
                 }
             })
             .disposed(by: disposeBag)
@@ -123,7 +127,7 @@ public class FocusTextField: UIView {
 
 // MARK: Dismiss focus line
 
-private extension FocusTextField {
+private extension FocusTextView {
     
     func dismissFocusLineAnimation1(duration: CFTimeInterval) {
         
@@ -162,7 +166,7 @@ private extension FocusTextField {
 
 
 // MARK: Display focus line
-private extension FocusTextField {
+private extension FocusTextView {
     
     func playFocusLine1(duration: CFTimeInterval, endPosForX: CGFloat, focusColor: CGColor) {
         
@@ -265,25 +269,12 @@ private extension FocusTextField {
     }
 }
 
-fileprivate extension Reactive where Base == UITextField {
-    
+fileprivate extension Reactive where Base == UITextView {
     var isFirstResponder: Observable<Bool> {
-        
-        Observable.merge([
-            
-            controlEvent(.editingDidBegin).map { _ in true }.asObservable(),
-            controlEvent(.editingDidEnd).map { _ in false }.asObservable(),
-        ])
+        Observable.merge(
+            didBeginEditing.map { true },
+            didEndEditing.map { false }
+        )
     }
 }
 
-#Preview {
-    
-    let stack: UIStackView = .init(arrangedSubviews: [
-        FocusTextField(placeholderText: "Test1", focusColor: .black),
-        FocusTextField(placeholderText: "Test2", focusColor: .black),
-    ])
-    stack.axis = .vertical
-    
-    return stack
-}
