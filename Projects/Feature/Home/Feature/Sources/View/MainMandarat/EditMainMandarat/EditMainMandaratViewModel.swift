@@ -10,10 +10,25 @@ import RxSwift
 
 class EditMainMandaratViewModel: Reactor {
     
-    var initialState: State = .init()
+    let initialState: State
+    
+    init(initialState: State) {
+        
+        self.initialState = initialState
+    }
     
     func reduce(state: State, mutation: Action) -> State {
-        state
+        
+        switch mutation {
+        case .editTitleText(let text):
+            
+            var newState = state
+            
+            return newState
+            
+        default:
+            return state
+        }
     }
 }
 
@@ -21,9 +36,16 @@ extension EditMainMandaratViewModel {
     
     enum Action {
         
+        // Event
+        case editTitleText(text: String)
+        case editDescriptionText(text: String)
+        
+        // Side effect
     }
     
     struct State {
         
+        var titleText: String
+        var descriptionText: String
     }
 }

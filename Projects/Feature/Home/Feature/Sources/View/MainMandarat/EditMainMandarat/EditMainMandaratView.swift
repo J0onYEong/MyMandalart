@@ -13,6 +13,14 @@ import ReactorKit
 
 class EditMainMandaratView: UIView, View {
     
+    // Sub View
+    private let titleTextField: UITextField = {
+        let textField: UITextField = .init()
+        return textField
+    }()
+    
+    
+    
     
     let reactor: EditMainMandaratViewModel
     var disposeBag: DisposeBag = .init()

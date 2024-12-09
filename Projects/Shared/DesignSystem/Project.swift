@@ -32,6 +32,8 @@ let project = Project(
             sources: ["Interface/**"],
             dependencies: [
                 
+                .thirdParty(library: .RxCocoa),
+                .thirdParty(library: .SnapKit),
             ]
         ),
     ]
