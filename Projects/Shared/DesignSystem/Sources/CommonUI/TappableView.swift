@@ -11,14 +11,14 @@ import RxSwift
 
 open class TappableView: UIView {
     
-    private let tapRecognizer: UITapGestureRecognizer = .init()
-    
     public let tap: PublishSubject<Void> = .init()
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
         
+        let tapRecognizer: UITapGestureRecognizer = .init()
         tapRecognizer.addTarget(self, action: #selector(onTap))
+        addGestureRecognizer(tapRecognizer)
     }
     public required init?(coder: NSCoder) { nil }
     
