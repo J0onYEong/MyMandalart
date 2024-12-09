@@ -32,6 +32,7 @@ class EditMainMandaratView: UIView, View {
         super.init(frame: .zero)
         
         setBackgroundView()
+        setInputFields()
         setLayout()
     }
     required init?(coder: NSCoder) { nil }
@@ -65,6 +66,17 @@ class EditMainMandaratView: UIView, View {
         backgroundView.backgroundColor = UIColor.gray.withAlphaComponent(0.7)
     }
     
+    private func setInputFields() {
+        
+        titleInputView.backgroundColor = UIColor.gray.withAlphaComponent(0.1)
+        titleInputView.setFocusLineColor(.gray)
+        titleInputView.setPlaceholderText("만다라트 주제를 입력해주세요!")
+        
+        descriptionInputView.backgroundColor = UIColor.gray.withAlphaComponent(0.1)
+        descriptionInputView.setFocusLineColor(.gray)
+        descriptionInputView.setPlaceholderText("목표를 설명해주세요!")
+    }
+    
     private func setLayout() {
         
         
@@ -92,7 +104,7 @@ class EditMainMandaratView: UIView, View {
             descriptionInputView,
         ])
         inputStackView.axis = .vertical
-        inputStackView.spacing = 5
+        inputStackView.spacing = 15
         inputStackView.alignment = .fill
         inputStackView.distribution = .fill
         

@@ -66,9 +66,15 @@ public class FocusTextView: UIView, UITextViewDelegate {
     
     private func setTextView() {
         
+        textView.backgroundColor = .clear
         textView.delegate = self
+        textView.font = .preferredFont(forTextStyle: .body)
+        textView.textContainerInset = .zero
+        textView.textContainer.lineFragmentPadding = .zero
         
         placeHolderLabel.text = self.placeholderText
+        placeHolderLabel.font = .preferredFont(forTextStyle: .body)
+        placeHolderLabel.backgroundColor = .clear
         placeHolderLabel.textColor = UIColor.gray.withAlphaComponent(0.5)
     }
     
@@ -91,10 +97,12 @@ public class FocusTextView: UIView, UITextViewDelegate {
         
         textView.addSubview(placeHolderLabel)
         
+        let horizontalInset = textView.textContainerInset.left + textView.textContainer.lineFragmentPadding
+        
         placeHolderLabel.snp.makeConstraints { make in
             
-            make.top.equalToSuperview()
-            make.leading.equalToSuperview()
+            make.top.equalToSuperview().inset(textView.textContainerInset.top)
+            make.leading.equalToSuperview().inset(horizontalInset)
         }
     }
     
@@ -128,7 +136,15 @@ extension FocusTextView {
     
     public func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         
-        self.text.onNext(textView.text)
+        let currentText = textView.text ?? ""
+
+        if let textRange = Range(range, in: currentText) {
+            
+            let updatedText = currentText.replacingCharacters(in: textRange, with: text)
+            
+            self.text.onNext(updatedText)
+            placeHolderLabel.isHidden = !updatedText.isEmpty
+        }
         
         return true
     }
