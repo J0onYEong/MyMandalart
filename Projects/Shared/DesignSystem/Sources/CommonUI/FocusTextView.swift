@@ -7,6 +7,7 @@
 
 import UIKit
 
+import ReactorKit
 import RxCocoa
 import RxSwift
 import SnapKit
@@ -24,7 +25,8 @@ public class FocusTextView: UIView, UITextViewDelegate {
     
     private let disposeBag: DisposeBag = .init()
     
-    public var rx: Reactive<UITextView> { textView.rx }
+    public let text: BehaviorSubject<String?> = .init(value: nil)
+    
     
     public init() {
         
@@ -36,7 +38,13 @@ public class FocusTextView: UIView, UITextViewDelegate {
         
         setLayout()
         
-        subscribeToFocusEvent()
+        text
+            .distinctUntilChanged()
+            .withUnretained(self)
+            .subscribe(onNext: { view, text in
+                view.textView.text = text
+            })
+            .disposed(by: disposeBag)
     }
     public required init?(coder: NSCoder) { nil }
     
@@ -54,10 +62,10 @@ public class FocusTextView: UIView, UITextViewDelegate {
     
     private func setTextView() {
         
+        textView.delegate = self
+        
         placeHolderLabel.text = self.placeholderText
         placeHolderLabel.textColor = UIColor.gray.withAlphaComponent(0.5)
-        
-        
     }
     
     private func setLayer() {
@@ -75,8 +83,6 @@ public class FocusTextView: UIView, UITextViewDelegate {
             make.bottom.equalToSuperview().inset(10)
             make.leading.equalToSuperview().inset(15)
             make.trailing.equalToSuperview().inset(15)
-            
-            make.width.equalTo(100)
         }
         
         textView.addSubview(placeHolderLabel)
@@ -87,26 +93,6 @@ public class FocusTextView: UIView, UITextViewDelegate {
             make.leading.equalToSuperview()
         }
     }
-    
-    // MARK: ReactiveUI
-    private func subscribeToFocusEvent() {
-        
-        textView.rx.isFirstResponder
-            .subscribe(onNext: { [weak self] isFocused in
-                guard let self = self else { return }
-                if isFocused {
-                    self.startFocusLineAnimation(
-                        duration: 0.2,
-                        endPosForX: self.layer.cornerRadius
-                    )
-                } else {
-                    self.dismissFocusLineAnimation(duration: 0.2)
-                }
-            })
-            .disposed(by: disposeBag)
-    }
-    
-    
     
     // MARK: Animations
     private func startFocusLineAnimation(duration: CFTimeInterval, endPosForX: CGFloat) {
@@ -133,8 +119,33 @@ public class FocusTextView: UIView, UITextViewDelegate {
     
 }
 
-// MARK: Dismiss focus line
+// MARK: TextView delegate
+extension FocusTextView {
+    
+    public func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        
+        self.text.onNext(textView.text)
+        
+        return true
+    }
+    
+    
+    public func textViewDidBeginEditing(_ textView: UITextView) {
+        
+        startFocusLineAnimation(
+            duration: 0.2,
+            endPosForX: self.layer.cornerRadius
+        )
+    }
+    
+    public func textViewDidEndEditing(_ textView: UITextView) {
+        
+        dismissFocusLineAnimation(duration: 0.2)
+    }
+}
 
+
+// MARK: Dismiss focus line
 private extension FocusTextView {
     
     func dismissFocusLineAnimation1(duration: CFTimeInterval) {
@@ -276,13 +287,3 @@ private extension FocusTextView {
         focusLineLayer.add(animation, forKey: "focus-line-animation1")
     }
 }
-
-fileprivate extension Reactive where Base == UITextView {
-    var isFirstResponder: Observable<Bool> {
-        Observable.merge(
-            didBeginEditing.map { true },
-            didEndEditing.map { false }
-        )
-    }
-}
-
