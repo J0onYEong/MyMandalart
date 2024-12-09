@@ -59,7 +59,7 @@ public class FocusTextView: UIView, UITextViewDelegate {
         focusLineLayer2?.strokeColor = self.focusColor
     }
     
-    
+    @discardableResult
     public override func becomeFirstResponder() -> Bool {
         textView.becomeFirstResponder()
     }

@@ -50,6 +50,7 @@ public class FocusTextField: UIView {
         focusLineLayer2?.strokeColor = self.focusColor
     }
     
+    @discardableResult
     public override func becomeFirstResponder() -> Bool {
         textField.becomeFirstResponder()
     }
