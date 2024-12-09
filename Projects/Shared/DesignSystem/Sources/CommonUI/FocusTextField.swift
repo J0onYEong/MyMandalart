@@ -19,14 +19,16 @@ public class FocusTextField: UIView {
     private var focusLineLayer2: CAShapeLayer?
     
     private let placeholderText: String
+    private let focusColor: CGColor
     
     private let disposeBag: DisposeBag = .init()
     
     public var rx: Reactive<UITextField> { textField.rx }
     
-    public init(placeholderText: String) {
+    public init(placeholderText: String, focusColor: UIColor) {
         
         self.placeholderText = placeholderText
+        self.focusColor = focusColor.cgColor
         
         super.init(frame: .zero)
         
@@ -107,8 +109,8 @@ public class FocusTextField: UIView {
             layer?.removeFromSuperlayer()
         }
         
-        playFocusLine1(duration: duration, endPosForX: endPosForX)
-        playFocusLine2(duration: duration, endPosForX: endPosForX)
+        playFocusLine1(duration: duration, endPosForX: endPosForX, focusColor: self.focusColor)
+        playFocusLine2(duration: duration, endPosForX: endPosForX, focusColor: self.focusColor)
         
     }
     
@@ -163,7 +165,7 @@ private extension FocusTextField {
 // MARK: Display focus line
 private extension FocusTextField {
     
-    func playFocusLine1(duration: CFTimeInterval, endPosForX: CGFloat) {
+    func playFocusLine1(duration: CFTimeInterval, endPosForX: CGFloat, focusColor: CGColor) {
         
         let focusLineLayer: CAShapeLayer = .init()
         let cornerRadius = layer.cornerRadius
@@ -193,7 +195,7 @@ private extension FocusTextField {
         path.addLine(to: .init(x: endPosForX, y: rect.minY))
         
         focusLineLayer.path = path
-        focusLineLayer.strokeColor = UIColor.black.cgColor
+        focusLineLayer.strokeColor = focusColor
         focusLineLayer.fillColor = UIColor.clear.cgColor
         focusLineLayer.lineWidth = 1
         focusLineLayer.strokeEnd = 0
@@ -213,7 +215,7 @@ private extension FocusTextField {
         focusLineLayer.add(animation, forKey: "focus-line-animation1")
     }
     
-    func playFocusLine2(duration: CFTimeInterval, endPosForX: CGFloat) {
+    func playFocusLine2(duration: CFTimeInterval, endPosForX: CGFloat, focusColor: CGColor) {
         
         let focusLineLayer: CAShapeLayer = .init()
         let cornerRadius = layer.cornerRadius
@@ -243,7 +245,7 @@ private extension FocusTextField {
         path.addLine(to: .init(x: endPosForX, y: rect.minY))
         
         focusLineLayer.path = path
-        focusLineLayer.strokeColor = UIColor.black.cgColor
+        focusLineLayer.strokeColor = focusColor
         focusLineLayer.fillColor = UIColor.clear.cgColor
         focusLineLayer.lineWidth = 1
         focusLineLayer.strokeEnd = 0
