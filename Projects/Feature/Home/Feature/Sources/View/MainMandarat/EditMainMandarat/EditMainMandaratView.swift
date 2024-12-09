@@ -34,7 +34,6 @@ class EditMainMandaratView: UIView, View {
         super.init(frame: .zero)
         
         setBackgroundView()
-        
         setLayout()
     }
     required init?(coder: NSCoder) { nil }
@@ -49,50 +48,21 @@ class EditMainMandaratView: UIView, View {
         }
     }
     
+    public func appearTransition() {
+        
+        backgroundView.alpha = 0.0
+        
+        UIView.animate(withDuration: 0.35) {
+            
+            self.backgroundView.alpha = 1
+        }
+    }
+    
     private func setBackgroundView() {
         
         backgroundView.backgroundColor = UIColor.gray.withAlphaComponent(0.7)
     }
     
-    private func setInputContainerView() {
-        
-        inputContainerBackView.backgroundColor = .white
-        
-        let shapeLayer: CAShapeLayer = .init()
-        shapeLayer.frame = inputContainerBackView.bounds
-        
-        let rect = shapeLayer.bounds
-        let minRadius: CGFloat = 30
-        let maxRadius: CGFloat = 90
-        let path = CGMutablePath()
-        path.move(to: .init(x: rect.minX, y: rect.maxY))
-        
-        path.addLine(to: .init(x: rect.minX, y: minRadius))
-        
-        path.addCurve(
-            to: .init(x: maxRadius, y: rect.minY),
-            control1: .init(x: rect.minX, y: rect.minY),
-            control2: .init(x: rect.minX, y: rect.minY)
-        )
-        
-        path.addLine(to: .init(x: rect.maxX-maxRadius, y: rect.minY))
-        
-        path.addCurve(
-            to: .init(x: rect.maxX, y: minRadius),
-            control1: .init(x: rect.maxX, y: rect.minY),
-            control2: .init(x: rect.maxX, y: rect.minY)
-        )
-        
-        path.addLine(to: .init(x: rect.maxX, y: rect.maxY))
-        path.addLine(to: .init(x: rect.minX, y: rect.maxY))
-        path.closeSubpath()
-        
-        shapeLayer.path = path
-        shapeLayer.strokeEnd = 1
-        shapeLayer.fillColor = UIColor.white.cgColor
-        
-        inputContainerBackView.layer.mask = shapeLayer
-    }
     
     private func setLayout() {
         
@@ -140,7 +110,82 @@ class EditMainMandaratView: UIView, View {
     }
     
     func bind(reactor: EditMainMandaratViewModel) {
+
+        // titleInputView
+        reactor.state
+            .map(\.titleText)
+            .take(1)
+            .bind(to: titleInputView.rx.text)
+            .disposed(by: disposeBag)
         
+        titleInputView.rx.text
+            .compactMap({ $0 })
+            .map { text in
+                return Reactor.Action.editTitleText(text: text)
+            }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+            
         
+        // descriptionInputView
+        reactor.state
+            .map(\.descriptionText)
+            .take(1)
+            .bind(to: descriptionInputView.rx.text)
+            .disposed(by: disposeBag)
+        
+        descriptionInputView.rx.text
+            .compactMap({ $0 })
+            .map { text in
+                return Reactor.Action.editDescriptionText(text: text)
+            }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
     }
+}
+
+
+// MARK: InputContainerView drawing
+private extension EditMainMandaratView {
+    
+    func setInputContainerView() {
+        
+        inputContainerBackView.backgroundColor = .white
+        
+        let shapeLayer: CAShapeLayer = .init()
+        shapeLayer.frame = inputContainerBackView.bounds
+        
+        let rect = shapeLayer.bounds
+        let minRadius: CGFloat = 30
+        let maxRadius: CGFloat = 90
+        let path = CGMutablePath()
+        path.move(to: .init(x: rect.minX, y: rect.maxY))
+        
+        path.addLine(to: .init(x: rect.minX, y: minRadius))
+        
+        path.addCurve(
+            to: .init(x: maxRadius, y: rect.minY),
+            control1: .init(x: rect.minX, y: rect.minY),
+            control2: .init(x: rect.minX, y: rect.minY)
+        )
+        
+        path.addLine(to: .init(x: rect.maxX-maxRadius, y: rect.minY))
+        
+        path.addCurve(
+            to: .init(x: rect.maxX, y: minRadius),
+            control1: .init(x: rect.maxX, y: rect.minY),
+            control2: .init(x: rect.maxX, y: rect.minY)
+        )
+        
+        path.addLine(to: .init(x: rect.maxX, y: rect.maxY))
+        path.addLine(to: .init(x: rect.minX, y: rect.maxY))
+        path.closeSubpath()
+        
+        shapeLayer.path = path
+        shapeLayer.strokeEnd = 1
+        shapeLayer.fillColor = UIColor.white.cgColor
+        
+        inputContainerBackView.layer.mask = shapeLayer
+    }
+    
 }

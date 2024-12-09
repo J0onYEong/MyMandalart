@@ -23,6 +23,14 @@ class EditMainMandaratViewModel: Reactor {
         case .editTitleText(let text):
             
             var newState = state
+            newState.titleText = text
+            
+            return newState
+            
+        case .editDescriptionText(let text):
+            
+            var newState = state
+            newState.titleText = text
             
             return newState
             
