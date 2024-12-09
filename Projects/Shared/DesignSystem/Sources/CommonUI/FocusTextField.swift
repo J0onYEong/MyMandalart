@@ -269,8 +269,8 @@ private extension FocusTextField {
 #Preview {
     
     let stack: UIStackView = .init(arrangedSubviews: [
-        FocusTextField(placeholderText: "Test1"),
-        FocusTextField(placeholderText: "Test2"),
+        FocusTextField(placeholderText: "Test1", focusColor: .black),
+        FocusTextField(placeholderText: "Test2", focusColor: .black),
     ])
     stack.axis = .vertical
     
