@@ -84,7 +84,8 @@ let project = Project(
             sources: ["Interface/**"],
             dependencies: [
                 
-                .domain(interface: .Mandarat)
+                .domain(interface: .Mandarat),
+                .shared(interface: .Navigation)
             ]
         ),
     ]
