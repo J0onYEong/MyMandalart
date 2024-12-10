@@ -9,6 +9,9 @@ import UIKit
 @testable import FeatureHomeTesting
 @testable import FeatureHome
 
+import SharedDependencyInjector
+import SharedNavigationInterface
+
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var window: UIWindow?
@@ -19,8 +22,23 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window = UIWindow(windowScene: windowScene)
         
+        dependencyInjection()
+        
         let viewModel: HomeViewModel = .init(mandaratUseCase: MockMandaratUseCase())
-        window?.rootViewController = HomeViewController(reactor: viewModel)
+        let viewController: HomeViewController = .init(reactor: viewModel)
+        
+        window?.rootViewController = UINavigationController()
         window?.makeKeyAndVisible()
+        
+        DependencyInjector.shared.resolve(Router.self).setRootModuleTo(
+            module: viewController
+        )
+    }
+    
+    func dependencyInjection() {
+        
+        DependencyInjector.shared.assemble([
+            MockAssembly()
+        ])
     }
 }
