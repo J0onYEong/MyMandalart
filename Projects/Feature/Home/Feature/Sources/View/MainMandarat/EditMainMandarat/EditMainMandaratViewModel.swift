@@ -5,6 +5,8 @@
 //  Created by choijunios on 12/9/24.
 //
 
+import UIKit
+
 import DomainMandaratInterface
 
 import ReactorKit
@@ -57,8 +59,13 @@ extension EditMainMandaratViewModel {
         // Event
         case editRequestFromOutside(mainMandarat: MainMandaratVO?)
         
+        // - editing
         case editTitleText(text: String)
         case editDescriptionText(text: String)
+        case editColor(color: UIColor)
+        
+        // - touch
+        case colorSelectionButtonClicked
         
         // Side effect
     }
