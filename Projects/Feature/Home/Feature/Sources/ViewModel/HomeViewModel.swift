@@ -5,11 +5,13 @@
 //  Created by choijunios on 12/4/24.
 //
 
-import ReactorKit
+import UIKit
 
 import DomainMandaratInterface
 
-class HomeViewModel: Reactor {
+import ReactorKit
+
+class HomeViewModel: Reactor, MainMandaratViewModelDelegate {
     
     // 의존성 주입
     private let mandaratUseCase: MandaratUseCase
@@ -107,10 +109,14 @@ extension HomeViewModel {
     
         var mainMandaratVO: [MandaratPosition: MainMandaratVO] = [:]
         var presentEditMainMandaratView: Bool = false
+        
+        // Color picker
+        var colorPickerPresentModel: ColorPickerPresentModel?
     }
 }
 
-extension HomeViewModel: MainMandaratViewModelDelegate {
+// MARK: MainMandaratViewModelDelegate
+extension HomeViewModel {
     
     func mainMandarat(buttonClicked position: MandaratPosition) {
         

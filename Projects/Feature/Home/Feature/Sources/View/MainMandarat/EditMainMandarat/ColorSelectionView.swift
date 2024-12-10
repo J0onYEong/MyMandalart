@@ -43,10 +43,25 @@ class ColorSelectionView: UIView {
     
     private func setReactive() {
         
+        colorView.tap
+            .withUnretained(self)
+            .subscribe(onNext: { view, _ in
+                
+                view.colorView.alpha = 0.5
+                UIView.animate(withDuration: 0.2) {
+                    view.colorView.alpha = 1
+                }
+            })
+            .disposed(by: disposeBag)
+        
+        
         selectedColor
             .asDriver(onErrorDriveWith: .empty())
-            .drive(onNext: { color in
+            .drive(onNext: { [weak self] color in
                         
+                guard let self else { return }
+                
+                colorView.backgroundColor = color
             })
             .disposed(by: disposeBag)
     }
@@ -58,7 +73,7 @@ class ColorSelectionView: UIView {
         
         colorView.layer.cornerRadius = 5
         colorView.backgroundColor = .white
-        colorView.layer.borderColor = UIColor.gray.cgColor
+        colorView.layer.borderColor = UIColor.white.cgColor
         colorView.layer.borderWidth = 2
         
         self.backgroundColor = UIColor.gray.withAlphaComponent(0.1)

@@ -12,16 +12,17 @@ import DomainMandaratInterface
 import ReactorKit
 import RxSwift
 
-class EditMainMandaratViewModel: Reactor {
+class EditMainMandaratViewModel: NSObject, Reactor, UIColorPickerViewControllerDelegate {
     
     let initialState: State
     
-    init() {
+    override init() {
         
         // Set initial state
         self.initialState = .init(
             titleText: "",
-            descriptionText: ""
+            descriptionText: "",
+            mandaratTitleColor: .white
         )
     }
     
@@ -45,6 +46,26 @@ class EditMainMandaratViewModel: Reactor {
             newState.titleText = text
             
             return newState
+        case .editColor(let color):
+            
+            var newState = state
+            newState.mandaratTitleColor = color
+            
+            return newState
+            
+        case .colorSelectionButtonClicked:
+
+            var newState = state
+            newState.presentColorPicker = true
+            
+            return newState
+            
+        case .colorPickerClosed:
+            
+            var newState = state
+            newState.presentColorPicker = false
+            
+            return newState
             
         default:
             return state
@@ -58,6 +79,7 @@ extension EditMainMandaratViewModel {
         
         // Event
         case editRequestFromOutside(mainMandarat: MainMandaratVO?)
+        case colorPickerClosed
         
         // - editing
         case editTitleText(text: String)
@@ -74,5 +96,15 @@ extension EditMainMandaratViewModel {
         
         var titleText: String
         var descriptionText: String
+        var mandaratTitleColor: UIColor
+        var presentColorPicker: Bool = false
+    }
+}
+
+extension EditMainMandaratViewModel {
+    
+    func colorPickerViewController(_ viewController: UIColorPickerViewController, didSelect color: UIColor, continuously: Bool) {
+        
+        action.onNext(.editColor(color: color))
     }
 }

@@ -16,8 +16,10 @@ class HomeViewController: UIViewController, View {
     
     // Sub view
     private var mainMandaratViews: [MandaratPosition: MainMandaratView] = [:]
-    private let editMandaratView: EditMainMandaratView = .init()
     
+    // Color picker
+    private let selectedColor: PublishSubject<UIColor> = .init()
+    private var editingColor: UIColor?
     
     var disposeBag: DisposeBag = .init()
     
@@ -39,16 +41,10 @@ class HomeViewController: UIViewController, View {
         setLayout()
         
         reactor?.sendEvent(.viewDidLoad)
-        
-        subscribeToKeyboardEvent()
     }
     
     
     func bind(reactor: HomeViewModel) {
-        
-        // Bind edit main mandarat view
-        editMandaratView.bind(reactor: reactor.editMainMandaratReactor)
-        
         
         // Bind reactors to MainMandaratViews
         MandaratPosition.allCases.forEach { position in
@@ -63,14 +59,13 @@ class HomeViewController: UIViewController, View {
         reactor.state
             .map(\.presentEditMainMandaratView)
             .withUnretained(self)
-            .subscribe(onNext: { vc, isPresent in
+            .subscribe(onNext: { [weak reactor] vc, isPresent in
                 
-                vc.editMandaratView.isHidden = !isPresent
+                guard let reactor else { return }
                 
-                if isPresent {
-                    
-                    vc.editMandaratView.onAppearTask()
-                }
+                vc.presentEditMainMandaratViewController(
+                    viewModel: reactor.editMainMandaratReactor
+                )
             })
             .disposed(by: disposeBag)
     }
@@ -78,8 +73,6 @@ class HomeViewController: UIViewController, View {
     private func setLayout() {
         
         setMainMandaratViewLayout()
-        
-        setEditMandaratViewLayout()
     }
 }
 
@@ -135,15 +128,6 @@ private extension HomeViewController {
             make.centerY.equalToSuperview()
         }
     }
-    
-    func setEditMandaratViewLayout() {
-        
-        view.addSubview(editMandaratView)
-        editMandaratView.snp.makeConstraints { make in
-            
-            make.edges.equalToSuperview()
-        }
-    }
 }
 
 // MARK: MainMandarats
@@ -168,49 +152,12 @@ private extension HomeViewController {
 
 private extension HomeViewController {
     
-    func subscribeToKeyboardEvent() {
+    func presentEditMainMandaratViewController(viewModel: EditMainMandaratViewModel) {
         
-        NotificationCenter.default.rx
-            .notification(UIApplication.keyboardWillShowNotification)
-            .withUnretained(self)
-            .subscribe(onNext: { vc, notfication in
-                
-                guard
-                    let keyboardFrame = notfication.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect,
-                    let keyboardDisplayDuration = notfication.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double
-                else { return }
-                
-                UIView.animate(withDuration: keyboardDisplayDuration) {
-                    
-                    vc.editMandaratView.snp.updateConstraints { make in
-                        
-                        make.bottom.equalToSuperview().inset(CGFloat(keyboardFrame.height))
-                    }
-                    
-                    vc.view.layoutIfNeeded()
-                }
-            })
-            .disposed(by: disposeBag)
+        let viewController = EditMainMandaratViewController()
+        viewController.bind(reactor: viewModel)
         
-        NotificationCenter.default.rx
-            .notification(UIApplication.keyboardWillHideNotification)
-            .withUnretained(self)
-            .subscribe(onNext: { vc, notfication in
-                
-                guard
-                    let keyboardDisplayDuration = notfication.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double
-                else { return }
-                
-                UIView.animate(withDuration: keyboardDisplayDuration) {
-                    
-                    vc.editMandaratView.snp.updateConstraints { make in
-                        
-                        make.bottom.equalToSuperview()
-                    }
-                    
-                    vc.view.layoutIfNeeded()
-                }
-            })
-            .disposed(by: disposeBag)
+        viewController.modalPresentationStyle = .overFullScreen
+        self.present(viewController, animated: false)
     }
 }
