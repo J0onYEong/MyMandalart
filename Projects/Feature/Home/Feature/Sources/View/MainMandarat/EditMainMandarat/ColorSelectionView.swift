@@ -35,22 +35,11 @@ class ColorSelectionView: UIView {
         
         super.init(frame: .zero)
         
-        setLabel()
-        setColorView()
+        setAppearance()
         setLayout()
         setReactive()
     }
     required init?(coder: NSCoder) { nil }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        if !isLayerAdded {
-            isLayerAdded = true
-            
-            addBorderToColorView()
-        }
-    }
     
     private func setReactive() {
         
@@ -62,15 +51,18 @@ class ColorSelectionView: UIView {
             .disposed(by: disposeBag)
     }
     
-    private func setLabel() {
+    private func setAppearance() {
         
         titleLabel.textColor = .black
         titleLabel.text = labelText
-    }
-    
-    private func setColorView() {
         
         colorView.layer.cornerRadius = 5
+        colorView.backgroundColor = .white
+        colorView.layer.borderColor = UIColor.gray.cgColor
+        colorView.layer.borderWidth = 2
+        
+        self.backgroundColor = UIColor.gray.withAlphaComponent(0.1)
+        self.layer.cornerRadius = 15
     }
     
     private func setLayout() {
@@ -79,35 +71,22 @@ class ColorSelectionView: UIView {
         stackView.axis = .horizontal
         stackView.spacing = 5
         stackView.distribution = .fill
-        stackView.alignment = .center
+        stackView.alignment = .fill
         
         colorView.snp.makeConstraints { make in
-            make.width.equalTo(65)
-            make.height.equalTo(30)
+            make.width.equalTo(60)
+            make.height.equalTo(25)
         }
         
         addSubview(stackView)
         
         stackView.snp.makeConstraints { make in
             
-            make.edges.equalToSuperview()
+            make.top.equalToSuperview().inset(10)
+            make.bottom.equalToSuperview().inset(10)
+            make.leading.equalToSuperview().inset(10)
+            make.trailing.equalToSuperview().inset(10)
         }
-    }
-    
-    private func addBorderToColorView() {
-        
-        let borderLayer: CALayer = .init(layer: colorView.layer)
-        
-        borderLayer.backgroundColor = UIColor.white.cgColor
-        borderLayer.borderWidth = 2
-        borderLayer.borderColor = UIColor.gray.withAlphaComponent(0.5).cgColor
-        
-        let maskLayer: CALayer = .init(layer: borderLayer)
-        maskLayer.backgroundColor = UIColor.clear.cgColor
-        
-        borderLayer.mask = maskLayer
-        
-        colorView.layer.addSublayer(borderLayer)
     }
 }
 

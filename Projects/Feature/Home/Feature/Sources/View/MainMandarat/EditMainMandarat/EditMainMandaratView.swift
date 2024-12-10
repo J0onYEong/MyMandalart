@@ -21,6 +21,7 @@ class EditMainMandaratView: UIView, View {
     private let titleInputView: FocusTextField = .init()
     private let descriptionInputView: FocusTextView = .init()
     private let inputContainerBackView: UIView = .init()
+    private let colorSelectionView: ColorSelectionView = .init(labelText: "대표 색상 변경")
     
     private var isLayerIsSetted = false
     
@@ -97,9 +98,18 @@ class EditMainMandaratView: UIView, View {
             make.bottom.equalToSuperview()
         }
         
+        // MARK: colorSelectionView
+        let colorSelectionStackView: UIStackView = .init(
+            arrangedSubviews: [colorSelectionView, UIView()]
+        )
+        colorSelectionStackView.axis = .horizontal
+        colorSelectionStackView.distribution = .fill
+        colorSelectionStackView.alignment = .center
+        
         
         // MARK: inputStackView
         let inputStackView: UIStackView = .init(arrangedSubviews: [
+            colorSelectionStackView,
             titleInputView,
             descriptionInputView,
         ])
