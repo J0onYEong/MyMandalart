@@ -1,5 +1,5 @@
 //
-//  TextButton.swift
+//  ImageButton.swift
 //  DesignSystem
 //
 //  Created by choijunios on 12/10/24.
@@ -11,18 +11,18 @@ import RxSwift
 import RxCocoa
 import SnapKit
 
-public class TextButton: TappableView {
+public class ImageButton: TappableView {
     
     // Sub view
-    private let labelView: UILabel = .init()
-    private let text: String
+    private let imageView: UIImageView = .init()
+    private let imageName: String
     private let backColor: UIColor = .gray.withAlphaComponent(0.1)
-    private let textColor: UIColor = .black
+    private let imageColor: UIColor = .black
     
     private let disposeBag: DisposeBag = .init()
     
-    public init(text: String) {
-        self.text = text
+    public init(imageName: String) {
+        self.imageName = imageName
         super.init(frame: .zero)
         
         setAppearance()
@@ -31,25 +31,30 @@ public class TextButton: TappableView {
     }
     public required init?(coder: NSCoder) { nil }
     
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        self.layer.cornerRadius = layer.bounds.width/2
+    }
+    
     private func setAppearance() {
         
-        labelView.text = text
-        labelView.font = .preferredFont(forTextStyle: .body)
-        labelView.textColor = textColor
+        imageView.image = UIImage(systemName: imageName)
+        imageView.contentMode = .scaleAspectFit
+        imageView.tintColor = imageColor
         
-        self.layer.cornerRadius = 15
         self.backgroundColor = backColor
     }
     
     private func setLayout() {
         
-        addSubview(labelView)
+        addSubview(imageView)
         
-        labelView.snp.makeConstraints { make in
+        imageView.snp.makeConstraints { make in
             make.top.equalToSuperview().inset(10)
             make.bottom.equalToSuperview().inset(10)
-            make.leading.equalToSuperview().inset(15)
-            make.trailing.equalToSuperview().inset(15)
+            make.leading.equalToSuperview().inset(10)
+            make.trailing.equalToSuperview().inset(10)
         }
     }
     
@@ -68,7 +73,7 @@ public class TextButton: TappableView {
     }
 }
 
-public extension Reactive where Base == TextButton {
+public extension Reactive where Base == ImageButton {
     
     var tap: Observable<Void> {
         
@@ -76,7 +81,7 @@ public extension Reactive where Base == TextButton {
     }
 }
 
-#Preview {
+#Preview(traits: .fixedLayout(width: 100.0, height: 100.0)) {
     
-    TextButton(text: "안녕")
+    ImageButton(imageName: "plus")
 }
