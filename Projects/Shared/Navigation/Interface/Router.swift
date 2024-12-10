@@ -7,37 +7,35 @@
 
 import UIKit
 
-public protocol Router {
-    
-    typealias Module = UIViewController
+private protocol RouteProtocol {
     
     var topViewController: UIViewController? { get }
     
     
-    func present(_ module: Module, animated: Bool, modalPresentationSytle: UIModalPresentationStyle)
+    func present(_ module: UIViewController, animated: Bool, modalPresentationSytle: UIModalPresentationStyle)
     
     
-    func presentToNavigation(_ module: Module, animated: Bool, modalPresentationSytle: UIModalPresentationStyle)
+    func presentToNavigation(_ module: UIViewController, animated: Bool, modalPresentationSytle: UIModalPresentationStyle)
     
     
     func dismissModule(animated: Bool, completion: (() -> Void)?)
     
     
-    func push(module: Module, animated: Bool)
+    func push(module: UIViewController, animated: Bool)
     
     
     func popModule(animated: Bool)
     
     
-    func setRootModuleTo(module: Module)
+    func setRootModuleTo(module: UIViewController)
 }
 
-public final class DefaultRouter: NSObject, Router {
+public final class Router: NSObject, RouteProtocol {
     
-    weak var rootController: UINavigationController?
+    private weak var rootController: UINavigationController?
     
     /// 네비게이션 최상단 ViewController
-    public var topViewController: UIViewController? {
+    fileprivate var topViewController: UIViewController? {
         rootController?.topViewController
     }
     
@@ -45,7 +43,7 @@ public final class DefaultRouter: NSObject, Router {
         super.init()
     }
     
-    public func present(_ module: Module, animated: Bool, modalPresentationSytle: UIModalPresentationStyle) {
+    public func present(_ module: UIViewController, animated: Bool, modalPresentationSytle: UIModalPresentationStyle) {
         
         module.modalPresentationStyle = modalPresentationSytle
         topViewController?.present(
@@ -54,7 +52,7 @@ public final class DefaultRouter: NSObject, Router {
         )
     }
     
-    public func presentToNavigation(_ module: Module, animated: Bool, modalPresentationSytle: UIModalPresentationStyle) {
+    public func presentToNavigation(_ module: UIViewController, animated: Bool, modalPresentationSytle: UIModalPresentationStyle) {
         
         module.modalPresentationStyle = modalPresentationSytle
         rootController?.present(
@@ -71,7 +69,7 @@ public final class DefaultRouter: NSObject, Router {
         )
     }
     
-    public func push(module: Module, animated: Bool) {
+    public func push(module: UIViewController, animated: Bool) {
         
         guard (module is UINavigationController) == false else {
             return assertionFailure("\(#function) 네비게이션 컨트롤러 삽입 불가")
@@ -83,7 +81,7 @@ public final class DefaultRouter: NSObject, Router {
         )
     }
     
-    public func push(module: Module, to: UINavigationController, animated: Bool) {
+    public func push(module: UIViewController, to: UINavigationController, animated: Bool) {
         
         to.pushViewController(module, animated: animated)
     }
@@ -92,12 +90,12 @@ public final class DefaultRouter: NSObject, Router {
         
     }
     
-    public func changeRootModuleTo(module: Module, animated: Bool) {
+    public func changeRootModuleTo(module: UIViewController, animated: Bool) {
         
         rootController?.setViewControllers([module], animated: animated)
     }
 
-    public func setRootModuleTo(module: Module) {
+    public func setRootModuleTo(module: UIViewController) {
         guard let keyWindow = UIWindow.keyWindow else { return }
         let navigationController = UINavigationController(rootViewController: module)
         navigationController.setNavigationBarHidden(true, animated: false)
