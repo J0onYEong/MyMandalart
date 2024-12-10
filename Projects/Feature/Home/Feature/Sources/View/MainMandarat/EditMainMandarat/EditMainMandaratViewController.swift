@@ -81,6 +81,20 @@ class EditMainMandaratViewController: UIViewController, View, UIColorPickerViewC
     private func setBackgroundView() {
         
         view.backgroundColor = UIColor.gray.withAlphaComponent(0.7)
+        let tapGesture: UITapGestureRecognizer = .init()
+        view.addGestureRecognizer(tapGesture)
+        tapGesture.addTarget(self, action: #selector(onBackgroundViewTapped))
+    }
+    @objc private func onBackgroundViewTapped() {
+        
+        [
+            titleInputView,
+            descriptionInputView
+        ].forEach { responder in
+            if responder.isFirstResponder {
+                responder.resignFirstResponder()
+            }
+        }
     }
     
     private func setInputFields() {

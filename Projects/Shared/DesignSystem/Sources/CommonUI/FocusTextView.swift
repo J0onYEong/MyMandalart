@@ -64,6 +64,15 @@ public class FocusTextView: UIView, UITextViewDelegate {
         textView.becomeFirstResponder()
     }
     
+    @discardableResult
+    public override func resignFirstResponder() -> Bool {
+        textView.resignFirstResponder()
+    }
+    
+    public override var isFirstResponder: Bool {
+        textView.isFirstResponder
+    }
+    
     private func setTextView() {
         
         textView.backgroundColor = .clear

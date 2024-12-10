@@ -55,6 +55,15 @@ public class FocusTextField: UIView {
         textField.becomeFirstResponder()
     }
     
+    @discardableResult
+    public override func resignFirstResponder() -> Bool {
+        textField.resignFirstResponder()
+    }
+    
+    public override var isFirstResponder: Bool {
+        textField.isFirstResponder
+    }
+    
     private func setTextField() {
         
         textField.placeholder = placeholderText
