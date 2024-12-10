@@ -22,6 +22,10 @@ class EditMainMandaratViewController: UIViewController, View, UIColorPickerViewC
     private let inputContainerBackView: UIView = .init()
     private let colorSelectionView: ColorSelectionView = .init(labelText: "대표 색상 변경")
     
+    // - Tool button
+    private let exitButton: ImageButton = .init(imageName: "xmark")
+    private let saveButton: TextButton = .init(text: "저장")
+    
     private var isLayerIsSetted = false
     
     var reactor: EditMainMandaratViewModel?
@@ -119,6 +123,25 @@ class EditMainMandaratViewController: UIViewController, View, UIColorPickerViewC
             make.bottom.equalToSuperview()
         }
         
+        
+        // MARK: toolButtonStack
+        let toolButtonStack: UIStackView = .init(
+            arrangedSubviews: [saveButton, exitButton]
+        )
+        toolButtonStack.axis = .horizontal
+        toolButtonStack.spacing = 5
+        toolButtonStack.distribution = .fill
+        toolButtonStack.alignment = .fill
+        
+        inputContainerBackView.addSubview(toolButtonStack)
+        
+        toolButtonStack.snp.makeConstraints { make in
+            
+            make.top.equalToSuperview().inset(40)
+            make.trailing.equalToSuperview().inset(20)
+        }
+        
+        
         // MARK: colorSelectionView
         let colorSelectionStackView: UIStackView = .init(
             arrangedSubviews: [colorSelectionView, UIView()]
@@ -135,7 +158,7 @@ class EditMainMandaratViewController: UIViewController, View, UIColorPickerViewC
             descriptionInputView,
         ])
         inputStackView.axis = .vertical
-        inputStackView.spacing = 15
+        inputStackView.spacing = 12
         inputStackView.alignment = .fill
         inputStackView.distribution = .fill
         
@@ -146,7 +169,7 @@ class EditMainMandaratViewController: UIViewController, View, UIColorPickerViewC
         }
         
         inputStackView.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(40)
+            make.top.equalTo(toolButtonStack.snp.bottom).inset(-10)
             make.leading.equalToSuperview().inset(20)
             make.trailing.equalToSuperview().inset(20)
             make.bottom.equalToSuperview().inset(20)
@@ -156,6 +179,23 @@ class EditMainMandaratViewController: UIViewController, View, UIColorPickerViewC
     func bind(reactor: EditMainMandaratViewModel) {
         
         self.reactor = reactor
+        
+        
+        // MARK: Bind, tool buttons
+        exitButton.rx.tap
+            .map { _ in
+                Reactor.Action.exitButtonClicked
+            }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        saveButton.rx.tap
+            .map { _ in
+                Reactor.Action.saveButtonClicked
+            }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
 
         // MARK: Bind, titleInputView
         reactor.state
@@ -228,8 +268,6 @@ class EditMainMandaratViewController: UIViewController, View, UIColorPickerViewC
             }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
-        
-        // MARK: Bind background tapped
         
     }
 }

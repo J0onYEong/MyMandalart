@@ -30,9 +30,38 @@ class EditMainMandaratViewModel: NSObject, Reactor, UIColorPickerViewControllerD
         action.onNext(.editRequestFromOutside(mainMandarat: mainMandaratVO))
     }
     
+    func mutate(action: Action) -> Observable<Action> {
+        switch action {
+        case .exitButtonClicked:
+            
+            let alertModel: AlertModel = .init(
+                title: "메인 만다라트 작성 종료",
+                description: "작성중이던 내용은 삭제됩니다.",
+                alertActions: [
+                    .init(title: "머무르기", style: .default),
+                    .init(title: "나가기", style: .destructive, handler: { [weak self] _ in
+                        // 화면 이탈
+                        self?.action.onNext(.exitPage)
+                    }),
+                ]
+            )
+            return .just(.alert(alertModel))
+            
+        default:
+            return .just(action)
+        }
+    }
+    
     func reduce(state: State, mutation: Action) -> State {
         
         switch mutation {
+        case .exitButtonClicked:
+            
+            var newState = state
+            
+            
+            return newState
+            
         case .editTitleText(let text):
             
             var newState = state
@@ -88,8 +117,12 @@ extension EditMainMandaratViewModel {
         
         // - touch
         case colorSelectionButtonClicked
+        case exitButtonClicked
+        case saveButtonClicked
         
         // Side effect
+        case alert(AlertModel)
+        case exitPage
     }
     
     struct State {
@@ -98,6 +131,7 @@ extension EditMainMandaratViewModel {
         var descriptionText: String
         var mandaratTitleColor: UIColor
         var presentColorPicker: Bool = false
+        var exitPageTrigger: Bool = false
     }
 }
 

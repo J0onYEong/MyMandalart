@@ -51,10 +51,16 @@ public class ImageButton: TappableView {
         addSubview(imageView)
         
         imageView.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(10)
-            make.bottom.equalToSuperview().inset(10)
-            make.leading.equalToSuperview().inset(10)
-            make.trailing.equalToSuperview().inset(10)
+            make.top.greaterThanOrEqualToSuperview().inset(10)
+            make.bottom.greaterThanOrEqualToSuperview().inset(10)
+            make.leading.greaterThanOrEqualToSuperview().inset(10)
+            make.trailing.greaterThanOrEqualToSuperview().inset(10)
+            
+            make.center.equalToSuperview()
+        }
+        
+        self.snp.makeConstraints { make in
+            make.width.equalTo(self.snp.height)
         }
     }
     

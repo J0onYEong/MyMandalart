@@ -109,9 +109,6 @@ extension HomeViewModel {
     
         var mainMandaratVO: [MandaratPosition: MainMandaratVO] = [:]
         var presentEditMainMandaratView: Bool = false
-        
-        // Color picker
-        var colorPickerPresentModel: ColorPickerPresentModel?
     }
 }
 
