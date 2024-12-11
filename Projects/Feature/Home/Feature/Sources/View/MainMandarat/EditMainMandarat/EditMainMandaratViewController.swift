@@ -404,9 +404,9 @@ private extension EditMainMandaratViewController {
 
 
 // MARK: Transition
-extension EditMainMandaratViewController {
+private extension EditMainMandaratViewController {
     
-    private func onAppearTask(duration: CFTimeInterval, context: UIViewControllerContextTransitioning) {
+    func onAppearTask(duration: CFTimeInterval, context: UIViewControllerContextTransitioning) {
         
         let containerView = context.containerView
         containerView.addSubview(view)
@@ -429,7 +429,7 @@ extension EditMainMandaratViewController {
         }
     }
     
-    private func onDissmissTask(duration: CFTimeInterval, context: UIViewControllerContextTransitioning) {
+    func onDissmissTask(duration: CFTimeInterval, context: UIViewControllerContextTransitioning) {
         
         UIView.animate(withDuration: duration) {
             
