@@ -39,7 +39,7 @@ class AddMandaratView: TappableView {
     
     private func setLayer() {
         
-        layer.cornerRadius = 15
+        layer.cornerRadius = MainMandaratUIConfig.cornerRadius
         layer.backgroundColor = UIColor.gray.cgColor
     }
     

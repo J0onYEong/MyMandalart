@@ -15,7 +15,7 @@ final class MainMandaratView: UIView, View {
     
     // Sub view
     private let addMandaratView: AddMandaratView = .init()
-    private let titleLabel: UILabel = .init()
+    private let mainMandaratDisplayView: MainMandaratDisplayView = .init()
     
     var disposeBag: DisposeBag = .init()
     
@@ -50,12 +50,17 @@ final class MainMandaratView: UIView, View {
             .disposed(by: disposeBag)
         
         
-        // Render mainMandaratRO
+        // Render mainMandaratDisplayView
+        reactor.state
+            .map(\.isAvailable)
+            .map({ !$0 })
+            .bind(to: mainMandaratDisplayView.rx.isHidden)
+            .disposed(by: disposeBag)
+        
         reactor.state
             .compactMap(\.mandarat)
             .distinctUntilChanged()
-            .map(\.title)
-            .bind(to: titleLabel.rx.text)
+            .bind(to: mainMandaratDisplayView.rx.renderObject)
             .disposed(by: disposeBag)
     }
     
@@ -74,11 +79,12 @@ final class MainMandaratView: UIView, View {
             make.edges.equalToSuperview()
         }
         
-        addSubview(titleLabel)
+        // MARK: mainMandaratDisplayView
+        addSubview(mainMandaratDisplayView)
         
-        titleLabel.snp.makeConstraints { make in
+        mainMandaratDisplayView.snp.makeConstraints { make in
             
-            make.center.equalToSuperview()
+            make.edges.equalToSuperview()
         }
     }
 }
