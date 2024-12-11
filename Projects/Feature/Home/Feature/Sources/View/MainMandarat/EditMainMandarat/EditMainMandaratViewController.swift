@@ -34,9 +34,15 @@ class EditMainMandaratViewController: UIViewController, View, UIColorPickerViewC
     private let colorPickerClosed: PublishSubject<Void> = .init()
     var disposeBag: DisposeBag = .init()
     
+    // Transition
+    private let transitionDelegate = TransitionDelegate()
+    
     init() {
         
         super.init(nibName: nil, bundle: nil)
+        
+        self.transitioningDelegate = transitionDelegate
+        
     }
     required init?(coder: NSCoder) { nil }
     
@@ -53,10 +59,11 @@ class EditMainMandaratViewController: UIViewController, View, UIColorPickerViewC
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        view.layoutIfNeeded()
-        onAppearTask()
+        self.view.layoutIfNeeded()
+        
+        // MARK: Keyboard
+        titleInputView.becomeFirstResponder()
     }
-    
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -66,21 +73,6 @@ class EditMainMandaratViewController: UIViewController, View, UIColorPickerViewC
             
             setInputContainerView()
         }
-    }
-    
-    
-    private func onAppearTask() {
-        
-        // MARK: Animation
-        backgroundView.alpha = 0
-        
-        UIView.animate(withDuration: 0.35) {
-            
-            self.backgroundView.alpha = 1
-        }
-        
-        // MARK: Keyboard
-        titleInputView.becomeFirstResponder()
     }
     
     private func setBackgroundView() {
@@ -409,3 +401,90 @@ private extension EditMainMandaratViewController {
             .disposed(by: disposeBag)
     }
 }
+
+
+// MARK: Transition
+extension EditMainMandaratViewController {
+    
+    private func onAppearTask(duration: CFTimeInterval, context: UIViewControllerContextTransitioning) {
+        
+        let containerView = context.containerView
+        containerView.addSubview(view)
+        
+        // MARK: Animation
+        view.layoutIfNeeded()
+        let height = self.inputContainerBackView.layer.bounds.height
+        inputContainerBackView.transform = .init(translationX: 0, y: height)
+        backgroundView.alpha = 0
+        
+        UIView.animate(withDuration: duration) {
+            
+            self.backgroundView.alpha = 1
+            
+            self.inputContainerBackView.transform = .identity
+            
+        } completion: { completed in
+            
+            context.completeTransition(completed)
+        }
+    }
+    
+    private func onDissmissTask(duration: CFTimeInterval, context: UIViewControllerContextTransitioning) {
+        
+        UIView.animate(withDuration: duration) {
+            
+            self.backgroundView.alpha = 0
+            
+            let height = self.inputContainerBackView.layer.bounds.height
+            self.inputContainerBackView.transform = .init(translationX: 0, y: height)
+            
+        } completion: { [weak self] completed in
+            
+            self?.view.removeFromSuperview()
+            context.completeTransition(completed)
+        }
+    }
+    
+    class TransitionDelegate: NSObject, UIViewControllerTransitioningDelegate {
+        
+        func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> (any UIViewControllerAnimatedTransitioning)? {
+            PresentAnimation()
+        }
+        
+        func animationController(forDismissed dismissed: UIViewController) -> (any UIViewControllerAnimatedTransitioning)? {
+            DismissAnimation()
+        }
+    }
+    
+    class PresentAnimation: NSObject, UIViewControllerAnimatedTransitioning {
+        func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
+            return 0.25
+        }
+
+        func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+            guard let viewController = transitionContext.viewController(forKey: .to) as? EditMainMandaratViewController else { return }
+            
+            viewController.onAppearTask(
+                duration: transitionDuration(using: transitionContext),
+                context: transitionContext
+            )
+        }
+    }
+
+    class DismissAnimation: NSObject, UIViewControllerAnimatedTransitioning {
+        func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
+            return 0.25
+        }
+
+        func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+            guard let viewController = transitionContext.viewController(forKey: .from) as? EditMainMandaratViewController else { return }
+            
+            viewController.onDissmissTask(
+                duration: transitionDuration(using: transitionContext),
+                context: transitionContext
+            )
+        }
+    }
+}
+
+

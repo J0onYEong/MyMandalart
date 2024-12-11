@@ -114,8 +114,7 @@ private extension HomeViewModel {
         let viewController = EditMainMandaratViewController()
         viewController.bind(reactor: viewModel)
         
-        viewController.modalPresentationStyle = .overFullScreen
-        router.present(viewController, animated: false, modalPresentationSytle: .overFullScreen)
+        router.present(viewController, animated: true, modalPresentationSytle: .custom)
     }
 }
 
