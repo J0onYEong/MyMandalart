@@ -9,7 +9,7 @@ import Foundation
 
 public struct MainMandaratVO: Identifiable {
     
-    public let id: String = UUID().uuidString
+    public let id: String
     
     public let title: String
     public let position: MandaratPosition
@@ -18,8 +18,9 @@ public struct MainMandaratVO: Identifiable {
     public let description: String?
     public let imageURL: String?
     
-    public init(title: String, position: MandaratPosition, hexColor: String?, description: String?, imageURL: String?) {
+    public init(id: String = UUID().uuidString, title: String, position: MandaratPosition, hexColor: String?, description: String?, imageURL: String?) {
         
+        self.id = id
         self.title = title
         self.position = position
         self.hexColor = hexColor

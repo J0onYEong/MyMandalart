@@ -60,6 +60,64 @@ public class DefaultMandaratRepository: MandaratRepository {
     // MARK: Saving
     public func requestSaveMainMandarat(mainMandarat: MainMandaratVO) -> Single<Void> {
         
+        let position = mainMandarat.position
+        let predicate: NSPredicate = .init(
+            format: "position.xpos == %d AND position.ypos == %d",
+            position.matrixCoordinate.0,
+            position.matrixCoordinate.1
+        )
+        
+        let fetchedMandarat: Observable<[MainMandaratEntity]> = coreDataService
+            .fetch(predicate: predicate)
+            .asObservable()
+            .share()
+        
+        
+        return fetchedMandarat
+            .withUnretained(self)
+            .flatMap { repository, entities in
+                
+                if entities.isEmpty {
+                    
+                    // 새로운 엔티티 만들기
+                    debugPrint("DefaultMandaratRepository: 새로운 메인 만다라트 엔티티 생성")
+                    
+                    return repository.saveMandarat(mainMandarat: mainMandarat)
+                    
+                } else {
+                    
+                    // 기존 엔티티 업데이트
+                    debugPrint("DefaultMandaratRepository: 기존 만다라트 엔티티 업데이트")
+                    
+                    return repository.coreDataService.save { context, completion in
+                        
+                        let firstEntity = entities.first!
+                        
+                        let mandaratPos = mainMandarat.position.matrixCoordinate
+                        firstEntity.position?.xpos = mandaratPos.0
+                        firstEntity.position?.ypos = mandaratPos.1
+                        
+                        firstEntity.id = mainMandarat.id
+                        firstEntity.title = mainMandarat.title
+                        firstEntity.hexColor = mainMandarat.hexColor
+                        firstEntity.story = mainMandarat.description
+                        firstEntity.imageURL = mainMandarat.imageURL
+                        
+                        do {
+                            try context.save()
+                            completion(.success(()))
+                        } catch {
+                            completion(.failure(error))
+                        }
+                    }
+                }
+                
+            }
+            .asSingle()
+    }
+    
+    private func saveMandarat(mainMandarat: MainMandaratVO) -> Single<Void> {
+        
         coreDataService.save { [mainMandarat] context, completion in
             
             let mainMandaratEntity = MainMandaratEntity(context: context)
@@ -83,6 +141,5 @@ public class DefaultMandaratRepository: MandaratRepository {
                 completion(.failure(error))
             }
         }
-        
     }
 }

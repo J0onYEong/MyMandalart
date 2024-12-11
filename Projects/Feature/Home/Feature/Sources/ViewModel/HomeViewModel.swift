@@ -75,6 +75,18 @@ class HomeViewModel: Reactor, MainMandaratViewModelDelegate, EditMainMandaratVie
             
             return state
             
+        case .mandaratUpdated(let mandaratVO):
+            
+            var newState = state
+            let position = mandaratVO.position
+            newState.mainMandaratVO[position] = mandaratVO
+            
+            // to mainMandaratViewModel
+            let mainMandaratViewModel = mainMandaratViewReactors[position]
+            mainMandaratViewModel?.requestRender(.create(from: mandaratVO))
+            
+            return newState
+            
         default:
             return state
         }
@@ -89,6 +101,7 @@ extension HomeViewModel {
         
         // Event
         case addMainMandaratButtonClicked(MandaratPosition)
+        case mandaratUpdated(MainMandaratVO)
         case viewDidLoad
         
         // Side effect
@@ -98,6 +111,7 @@ extension HomeViewModel {
     struct State {
     
         var mainMandaratVO: [MandaratPosition: MainMandaratVO] = [:]
+        
         var presentEditMainMandaratView: Bool = false
     }
 }
@@ -154,6 +168,8 @@ extension HomeViewModel {
     
     func editFinishedWithSavingRequest(mainMandarat edited: MainMandaratVO) {
         
+        action.onNext(.mandaratUpdated(edited))
         
+        mandaratUseCase.saveMainMandarat(mainMandarat: edited)
     }
 }

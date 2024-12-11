@@ -13,8 +13,9 @@ import ReactorKit
 
 final class MainMandaratView: UIView, View {
     
-    // View
+    // Sub view
     private let addMandaratView: AddMandaratView = .init()
+    private let titleLabel: UILabel = .init()
     
     var disposeBag: DisposeBag = .init()
     
@@ -25,6 +26,7 @@ final class MainMandaratView: UIView, View {
         super.init(frame: .zero)
         
         setLayer()
+        setLayout()
     }
     required init?(coder: NSCoder) { nil }
     
@@ -46,15 +48,37 @@ final class MainMandaratView: UIView, View {
             .map(\.isAvailable)
             .bind(to: addMandaratView.rx.isHidden)
             .disposed(by: disposeBag)
+        
+        
+        // Render mainMandaratRO
+        reactor.state
+            .compactMap(\.mandarat)
+            .distinctUntilChanged()
+            .map(\.title)
+            .bind(to: titleLabel.rx.text)
+            .disposed(by: disposeBag)
     }
     
     private func setLayer() {
         
+        
+    }
+    
+    private func setLayout() {
+        
+        // MARK: addMandaratView
         addSubview(addMandaratView)
         
         addMandaratView.snp.makeConstraints { make in
             
             make.edges.equalToSuperview()
+        }
+        
+        addSubview(titleLabel)
+        
+        titleLabel.snp.makeConstraints { make in
+            
+            make.center.equalToSuperview()
         }
     }
 }

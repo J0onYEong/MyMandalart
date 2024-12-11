@@ -26,6 +26,11 @@ class MainMandaratViewModel: Reactor {
         self.initialState = .init()
     }
     
+    public func requestRender(_ mandaratRO: MainMandaratRO) {
+        
+        action.onNext(.mandaratDataFromOutside(mandaratRO))
+    }
+    
     
     func reduce(state: State, mutation: Action) -> State {
         
@@ -36,10 +41,10 @@ class MainMandaratViewModel: Reactor {
             
             return state
             
-        case .mandaratDataFromOutside(let mainMandaratVO):
+        case .mandaratDataFromOutside(let mainMandaratRO):
             
             var newState = state
-            newState.mandarat = mainMandaratVO
+            newState.mandarat = mainMandaratRO
             
             return newState
         default:
@@ -54,7 +59,7 @@ extension MainMandaratViewModel {
         
         // Event
         case addMandaratButtonClicked
-        case mandaratDataFromOutside(MainMandaratVO)
+        case mandaratDataFromOutside(MainMandaratRO)
         
         // Side effect
         
@@ -62,7 +67,7 @@ extension MainMandaratViewModel {
     
     struct State {
         
-        var mandarat: MainMandaratVO?
+        var mandarat: MainMandaratRO?
         
         public var isAvailable: Bool { mandarat != nil }
         
