@@ -89,7 +89,7 @@ class MainMandaratDisplayView: TappableView {
     
     private func createGredientLayer(_ baseColor: UIColor) {
         
-        let subColor: UIColor = baseColor.withAlphaComponent(0.3)
+        let subColor: UIColor = baseColor.withAlphaComponent(0.5)
         
         self.gradientLayer = .init(layer: self.layer)
         gradientLayer.frame = layer.bounds
@@ -109,7 +109,7 @@ class MainMandaratDisplayView: TappableView {
         let animation: CABasicAnimation = .init(keyPath: "locations")
         animation.fromValue = [0,1]
         animation.toValue = [0,0.5]
-        animation.duration = 2
+        animation.duration = 3
         animation.repeatCount = .greatestFiniteMagnitude
         animation.autoreverses = true
         
