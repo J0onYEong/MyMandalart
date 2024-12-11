@@ -15,7 +15,7 @@ let project = Project(
         .target(
             name: "SharedCore",
             destinations: .iOS,
-            product: .staticLibrary,
+            product: .framework,
             bundleId: "\(Project.Environment.bundlePrefix).shared.Core",
             sources: ["Sources/**"],
             dependencies: [

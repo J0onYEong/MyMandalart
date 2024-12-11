@@ -11,6 +11,7 @@ import SharedDependencyInjector
 import SharedAlertHelperInterface
 import SharedNavigationInterface
 import DomainMandaratInterface
+import SharedCore
 
 import ReactorKit
 import RxSwift
@@ -21,19 +22,24 @@ class EditMainMandaratViewModel: NSObject, Reactor, UIColorPickerViewControllerD
     
     let initialState: State
     
-    override init() {
+    weak var delegate: EditMainMandaratViewModelDelegate?
+    
+    private let initialMandarat: MainMandaratVO
+    
+    init(_ mainMandaratVO: MainMandaratVO) {
+        
+        self.initialMandarat = mainMandaratVO
+        
+        let colorString = mainMandaratVO.hexColor
         
         // Set initial state
         self.initialState = .init(
-            titleText: "",
-            descriptionText: "",
-            mandaratTitleColor: .white
+            titleText: mainMandaratVO.title,
+            descriptionText: mainMandaratVO.description ?? "",
+            mandaratTitleColor: colorString == nil ? .white : (.color(colorString!) ?? .white)
         )
     }
     
-    public func editWithPreviousData(_ mainMandaratVO: MainMandaratVO?) {
-        action.onNext(.editRequestFromOutside(mainMandarat: mainMandaratVO))
-    }
     
     func mutate(action: Action) -> Observable<Action> {
         switch action {
@@ -85,6 +91,18 @@ class EditMainMandaratViewModel: NSObject, Reactor, UIColorPickerViewControllerD
             
             return newState
             
+        case .saveButtonClicked:
+            
+            let mandaratVO: MainMandaratVO = createMandaratVO(state: state)
+            
+            delegate?.editFinishedWithSavingRequest(
+                mainMandarat: mandaratVO
+            )
+            
+            router.dismissModule(animated: true)
+            
+            return state
+            
         default:
             return state
         }
@@ -120,10 +138,18 @@ extension EditMainMandaratViewModel {
     }
 }
 
-extension EditMainMandaratViewModel {
+private extension EditMainMandaratViewModel {
     
-    func colorPickerViewController(_ viewController: UIColorPickerViewController, didSelect color: UIColor, continuously: Bool) {
+    func createMandaratVO(state: State) -> MainMandaratVO {
         
-        action.onNext(.editColor(color: color))
+        let newMandarat: MainMandaratVO = .init(
+            title: state.titleText,
+            position: initialMandarat.position,
+            hexColor: state.mandaratTitleColor.toHexString(),
+            description: state.descriptionText,
+            imageURL: nil
+        )
+        
+        return newMandarat
     }
 }

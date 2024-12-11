@@ -13,7 +13,7 @@ import DomainMandaratInterface
 
 import ReactorKit
 
-class HomeViewModel: Reactor, MainMandaratViewModelDelegate {
+class HomeViewModel: Reactor, MainMandaratViewModelDelegate, EditMainMandaratViewModelDelegate {
     
     @Inject private var router: Router
     
@@ -70,7 +70,7 @@ class HomeViewModel: Reactor, MainMandaratViewModelDelegate {
             
         case .addMainMandaratButtonClicked(let position):
             
-            let mainMandaratVO = state.mainMandaratVO[position]
+            let mainMandaratVO = state.mainMandaratVO[position] ?? .createEmpty(with: position)
             presentEditMainMandaratViewController(mainMandaratVO)
             
             return state
@@ -106,10 +106,10 @@ extension HomeViewModel {
 // MARK: Navigations
 private extension HomeViewModel {
     
-    func presentEditMainMandaratViewController(_ mainMandaratVO: MainMandaratVO?) {
+    func presentEditMainMandaratViewController(_ mainMandaratVO: MainMandaratVO) {
         
-        let viewModel: EditMainMandaratViewModel = .init()
-        viewModel.editWithPreviousData(mainMandaratVO)
+        let viewModel: EditMainMandaratViewModel = .init(mainMandaratVO)
+        viewModel.delegate = self
         
         let viewController = EditMainMandaratViewController()
         viewController.bind(reactor: viewModel)
@@ -145,5 +145,15 @@ private extension HomeViewModel {
         }
         
         self.mainMandaratViewReactors = mainMandaratReactors
+    }
+}
+
+
+// MARK: EditMainMandaratViewModelDelegate
+extension HomeViewModel {
+    
+    func editFinishedWithSavingRequest(mainMandarat edited: MainMandaratVO) {
+        
+        
     }
 }
