@@ -17,6 +17,7 @@ import SnapKit
 class EditMainMandaratViewController: UIViewController, View, UIColorPickerViewControllerDelegate {
     
     // Sub View
+    private let backgroundView: TappableView = .init()
     private let titleInputView: FocusTextField = .init()
     private let descriptionInputView: FocusTextView = .init()
     private let inputContainerBackView: UIView = .init()
@@ -71,11 +72,11 @@ class EditMainMandaratViewController: UIViewController, View, UIColorPickerViewC
     private func onAppearTask() {
         
         // MARK: Animation
-        view.alpha = 0.0
+        backgroundView.alpha = 0
         
         UIView.animate(withDuration: 0.35) {
             
-            self.view.alpha = 1
+            self.backgroundView.alpha = 1
         }
         
         // MARK: Keyboard
@@ -84,9 +85,11 @@ class EditMainMandaratViewController: UIViewController, View, UIColorPickerViewC
     
     private func setBackgroundView() {
         
-        view.backgroundColor = UIColor.gray.withAlphaComponent(0.7)
+        view.backgroundColor = .clear
+        
+        backgroundView.backgroundColor = UIColor.gray.withAlphaComponent(0.7)
         let tapGesture: UITapGestureRecognizer = .init()
-        view.addGestureRecognizer(tapGesture)
+        backgroundView.addGestureRecognizer(tapGesture)
         tapGesture.addTarget(self, action: #selector(onBackgroundViewTapped))
     }
     @objc private func onBackgroundViewTapped() {
@@ -113,6 +116,14 @@ class EditMainMandaratViewController: UIViewController, View, UIColorPickerViewC
     }
     
     private func setLayout() {
+        
+        // MARK: backgroundView
+        view.addSubview(backgroundView)
+        
+        backgroundView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        
         
         // MARK: inputContainerBackView
         view.addSubview(inputContainerBackView)
@@ -206,6 +217,7 @@ class EditMainMandaratViewController: UIViewController, View, UIColorPickerViewC
         
         titleInputView.rx.text
             .compactMap({ $0 })
+            .distinctUntilChanged()
             .map { text in
                 return Reactor.Action.editTitleText(text: text)
             }
@@ -222,6 +234,7 @@ class EditMainMandaratViewController: UIViewController, View, UIColorPickerViewC
         
         descriptionInputView.text
             .compactMap({ $0 })
+            .distinctUntilChanged()
             .map { text in
                 return Reactor.Action.editDescriptionText(text: text)
             }

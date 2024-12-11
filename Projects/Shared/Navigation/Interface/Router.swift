@@ -15,9 +15,6 @@ private protocol RouteProtocol {
     func present(_ module: UIViewController, animated: Bool, modalPresentationSytle: UIModalPresentationStyle)
     
     
-    func presentToNavigation(_ module: UIViewController, animated: Bool, modalPresentationSytle: UIModalPresentationStyle)
-    
-    
     func dismissModule(animated: Bool, completion: (() -> Void)?)
     
     
@@ -46,15 +43,7 @@ public final class Router: NSObject, RouteProtocol {
     public func present(_ module: UIViewController, animated: Bool, modalPresentationSytle: UIModalPresentationStyle) {
         
         module.modalPresentationStyle = modalPresentationSytle
-        topViewController?.present(
-            module,
-            animated: animated
-        )
-    }
-    
-    public func presentToNavigation(_ module: UIViewController, animated: Bool, modalPresentationSytle: UIModalPresentationStyle) {
         
-        module.modalPresentationStyle = modalPresentationSytle
         rootController?.present(
             module,
             animated: animated
@@ -87,7 +76,7 @@ public final class Router: NSObject, RouteProtocol {
     }
     
     public func popModule(animated: Bool) {
-        
+        rootController?.popViewController(animated: animated)
     }
     
     public func changeRootModuleTo(module: UIViewController, animated: Bool) {

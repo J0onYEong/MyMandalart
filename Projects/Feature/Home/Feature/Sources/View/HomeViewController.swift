@@ -53,21 +53,6 @@ class HomeViewController: UIViewController, View {
             
             mainMandaratViews[position]?.bind(reactor: mainMandaratReactor)
         }
-        
-        
-        // Bind HomeViewModel
-        reactor.state
-            .map(\.presentEditMainMandaratView)
-            .withUnretained(self)
-            .subscribe(onNext: { [weak reactor] vc, isPresent in
-                
-                guard let reactor else { return }
-                
-                vc.presentEditMainMandaratViewController(
-                    viewModel: reactor.editMainMandaratReactor
-                )
-            })
-            .disposed(by: disposeBag)
     }
     
     private func setLayout() {
@@ -147,17 +132,5 @@ private extension HomeViewController {
             
             self.mainMandaratViews[position]!
         }
-    }
-}
-
-private extension HomeViewController {
-    
-    func presentEditMainMandaratViewController(viewModel: EditMainMandaratViewModel) {
-        
-        let viewController = EditMainMandaratViewController()
-        viewController.bind(reactor: viewModel)
-        
-        viewController.modalPresentationStyle = .overFullScreen
-        self.present(viewController, animated: false)
     }
 }

@@ -7,12 +7,17 @@
 
 import UIKit
 
+import SharedDependencyInjector
+import SharedAlertHelperInterface
+import SharedNavigationInterface
 import DomainMandaratInterface
 
 import ReactorKit
 import RxSwift
 
 class EditMainMandaratViewModel: NSObject, Reactor, UIColorPickerViewControllerDelegate {
+    
+    @Inject private var router: Router
     
     let initialState: State
     
@@ -34,18 +39,9 @@ class EditMainMandaratViewModel: NSObject, Reactor, UIColorPickerViewControllerD
         switch action {
         case .exitButtonClicked:
             
-            let alertModel: AlertModel = .init(
-                title: "메인 만다라트 작성 종료",
-                description: "작성중이던 내용은 삭제됩니다.",
-                alertActions: [
-                    .init(title: "머무르기", style: .default),
-                    .init(title: "나가기", style: .destructive, handler: { [weak self] _ in
-                        // 화면 이탈
-                        self?.action.onNext(.exitPage)
-                    }),
-                ]
-            )
-            return .just(.alert(alertModel))
+            router.dismissModule(animated: true)
+            
+            return .empty()
             
         default:
             return .just(action)
@@ -55,13 +51,6 @@ class EditMainMandaratViewModel: NSObject, Reactor, UIColorPickerViewControllerD
     func reduce(state: State, mutation: Action) -> State {
         
         switch mutation {
-        case .exitButtonClicked:
-            
-            var newState = state
-            
-            
-            return newState
-            
         case .editTitleText(let text):
             
             var newState = state
@@ -119,10 +108,6 @@ extension EditMainMandaratViewModel {
         case colorSelectionButtonClicked
         case exitButtonClicked
         case saveButtonClicked
-        
-        // Side effect
-        case alert(AlertModel)
-        case exitPage
     }
     
     struct State {

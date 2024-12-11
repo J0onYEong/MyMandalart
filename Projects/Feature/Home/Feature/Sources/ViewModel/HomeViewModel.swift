@@ -7,11 +7,15 @@
 
 import UIKit
 
+import SharedDependencyInjector
+import SharedNavigationInterface
 import DomainMandaratInterface
 
 import ReactorKit
 
 class HomeViewModel: Reactor, MainMandaratViewModelDelegate {
+    
+    @Inject private var router: Router
     
     // 의존성 주입
     private let mandaratUseCase: MandaratUseCase
@@ -20,7 +24,6 @@ class HomeViewModel: Reactor, MainMandaratViewModelDelegate {
     
     // Sub reactors
     private(set) var mainMandaratViewReactors: [MandaratPosition: MainMandaratViewModel] = [:]
-    let editMainMandaratReactor: EditMainMandaratViewModel = .init()
     
     init(mandaratUseCase: MandaratUseCase) {
         
@@ -46,18 +49,6 @@ class HomeViewModel: Reactor, MainMandaratViewModelDelegate {
                     
                     Action.fetchedMainMandarat(mainMandarats)
                 }
-            
-        case .addMainMandaratButtonClicked(let position):
-            
-            return state
-                .map(\.mainMandaratVO)
-                .map { mandaratVODict in
-                    mandaratVODict[position]
-                }
-                .map { mandaratVO in
-                    Action.openEditMainMandaratView(mandaratVO)
-                }
-            
         default:
             return .just(action)
         }
@@ -77,13 +68,12 @@ class HomeViewModel: Reactor, MainMandaratViewModelDelegate {
             }
             return newState
             
-        case .openEditMainMandaratView(let mainMandaratVO):
+        case .addMainMandaratButtonClicked(let position):
             
-            var newState = state
-            newState.presentEditMainMandaratView = true
-            editMainMandaratReactor.editWithPreviousData(mainMandaratVO)
+            let mainMandaratVO = state.mainMandaratVO[position]
+            presentEditMainMandaratViewController(mainMandaratVO)
             
-            return newState
+            return state
             
         default:
             return state
@@ -91,6 +81,7 @@ class HomeViewModel: Reactor, MainMandaratViewModelDelegate {
         
     }
 }
+
 
 extension HomeViewModel {
     
@@ -101,7 +92,6 @@ extension HomeViewModel {
         case viewDidLoad
         
         // Side effect
-        case openEditMainMandaratView(MainMandaratVO?)
         case fetchedMainMandarat([MainMandaratVO])
     }
     
@@ -112,6 +102,24 @@ extension HomeViewModel {
     }
 }
 
+
+// MARK: Navigations
+private extension HomeViewModel {
+    
+    func presentEditMainMandaratViewController(_ mainMandaratVO: MainMandaratVO?) {
+        
+        let viewModel: EditMainMandaratViewModel = .init()
+        viewModel.editWithPreviousData(mainMandaratVO)
+        
+        let viewController = EditMainMandaratViewController()
+        viewController.bind(reactor: viewModel)
+        
+        viewController.modalPresentationStyle = .overFullScreen
+        router.present(viewController, animated: false, modalPresentationSytle: .overFullScreen)
+    }
+}
+
+
 // MARK: MainMandaratViewModelDelegate
 extension HomeViewModel {
     
@@ -120,6 +128,7 @@ extension HomeViewModel {
         self.action.onNext(.addMainMandaratButtonClicked(position))
     }
 }
+
 
 // MARK: Create main mandarat reactors
 private extension HomeViewModel {

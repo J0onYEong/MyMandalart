@@ -7,7 +7,33 @@
 
 import UIKit
 
-public protocol AlertHelper {
+import SharedNavigationInterface
+import SharedDependencyInjector
+
+private protocol AlertHelperProtocol {
     
-    func presentAlertToTopViewController(model: AlertModel)
+    func presentAlert(model: AlertModel)
+}
+
+public class AlertHelper: AlertHelperProtocol {
+    
+    private let router: Router
+    
+    public init(router: Router) {
+        self.router = router
+    }
+    
+    public func presentAlert(model: SharedAlertHelperInterface.AlertModel) {
+        
+        let alertController: UIAlertController = .init(
+            title: model.title,
+            message: model.description,
+            preferredStyle: .alert
+        )
+        
+        model.alertActions.forEach { action in
+            alertController.addAction(action)
+        }
+        router.present(alertController, animated: true, modalPresentationSytle: .automatic)
+    }
 }
