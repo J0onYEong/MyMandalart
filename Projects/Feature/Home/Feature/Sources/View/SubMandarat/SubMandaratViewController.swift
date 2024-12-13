@@ -33,8 +33,6 @@ class SubMandaratViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .white
-        
         setLayer()
         setLayout()
     }
@@ -128,13 +126,6 @@ private extension SubMandaratViewController {
 extension SubMandaratViewController {
     
     func onAppearAnimation(duration: CFTimeInterval, context: UIViewControllerContextTransitioning) {
-        
-        // #1. background view
-        UIView.animate(withDuration: duration) {
-            
-            self.view.backgroundColor = .white
-        }
-        
         
         // #2. addSubView
         context.containerView.addSubview(self.view)

@@ -97,3 +97,22 @@ final class MainMandaratView: UIView, View {
         }
     }
 }
+
+
+// MARK: Public interface
+extension MainMandaratView {
+    
+    func moveCenter(point: CGPoint) {
+        
+        let layersize = layer.bounds
+        let xInset = layersize.width/2
+        let yInset = layersize.height/2
+        let move = self.transform.translatedBy(x: point.x-xInset, y: point.y-yInset)
+        self.transform = move
+    }
+    
+    func moveToIdentity() {
+        
+        self.transform = .identity
+    }
+}

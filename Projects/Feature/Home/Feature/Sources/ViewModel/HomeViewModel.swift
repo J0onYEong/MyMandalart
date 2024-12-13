@@ -58,6 +58,7 @@ class HomeViewModel: Reactor, MainMandaratViewModelDelegate, EditMainMandaratVie
                 .disposed(by: disposeBag)
             
             return .never()
+            
         default:
             return .just(action)
         }
@@ -66,6 +67,24 @@ class HomeViewModel: Reactor, MainMandaratViewModelDelegate, EditMainMandaratVie
     func reduce(state: State, mutation: Action) -> State {
         
         switch mutation {
+        case .moveMandaratToCenter(let position):
+            
+            var newState = state
+            newState.positionToMoveCenter = position
+            
+            return newState
+            
+        case .moveMandaratToCenterFinished:
+            
+            // 해당 위치의 만다라트의 서브만다라트 뷰컨틀러 표출
+            let mainMandaratVO = mainMandaratVO[state.positionToMoveCenter!]!
+            presentSubMandaratViewController(mainMandaratVO)
+            
+            var newState = state
+            newState.positionToMoveCenter = nil
+            
+            return newState
+            
         default:
             return state
         }
@@ -78,14 +97,16 @@ extension HomeViewModel {
     enum Action {
         
         // Event
-        case mandaratUpdated(MainMandaratVO)
         case viewDidLoad
+        case moveMandaratToCenterFinished
+        case moveMandaratToCenter(MandaratPosition)
         
         // Side effect
     }
     
     struct State {
-    
+        
+        var positionToMoveCenter: MandaratPosition?
     }
 }
 
@@ -124,8 +145,8 @@ extension HomeViewModel {
     
     func mainMandarat(detailButtonClicked position: MandaratPosition) {
         
-        let mainMandaratVO = mainMandaratVO[position]!
-        presentSubMandaratViewController(mainMandaratVO)
+        // 화면전환 애니메이션
+        action.onNext(.moveMandaratToCenter(position))
     }
 }
 
@@ -154,8 +175,6 @@ private extension HomeViewModel {
 extension HomeViewModel {
     
     func editFinishedWithSavingRequest(edited mainMandarat: MainMandaratVO) {
-        
-        action.onNext(.mandaratUpdated(mainMandarat))
         
         mandaratUseCase.saveMainMandarat(mainMandarat: mainMandarat)
         

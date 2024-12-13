@@ -16,6 +16,7 @@ class HomeViewController: UIViewController, View {
     
     // Sub view
     private var mainMandaratViews: [MandaratPosition: MainMandaratView] = [:]
+    fileprivate var mainMandaratContainerView: UIStackView!
     
     // Color picker
     private let selectedColor: PublishSubject<UIColor> = .init()
@@ -43,6 +44,12 @@ class HomeViewController: UIViewController, View {
         reactor?.sendEvent(.viewDidLoad)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        resetAllMainMandaratPosition()
+    }
+    
     
     func bind(reactor: HomeViewModel) {
         
@@ -53,6 +60,24 @@ class HomeViewController: UIViewController, View {
             
             mainMandaratViews[position]?.bind(reactor: mainMandaratReactor)
         }
+        
+        
+        // Transition animation
+        reactor.state
+            .compactMap(\.positionToMoveCenter)
+            .distinctUntilChanged()
+            .withUnretained(self)
+            .subscribe(onNext: { vc, position in
+                
+                vc.focusingMainMandaratCell(selected: position) { completed in
+                    
+                    if completed {
+                        vc.reactor?.action.onNext(.moveMandaratToCenterFinished)
+                    }
+                    
+                }
+            })
+            .disposed(by: disposeBag)
     }
     
     private func setLayout() {
@@ -112,6 +137,8 @@ private extension HomeViewController {
             // y position
             make.centerY.equalToSuperview()
         }
+        
+        self.mainMandaratContainerView = mainMandaratContainerStackView
     }
 }
 
@@ -132,5 +159,50 @@ private extension HomeViewController {
             
             self.mainMandaratViews[position]!
         }
+    }
+}
+
+
+// MARK: Animation
+private extension HomeViewController {
+    
+    func resetAllMainMandaratPosition() {
+        
+        mainMandaratViews.values.forEach { mainMandaratView in
+            
+            mainMandaratView.moveToIdentity()
+            mainMandaratView.alpha = 1
+        }
+    }
+    
+    
+    func focusingMainMandaratCell(selected position: MandaratPosition, completion: @escaping (Bool) -> ()) {
+        
+        // 중앙 좌표구하기
+        let containerSize = mainMandaratContainerView.bounds
+        let middlePosition: CGPoint = .init(
+            x: containerSize.width/2,
+            y: containerSize.height/2
+        )
+        
+        let selectedMainMandaratView = mainMandaratViews[position]!
+        
+        let positionFittedToView = mainMandaratContainerView.convert(middlePosition, to: selectedMainMandaratView)
+        
+        UIView.animate(withDuration: 0.3, animations: {
+            
+            // 선택된 뷰를 중앙으로 이동
+            selectedMainMandaratView.moveCenter(point: positionFittedToView)
+            
+            // 다른 뷰들은 사라짐
+            self.mainMandaratViews
+                .filter({ (pos, _) in pos != position })
+                .values
+                .forEach { mainMandaratView in
+                    
+                    mainMandaratView.alpha = 0
+                }
+            
+        }, completion: completion)
     }
 }
