@@ -13,3 +13,9 @@ protocol MainMandaratViewModelDelegate: AnyObject {
     
     func mainMandarat(detailButtonClicked position: MandaratPosition)
 }
+
+extension MainMandaratViewModelDelegate {
+    
+    func mainMandarat(editButtonClicked position: MandaratPosition) { }
+    func mainMandarat(detailButtonClicked position: MandaratPosition) { }
+}

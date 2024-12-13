@@ -75,7 +75,8 @@ final class MainMandaratView: UIView, View {
     
     private func setLayer() {
         
-        
+        self.layer.cornerRadius = MainMandaratUIConfig.cornerRadius
+        self.backgroundColor = .white
     }
     
     private func setLayout() {

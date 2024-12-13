@@ -59,6 +59,14 @@ class HomeViewModel: Reactor, MainMandaratViewModelDelegate, EditMainMandaratVie
             
             return .never()
             
+        case .moveMandaratToCenterFinished(let position):
+            
+            // 해당 위치의 만다라트의 서브만다라트 뷰컨트롤러 표출
+            let mainMandaratVO = mainMandaratVO[position]!
+            presentSubMandaratViewController(mainMandaratVO)
+            
+            return .never()
+            
         default:
             return .just(action)
         }
@@ -74,14 +82,22 @@ class HomeViewModel: Reactor, MainMandaratViewModelDelegate, EditMainMandaratVie
             
             return newState
             
-        case .moveMandaratToCenterFinished:
-            
-            // 해당 위치의 만다라트의 서브만다라트 뷰컨틀러 표출
-            let mainMandaratVO = mainMandaratVO[state.positionToMoveCenter!]!
-            presentSubMandaratViewController(mainMandaratVO)
+        case .viewDidAppear:
             
             var newState = state
-            newState.positionToMoveCenter = nil
+            
+            if let selectedPosition = state.positionToMoveCenter {
+                
+                newState.viewAction = .replaceMainMandarats(selectedPosition: selectedPosition)
+                newState.positionToMoveCenter = nil
+            }
+            
+            return newState
+            
+        case .resetMainMandaratsFinished:
+            
+            var newState = state
+            newState.viewAction = nil
             
             return newState
             
@@ -94,11 +110,19 @@ class HomeViewModel: Reactor, MainMandaratViewModelDelegate, EditMainMandaratVie
 
 extension HomeViewModel {
     
+    enum ViewAction: Equatable {
+        
+        case replaceMainMandarats(selectedPosition: MandaratPosition)
+    }
+    
+    
     enum Action {
         
         // Event
         case viewDidLoad
-        case moveMandaratToCenterFinished
+        case viewDidAppear
+        case resetMainMandaratsFinished
+        case moveMandaratToCenterFinished(MandaratPosition)
         case moveMandaratToCenter(MandaratPosition)
         
         // Side effect
@@ -106,6 +130,7 @@ extension HomeViewModel {
     
     struct State {
         
+        var viewAction: ViewAction?
         var positionToMoveCenter: MandaratPosition?
     }
 }
@@ -126,10 +151,23 @@ private extension HomeViewModel {
         router.present(viewController, animated: true, modalPresentationSytle: .custom)
     }
     
+    
+    /// 서브 만다라트 화면 표출
     func presentSubMandaratViewController(_ mainMandaratVO: MainMandaratVO) {
         
+        let viewModel: SubMandaratPageModel = .init(
+            mainMandarat: mainMandaratVO,
+            subMandarats: []
+        )
+        
         let viewController = SubMandaratViewController()
-        router.present(viewController, animated: true, modalPresentationSytle: .custom)
+        viewController.bind(reactor: viewModel)
+        
+        router.push(
+            viewController,
+            animated: true,
+            delegate: viewModel.transitionDelegate
+        )
     }
 }
 

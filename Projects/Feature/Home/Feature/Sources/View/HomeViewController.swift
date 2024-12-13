@@ -44,10 +44,11 @@ class HomeViewController: UIViewController, View {
         reactor?.sendEvent(.viewDidLoad)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         
-        resetAllMainMandaratPosition()
+        reactor?.sendEvent(.viewDidAppear)
     }
     
     
@@ -65,17 +66,38 @@ class HomeViewController: UIViewController, View {
         // Transition animation
         reactor.state
             .compactMap(\.positionToMoveCenter)
-            .distinctUntilChanged()
             .withUnretained(self)
             .subscribe(onNext: { vc, position in
                 
                 vc.focusingMainMandaratCell(selected: position) { completed in
                     
                     if completed {
-                        vc.reactor?.action.onNext(.moveMandaratToCenterFinished)
+                        vc.reactor?.action.onNext(.moveMandaratToCenterFinished(position))
                     }
                     
                 }
+            })
+            .disposed(by: disposeBag)
+        
+        reactor.state
+            .map(\.viewAction)
+            .distinctUntilChanged()
+            .compactMap({ $0 })
+            .withUnretained(self)
+            .subscribe(onNext: { vc, viewAction in
+                
+                switch viewAction {
+                case .replaceMainMandarats(let position):
+                    
+                    vc.resetMainMandaratPositions(selected: position) { completed in
+                        
+                        if completed {
+                            
+                            vc.reactor?.sendEvent(.resetMainMandaratsFinished)
+                        }
+                    }
+                }
+                
             })
             .disposed(by: disposeBag)
     }
@@ -153,6 +175,7 @@ private extension HomeViewController {
         }
     }
     
+    
     func getMainMandaratViews(_ positions: [MandaratPosition]) -> [MainMandaratView] {
         
         return positions.map { position in
@@ -160,23 +183,43 @@ private extension HomeViewController {
             self.mainMandaratViews[position]!
         }
     }
+    
+    
+    func makeMainMandaratViewToTop(_ position: MandaratPosition) {
+        
+        let targetView = mainMandaratViews[position]!
+        targetView.superview?.layer.sublayers?.forEach({ $0.zPosition = 0 })
+        targetView.layer.zPosition = 1
+        
+        mainMandaratContainerView.layer.sublayers?.forEach({ $0.zPosition = 0 })
+        targetView.superview?.layer.zPosition = 1
+    }
 }
 
 
 // MARK: Animation
 private extension HomeViewController {
     
-    func resetAllMainMandaratPosition() {
+    func resetMainMandaratPositions(selected position: MandaratPosition, completion: @escaping (Bool) -> ()) {
         
-        mainMandaratViews.values.forEach { mainMandaratView in
+        UIView.animate(withDuration: 0.4, animations: {
             
-            mainMandaratView.moveToIdentity()
-            mainMandaratView.alpha = 1
-        }
+            self.mainMandaratViews.filter({ key, _ in key != position }).values.forEach { mainMandaratView in
+                
+                mainMandaratView.alpha = 1
+            }
+            
+            self.mainMandaratViews[position]!.moveToIdentity()
+            
+        }, completion: completion)
     }
     
     
     func focusingMainMandaratCell(selected position: MandaratPosition, completion: @escaping (Bool) -> ()) {
+        
+        // 선택된 셀을 최상단으로 이동
+        makeMainMandaratViewToTop(position)
+        
         
         // 중앙 좌표구하기
         let containerSize = mainMandaratContainerView.bounds

@@ -13,7 +13,7 @@ import ReactorKit
 import RxSwift
 import RxCocoa
 
-class SubMandaratViewController: UIViewController {
+class SubMandaratViewController: UIViewController, View {
     
     // Sub view
     fileprivate var subMandaratViews: [MandaratPosition: SubMandaratView] = [:]
@@ -25,15 +25,14 @@ class SubMandaratViewController: UIViewController {
     fileprivate let mainMandaratView: MainMandaratView = .init()
     
     
-    // Animation
-    private let transitionDelegate: TransitionDelegate = .init()
+    // Reactor
+    var reactor: SubMandaratPageModel?
+    var disposeBag: DisposeBag = .init()
     
     init() {
         super.init(nibName: nil, bundle: nil)
         
         createSubMandaratViews()
-        
-        self.transitioningDelegate = transitionDelegate
     }
     required init?(coder: NSCoder) { nil }
     
@@ -42,6 +41,9 @@ class SubMandaratViewController: UIViewController {
         
         setUI()
         setLayout()
+        
+        view.layoutIfNeeded()
+        reactor?.action.onNext(.viewDidLoad)
     }
     
     private func setUI() {
@@ -57,6 +59,17 @@ class SubMandaratViewController: UIViewController {
         setSubMandaratViewLayout()
         
         setMainMandaratViewLayout()
+    }
+    
+    
+    func bind(reactor: SubMandaratPageModel) {
+        
+        self.reactor = reactor
+        
+        // Bind, mainMandaratView
+        mainMandaratView.bind(reactor: reactor.mainMandaratViewModel)
+        
+        // Bind, subMandaratViews
     }
 }
 
@@ -160,7 +173,7 @@ extension SubMandaratViewController {
             
             subMandaratView.alpha = 0
             
-            // 목표좌표를 각뷰의 좌표로 변환
+            // 랜덤이동
             subMandaratView.moveOneInch(direction: .random)
         }
         
@@ -175,6 +188,7 @@ extension SubMandaratViewController {
                 subMandaratView.moveToIdentity()
                 subMandaratView.alpha = 1
             }
+            
         } completion: { completed in
             
             self.view.backgroundColor = .white
@@ -183,16 +197,34 @@ extension SubMandaratViewController {
         }
     }
     
-    class TransitionDelegate: NSObject, UIViewControllerTransitioningDelegate {
+    
+    func onDisappearAnimation(duration: CFTimeInterval, context: UIViewControllerContextTransitioning) {
         
-        func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> (any UIViewControllerAnimatedTransitioning)? {
-            PresentAnimation()
+        let containerView = context.containerView
+        
+        if let toView = context.view(forKey: .to) {
+            
+            containerView.insertSubview(toView, belowSubview: view)
         }
         
-        func animationController(forDismissed dismissed: UIViewController) -> (any UIViewControllerAnimatedTransitioning)? {
-            DismissAnimation()
+        UIView.animate(withDuration: duration) {
+            
+            self.subMandaratViewsExceptForCenter.forEach { (key, subMandaratView) in
+                
+                subMandaratView.alpha = 0
+                
+                // 랜덤이동
+                subMandaratView.moveOneInch(direction: .random)
+            }
+            
+            self.view.backgroundColor = .clear
+            
+        } completion: { completed in
+               
+            context.completeTransition(completed)
         }
     }
+
     
     class PresentAnimation: NSObject, UIViewControllerAnimatedTransitioning {
         func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
@@ -211,15 +243,16 @@ extension SubMandaratViewController {
     
     class DismissAnimation: NSObject, UIViewControllerAnimatedTransitioning {
         func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-            return 0.25
+            return 0.2
         }
         
         func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
             guard let viewController = transitionContext.viewController(forKey: .from) as? SubMandaratViewController else { return }
             
-            
+            viewController.onDisappearAnimation(
+                duration: transitionDuration(using: transitionContext),
+                context: transitionContext
+            )
         }
     }
 }
-
-
