@@ -17,8 +17,15 @@ class SubMandaratViewController: UIViewController {
     
     // Sub view
     fileprivate var subMandaratViews: [MandaratPosition: SubMandaratView] = [:]
+    fileprivate var subMandaratViewsExceptForCenter: [MandaratPosition: SubMandaratView] {
+        subMandaratViews.filter { key, _ in key != .TWO_TWO }
+    }
     fileprivate var subMandaratContainerView: UIStackView?
     
+    fileprivate let mainMandaratView: MainMandaratView = .init()
+    
+    
+    // Animation
     private let transitionDelegate: TransitionDelegate = .init()
     
     init() {
@@ -33,24 +40,39 @@ class SubMandaratViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setLayer()
+        setUI()
         setLayout()
     }
     
-    private func setLayer() {
+    private func setUI() {
         
         view.backgroundColor = .clear
+        
+        subMandaratViews[.TWO_TWO]?.alpha = 0
     }
     
     
     private func setLayout() {
         
         setSubMandaratViewLayout()
+        
+        setMainMandaratViewLayout()
     }
 }
 
 // MARK: Sub mandarat views
 private extension SubMandaratViewController {
+    
+    func setMainMandaratViewLayout() {
+        
+        view.addSubview(mainMandaratView)
+        
+        let middleCell: UIView = subMandaratViews[.TWO_TWO]!
+        
+        mainMandaratView.snp.makeConstraints { make in
+            make.edges.equalTo(middleCell)
+        }
+    }
     
     func setSubMandaratViewLayout() {
         
@@ -131,11 +153,10 @@ extension SubMandaratViewController {
         context.containerView.addSubview(self.view)
         
         
-        
         // 모든 셀을 가운데 모으고 투명화한다.
         view.layoutIfNeeded()
         
-        subMandaratViews.forEach { (key, subMandaratView) in
+        subMandaratViewsExceptForCenter.forEach { (key, subMandaratView) in
             
             subMandaratView.alpha = 0
             
@@ -143,17 +164,21 @@ extension SubMandaratViewController {
             subMandaratView.moveOneInch(direction: .random)
         }
         
+        mainMandaratView.alpha = 0
+        
         
         // 동시에 모든 셀을 사방으로 보낸다. + Animation
         UIView.animate(withDuration: duration) {
             
-            self.subMandaratViews.values.forEach { subMandaratView in
+            self.subMandaratViewsExceptForCenter.values.forEach { subMandaratView in
                 
                 subMandaratView.moveToIdentity()
                 subMandaratView.alpha = 1
             }
         } completion: { completed in
             
+            self.view.backgroundColor = .white
+            self.mainMandaratView.alpha = 1
             context.completeTransition(completed)
         }
     }
