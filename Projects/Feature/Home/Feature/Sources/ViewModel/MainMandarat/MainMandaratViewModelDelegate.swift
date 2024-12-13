@@ -9,5 +9,7 @@ import DomainMandaratInterface
 
 protocol MainMandaratViewModelDelegate: AnyObject {
     
-    func mainMandarat(buttonClicked position: MandaratPosition)
+    func mainMandarat(editButtonClicked position: MandaratPosition)
+    
+    func mainMandarat(detailButtonClicked position: MandaratPosition)
 }

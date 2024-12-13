@@ -7,15 +7,20 @@
 
 public struct SubMandaratVO {
     
-    public let mainMandarat: MainMandaratVO
-    
     public let title: String
     public let description: String?
     public let imageURL: String?
     public let position: MandaratPosition
     
-    public var hexColor: String? {
-        
-        mainMandarat.hexColor
+    public init(
+        title: String,
+        description: String?,
+        imageURL: String?,
+        position: MandaratPosition
+    ) {
+        self.title = title
+        self.description = description
+        self.imageURL = imageURL
+        self.position = position
     }
 }

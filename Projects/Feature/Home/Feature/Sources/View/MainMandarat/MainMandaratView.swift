@@ -41,6 +41,15 @@ final class MainMandaratView: UIView, View {
             }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
+        
+        
+        // Display button clicked
+        mainMandaratDisplayView.tap
+            .map { _ in
+                return Reactor.Action.mainMandaratDisplayViewClicked
+            }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
             
         
         // Presentation for add mandarat

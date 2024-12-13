@@ -9,5 +9,5 @@ import DomainMandaratInterface
 
 protocol EditMainMandaratViewModelDelegate: AnyObject {
     
-    func editFinishedWithSavingRequest(mainMandarat edited: MainMandaratVO)
+    func editFinishedWithSavingRequest(edited mainMandarat: MainMandaratVO)
 }

@@ -21,9 +21,11 @@ class HomeViewModel: Reactor, MainMandaratViewModelDelegate, EditMainMandaratVie
     private let mandaratUseCase: MandaratUseCase
     
     let initialState: State = .init()
+    private let disposeBag: DisposeBag = .init()
     
     // Sub reactors
     private(set) var mainMandaratViewReactors: [MandaratPosition: MainMandaratViewModel] = [:]
+    private var mainMandaratVO: [MandaratPosition: MainMandaratVO] = [:]
     
     init(mandaratUseCase: MandaratUseCase) {
         
@@ -42,13 +44,20 @@ class HomeViewModel: Reactor, MainMandaratViewModelDelegate, EditMainMandaratVie
         switch action {
         case .viewDidLoad:
             
-            return mandaratUseCase
+            mandaratUseCase
                 .requestMainMandarats()
                 .asObservable()
-                .map { mainMandarats in
+                .withUnretained(self)
+                .subscribe(onNext: { viewModel, mainMandarats in
                     
-                    Action.fetchedMainMandarat(mainMandarats)
-                }
+                    mainMandarats.forEach { mainMandaratVO in
+                        
+                        viewModel.updateMainMandarat(updated: mainMandaratVO)
+                    }
+                })
+                .disposed(by: disposeBag)
+            
+            return .never()
         default:
             return .just(action)
         }
@@ -57,40 +66,9 @@ class HomeViewModel: Reactor, MainMandaratViewModelDelegate, EditMainMandaratVie
     func reduce(state: State, mutation: Action) -> State {
         
         switch mutation {
-        case .fetchedMainMandarat(let mainMandarats):
-            
-            var newState = state
-            mainMandarats.forEach { mainMandaratVO in
-                
-                let position = mainMandaratVO.position
-                newState.mainMandaratVO[position] = mainMandaratVO
-                
-            }
-            return newState
-            
-        case .addMainMandaratButtonClicked(let position):
-            
-            let mainMandaratVO = state.mainMandaratVO[position] ?? .createEmpty(with: position)
-            presentEditMainMandaratViewController(mainMandaratVO)
-            
-            return state
-            
-        case .mandaratUpdated(let mandaratVO):
-            
-            var newState = state
-            let position = mandaratVO.position
-            newState.mainMandaratVO[position] = mandaratVO
-            
-            // to mainMandaratViewModel
-            let mainMandaratViewModel = mainMandaratViewReactors[position]
-            mainMandaratViewModel?.requestRender(.create(from: mandaratVO))
-            
-            return newState
-            
         default:
             return state
         }
-        
     }
 }
 
@@ -100,19 +78,14 @@ extension HomeViewModel {
     enum Action {
         
         // Event
-        case addMainMandaratButtonClicked(MandaratPosition)
         case mandaratUpdated(MainMandaratVO)
         case viewDidLoad
         
         // Side effect
-        case fetchedMainMandarat([MainMandaratVO])
     }
     
     struct State {
     
-        var mainMandaratVO: [MandaratPosition: MainMandaratVO] = [:]
-        
-        var presentEditMainMandaratView: Bool = false
     }
 }
 
@@ -120,6 +93,7 @@ extension HomeViewModel {
 // MARK: Navigations
 private extension HomeViewModel {
     
+    /// 메인 만다라트 수정 및 생성 화면
     func presentEditMainMandaratViewController(_ mainMandaratVO: MainMandaratVO) {
         
         let viewModel: EditMainMandaratViewModel = .init(mainMandaratVO)
@@ -130,15 +104,28 @@ private extension HomeViewModel {
         
         router.present(viewController, animated: true, modalPresentationSytle: .custom)
     }
+    
+    func presentSubMandaratViewController(_ mainMandaratVO: MainMandaratVO) {
+        
+        let viewController = SubMandaratViewController()
+        router.present(viewController, animated: true, modalPresentationSytle: .custom)
+    }
 }
 
 
 // MARK: MainMandaratViewModelDelegate
 extension HomeViewModel {
     
-    func mainMandarat(buttonClicked position: MandaratPosition) {
+    func mainMandarat(editButtonClicked position: MandaratPosition) {
         
-        self.action.onNext(.addMainMandaratButtonClicked(position))
+        let mainMandaratVO = mainMandaratVO[position] ?? .createEmpty(with: position)
+        presentEditMainMandaratViewController(mainMandaratVO)
+    }
+    
+    func mainMandarat(detailButtonClicked position: MandaratPosition) {
+        
+        let mainMandaratVO = mainMandaratVO[position]!
+        presentSubMandaratViewController(mainMandaratVO)
     }
 }
 
@@ -166,10 +153,30 @@ private extension HomeViewModel {
 // MARK: EditMainMandaratViewModelDelegate
 extension HomeViewModel {
     
-    func editFinishedWithSavingRequest(mainMandarat edited: MainMandaratVO) {
+    func editFinishedWithSavingRequest(edited mainMandarat: MainMandaratVO) {
         
-        action.onNext(.mandaratUpdated(edited))
+        action.onNext(.mandaratUpdated(mainMandarat))
         
-        mandaratUseCase.saveMainMandarat(mainMandarat: edited)
+        mandaratUseCase.saveMainMandarat(mainMandarat: mainMandarat)
+        
+        self.updateMainMandarat(updated: mainMandarat)
+    }
+}
+
+
+// MARK: 만다라트 상태를 상태에 반영
+private extension HomeViewModel {
+    
+    /// HomeViewModel상태 업데이트 및 변경 사항을 MainMandaratViewModel에 전파
+    func updateMainMandarat(updated mainMandarat: MainMandaratVO) {
+        
+        //#1. HomeViewModel 업데이트
+        let position = mainMandarat.position
+        self.mainMandaratVO[position] = mainMandarat
+        
+        
+        //#2. 변경 상태를 메인 만다라트 뷰모델에 전달
+        let mainMandaratViewModel = mainMandaratViewReactors[position]
+        mainMandaratViewModel?.requestRender(.create(from: mainMandarat))
     }
 }

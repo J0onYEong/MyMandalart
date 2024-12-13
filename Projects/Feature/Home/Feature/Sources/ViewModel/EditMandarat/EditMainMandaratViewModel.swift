@@ -95,9 +95,7 @@ class EditMainMandaratViewModel: NSObject, Reactor, UIColorPickerViewControllerD
             
             let mandaratVO: MainMandaratVO = createMandaratVO(state: state)
             
-            delegate?.editFinishedWithSavingRequest(
-                mainMandarat: mandaratVO
-            )
+            delegate?.editFinishedWithSavingRequest(edited: mandaratVO)
             
             router.dismissModule(animated: true)
             

@@ -31,16 +31,27 @@ class MainMandaratViewModel: Reactor {
         action.onNext(.mandaratDataFromOutside(mandaratRO))
     }
     
+    func mutate(action: Action) -> Observable<Action> {
+        switch action {
+        case .addMandaratButtonClicked:
+            
+            delegate?.mainMandarat(editButtonClicked: position)
+            return .never()
+            
+        case .mainMandaratDisplayViewClicked:
+            
+            delegate?.mainMandarat(detailButtonClicked: position)
+            return .never()
+            
+        default:
+            return .just(action)
+        }
+    }
+    
     
     func reduce(state: State, mutation: Action) -> State {
         
         switch mutation {
-        case .addMandaratButtonClicked:
-            
-            delegate?.mainMandarat(buttonClicked: position)
-            
-            return state
-            
         case .mandaratDataFromOutside(let mainMandaratRO):
             
             var newState = state
@@ -59,6 +70,7 @@ extension MainMandaratViewModel {
         
         // Event
         case addMandaratButtonClicked
+        case mainMandaratDisplayViewClicked
         case mandaratDataFromOutside(MainMandaratRO)
         
         // Side effect
