@@ -10,6 +10,23 @@ import UIKit
 
 public extension UIColor {
     
+    func getTriadicColors() -> [UIColor] {
+        
+        let hsb = colorToHSB(self)
+        
+        // Calculate triadic hues (120 degrees apart)
+        let hue1 = fmod(hsb.hue + 0.333, 1.0) // Add 120 degrees
+        let hue2 = fmod(hsb.hue + 0.666, 1.0) // Add 240 degrees
+        
+        // Generate UIColor objects for triadic colors
+        let color1 = hsbToColor(hue: hue1, saturation: hsb.saturation, brightness: hsb.brightness)
+        let color2 = hsbToColor(hue: hue2, saturation: hsb.saturation, brightness: hsb.brightness)
+        
+        // Convert colors back to HEX strings
+        return [color1, color2]
+    }
+    
+    
     static func color(_ hexString: String) -> UIColor? {
 
         var hexStringOnly = hexString
@@ -72,5 +89,25 @@ public extension UIColor {
                           lround(Double(green * 255)),
                           lround(Double(blue * 255)))
         }
+    }
+}
+
+
+private extension UIColor {
+
+    /// Converts UIColor to HSB (Hue, Saturation, Brightness)
+    func colorToHSB(_ color: UIColor) -> (hue: CGFloat, saturation: CGFloat, brightness: CGFloat) {
+        var hue: CGFloat = 0
+        var saturation: CGFloat = 0
+        var brightness: CGFloat = 0
+        var alpha: CGFloat = 0
+        
+        color.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
+        return (hue: hue, saturation: saturation, brightness: brightness)
+    }
+
+    /// Converts HSB values to UIColor
+    func hsbToColor(hue: CGFloat, saturation: CGFloat, brightness: CGFloat) -> UIColor {
+        return UIColor(hue: hue, saturation: saturation, brightness: brightness, alpha: 1.0)
     }
 }
