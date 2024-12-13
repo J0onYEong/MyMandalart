@@ -14,11 +14,11 @@ public struct MainMandaratVO: Identifiable {
     public let title: String
     public let position: MandaratPosition
     
-    public let hexColor: String?
+    public let hexColor: String
     public let description: String?
     public let imageURL: String?
     
-    public init(id: String = UUID().uuidString, title: String, position: MandaratPosition, hexColor: String?, description: String?, imageURL: String?) {
+    public init(id: String = UUID().uuidString, title: String, position: MandaratPosition, hexColor: String, description: String?, imageURL: String?) {
         
         self.id = id
         self.title = title
@@ -33,7 +33,7 @@ public struct MainMandaratVO: Identifiable {
         return .init(
             title: "",
             position: position,
-            hexColor: nil,
+            hexColor: "#FFFFFF",
             description: nil,
             imageURL: nil
         )

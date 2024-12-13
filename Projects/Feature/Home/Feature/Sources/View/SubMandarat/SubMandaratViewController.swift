@@ -70,6 +70,10 @@ class SubMandaratViewController: UIViewController, View {
         mainMandaratView.bind(reactor: reactor.mainMandaratViewModel)
         
         // Bind, subMandaratViews
+        reactor.subMandaratViewModels.forEach { position, viewModel in
+            
+            self.subMandaratViews[position]!.bind(reactor: viewModel)
+        }
     }
 }
 

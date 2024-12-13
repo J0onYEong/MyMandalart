@@ -18,12 +18,10 @@ struct MainMandaratRO: Equatable {
     
     static func create(from: MainMandaratVO) -> Self {
         
-        let hexColorString = from.hexColor
-        
         return .init(
             title: from.title,
             description: from.description ?? "",
-            titleColor: hexColorString == nil ? .white : (.color(hexColorString!) ?? .white)
+            titleColor: .color(from.hexColor) ?? .white
         )
     }
 }

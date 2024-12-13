@@ -8,23 +8,58 @@
 import UIKit
 
 import ReactorKit
+import SnapKit
 import RxSwift
 import RxCocoa
 
-class SubMandaratView: UIView {
+class SubMandaratView: UIView, View {
+    
+    // Sub view
+    private let addSubMandaratView: AddSubMandaratView = .init()
+    
+    
+    var reactor: SubMandaratViewModel?
+    var disposeBag: DisposeBag = .init()
     
     init() {
         super.init(frame: .zero)
         
         setUI()
+        setLayout()
     }
     required init?(coder: NSCoder) { nil }
     
     private func setUI() {
         
-        layer.cornerRadius = SubMandaratConfig.corenrRadius
-        
+        self.layer.cornerRadius = SubMandaratConfig.corenrRadius
         self.backgroundColor = UIColor.black
+    }
+    
+    private func setLayout() {
+        
+        addSubview(addSubMandaratView)
+        addSubMandaratView.snp.makeConstraints { make in
+            
+            make.edges.equalToSuperview()
+        }
+    }
+    
+    func bind(reactor: SubMandaratViewModel) {
+        
+        self.reactor = reactor
+        
+        // Bind, AddSubMandaratView
+        reactor.state
+            .map(\.isAvailable)
+            .bind(to: addSubMandaratView.rx.isHidden)
+            .disposed(by: disposeBag)
+        
+        reactor.state
+            .map(\.titleColor)
+            .bind(to: addSubMandaratView.rx.color)
+            .disposed(by: disposeBag)
+        
+        
     }
 }
 

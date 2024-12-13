@@ -14,10 +14,17 @@ import RxSwift
 
 class SubMandaratViewModel: Reactor {
     
-    var initialState: State = .init()
+    var initialState: State
     
-    init() {
+    private let position: MandaratPosition
+    
+    init(position: MandaratPosition, color: UIColor) {
         
+        self.position = position
+        
+        self.initialState = .init(
+            titleColor: color
+        )
     }
 }
 
@@ -30,6 +37,7 @@ extension SubMandaratViewModel {
     
     struct State {
         
-        
+        var isAvailable: Bool = false
+        var titleColor: UIColor
     }
 }

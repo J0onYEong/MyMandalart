@@ -16,8 +16,12 @@ import SnapKit
 class AddSubMandaratView: UIView {
     
     // Sub view
-    private let tapView: TappableView = .init()
-    private let addImageView: UIImageView = .init(image: .init(systemName: "plus.app.fill"))
+    fileprivate let tapView: TappableView = .init()
+    private let addImageView: UIImageView = {
+        let view: UIImageView = .init(image: .init(systemName: "plus.circle.fill"))
+        view.contentMode = .scaleAspectFit
+        return view
+    }()
     
     fileprivate let color: PublishSubject<UIColor> = .init()
     private let disposeBag: DisposeBag = .init()
@@ -53,6 +57,9 @@ class AddSubMandaratView: UIView {
         addImageView.snp.makeConstraints { make in
             
             make.center.equalToSuperview()
+            
+            make.width.equalTo(32)
+            make.height.equalTo(addImageView.snp.width)
         }
     }
     
@@ -76,5 +83,10 @@ extension Reactive where Base == AddSubMandaratView {
     var color: PublishSubject<UIColor> {
         
         base.color
+    }
+    
+    var tap: PublishSubject<Void> {
+        
+        base.tapView.tap
     }
 }

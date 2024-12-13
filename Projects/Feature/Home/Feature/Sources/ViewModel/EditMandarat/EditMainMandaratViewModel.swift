@@ -36,7 +36,7 @@ class EditMainMandaratViewModel: NSObject, Reactor, UIColorPickerViewControllerD
         self.initialState = .init(
             titleText: mainMandaratVO.title,
             descriptionText: mainMandaratVO.description ?? "",
-            mandaratTitleColor: colorString == nil ? .white : (.color(colorString!) ?? .white)
+            mandaratTitleColor: .color(colorString) ?? .white
         )
     }
     
@@ -143,7 +143,7 @@ private extension EditMainMandaratViewModel {
         let newMandarat: MainMandaratVO = .init(
             title: state.titleText,
             position: initialMandarat.position,
-            hexColor: state.mandaratTitleColor.toHexString(),
+            hexColor: state.mandaratTitleColor.toHexString() ?? "#FFFFFF",
             description: state.descriptionText,
             imageURL: nil
         )

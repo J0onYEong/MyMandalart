@@ -89,10 +89,13 @@ private extension SubMandaratPageModel {
     
     func createSubMandaratViewModels() {
         
-        MandaratPosition.allCases.filter({ $0 != .TRD_TWO })
+        MandaratPosition.allCases.filter({ $0 != .TWO_TWO })
             .forEach { position in
                 
-                self.subMandaratViewModels[position] = .init()
+                self.subMandaratViewModels[position] = .init(
+                    position: mainMandaratVO.position,
+                    color: .color(mainMandaratVO.hexColor) ?? .white
+                )
             }
     }
 }
