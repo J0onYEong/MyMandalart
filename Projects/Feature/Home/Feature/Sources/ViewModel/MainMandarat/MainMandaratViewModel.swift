@@ -26,11 +26,6 @@ class MainMandaratViewModel: Reactor {
         self.initialState = .init()
     }
     
-    public func requestRender(_ mandaratRO: MainMandaratRO) {
-        
-        action.onNext(.mandaratDataFromOutside(mandaratRO))
-    }
-    
     func mutate(action: Action) -> Observable<Action> {
         switch action {
         case .addMandaratButtonClicked:
@@ -64,6 +59,18 @@ class MainMandaratViewModel: Reactor {
     }
 }
 
+
+// MARK: Public interface
+extension MainMandaratViewModel {
+    
+    public func requestRender(_ mandaratRO: MainMandaratRO) {
+        
+        action.onNext(.mandaratDataFromOutside(mandaratRO))
+    }
+}
+
+
+// MARK: State & Action
 extension MainMandaratViewModel {
     
     enum Action {
