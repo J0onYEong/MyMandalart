@@ -127,38 +127,30 @@ extension SubMandaratViewController {
     
     func onAppearAnimation(duration: CFTimeInterval, context: UIViewControllerContextTransitioning) {
         
-        // #2. addSubView
+        // addSubView
         context.containerView.addSubview(self.view)
         
         
-        // #3. 중앙 좌표를 추출
+        
+        // 모든 셀을 가운데 모으고 투명화한다.
         view.layoutIfNeeded()
-        let middleCell: SubMandaratView = subMandaratViews[.TWO_TWO]!
         
-        let containerView = self.subMandaratContainerView!
-        let frameOnContainerView = middleCell.superview!.convert(middleCell.frame, to: containerView)
-        
-        var middlePosition: CGPoint = frameOnContainerView.origin
-        let cellSize = middleCell.bounds.size
-        middlePosition.x += (cellSize.width/2)
-        middlePosition.y += (cellSize.height/2)
-        
-        
-        // #4. 모든 셀을 가운데 모은다.
         subMandaratViews.forEach { (key, subMandaratView) in
             
+            subMandaratView.alpha = 0
+            
             // 목표좌표를 각뷰의 좌표로 변환
-            let positionFittedToview = containerView.convert(middlePosition, to: subMandaratView)
-            subMandaratView.moveCenter(point: positionFittedToview)
+            subMandaratView.moveOneInch(direction: .random)
         }
         
         
-        // #5. 동시에 모든 셀을 사방으로 보낸다. + Animation
+        // 동시에 모든 셀을 사방으로 보낸다. + Animation
         UIView.animate(withDuration: duration) {
             
             self.subMandaratViews.values.forEach { subMandaratView in
                 
                 subMandaratView.moveToIdentity()
+                subMandaratView.alpha = 1
             }
         } completion: { completed in
             
