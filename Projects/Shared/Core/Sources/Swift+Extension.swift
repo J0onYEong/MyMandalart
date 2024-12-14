@@ -26,6 +26,54 @@ public extension UIColor {
         return [color1, color2]
     }
     
+    func getAnalogousColors() -> [UIColor] {
+        
+        // 1. UIColor -> HSB(Hue, Saturation, Brightness)로 변환
+        var hue: CGFloat = 0
+        var saturation: CGFloat = 0
+        var brightness: CGFloat = 0
+        var alpha: CGFloat = 0
+        
+        self.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
+        
+        // 2. 유사색 계산
+        let analogousHue1 = fmod(hue + 30.0 / 360.0, 1.0) // Hue는 0~1 범위
+        let analogousHue2 = fmod(hue + 60.0 / 360.0, 1.0) // 음수 방지
+        
+        // 3. HSB 값을 기반으로 UIColor 생성
+        let analogousColor1 = UIColor(hue: analogousHue1, saturation: saturation, brightness: brightness, alpha: alpha)
+        let analogousColor2 = UIColor(hue: analogousHue2, saturation: saturation, brightness: brightness, alpha: alpha)
+        
+        // 4. 결과 반환 (원본 색상 포함)
+        return [analogousColor1, analogousColor2]
+    }
+    
+    
+    var isGrayScale: Bool {
+        
+        // UIColor -> RGB 변환
+        var red: CGFloat = 0
+        var green: CGFloat = 0
+        var blue: CGFloat = 0
+        var alpha: CGFloat = 0
+        
+        self.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+        
+        // R, G, B 값이 모두 같으면 무채색
+        return red == green && green == blue
+    }
+    
+    
+    func getInvertedColor() -> UIColor {
+        var white: CGFloat = 0
+        var alpha: CGFloat = 0
+        
+        _ = self.getWhite(&white, alpha: &alpha)
+        
+        let invertedWhite = 1.0 - white // 밝기를 반전
+        return UIColor(white: invertedWhite, alpha: alpha)
+    }
+    
     
     static func color(_ hexString: String) -> UIColor? {
 

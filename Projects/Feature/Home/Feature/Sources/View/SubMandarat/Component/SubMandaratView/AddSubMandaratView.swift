@@ -72,7 +72,8 @@ class AddSubMandaratView: UIView {
             .subscribe(onNext: { view, color in
                 
                 view.tapView.backgroundColor = color
-                view.addImageView.tintColor = color.getTriadicColors().randomElement()
+                view.addImageView.tintColor = color.getInvertedColor()
+
             })
             .disposed(by: disposeBag)
     }
