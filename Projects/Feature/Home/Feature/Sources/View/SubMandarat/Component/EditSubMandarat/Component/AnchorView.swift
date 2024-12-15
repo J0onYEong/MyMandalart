@@ -20,8 +20,8 @@ class AnchorView: UIView {
         return view
     }()
     
-    fileprivate let panGesture: UIPanGestureRecognizer = .init()
-    
+    private let panGesture: UIPanGestureRecognizer = .init()
+    fileprivate let panGestureMovingDistanceEvent: PublishSubject<(CGFloat, UIGestureRecognizer.State)> = .init()
     private let disposeBag: DisposeBag = .init()
     
     init() {
@@ -36,12 +36,13 @@ class AnchorView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        iconView.layer.cornerRadius = iconView.layer.bounds.width/2
+        self.layer.cornerRadius = layer.bounds.width/2
     }
     
     
     private func setUI() {
         
+        self.clipsToBounds = true
         self.backgroundColor = .white
         self.layer.borderColor = UIColor.gray.cgColor
         self.layer.borderWidth = 1
@@ -51,6 +52,12 @@ class AnchorView: UIView {
     private func setGesture() {
         
         self.addGestureRecognizer(panGesture)
+        panGesture.addTarget(self, action: #selector(gestureCallback(panGesture:)))
+    }
+    @objc
+    private func gestureCallback(panGesture: UIPanGestureRecognizer) {
+        let moveDistance = panGesture.translation(in: self).x
+        panGestureMovingDistanceEvent.onNext((moveDistance, panGesture.state))
     }
     
     
@@ -66,9 +73,9 @@ class AnchorView: UIView {
 
 extension Reactive where Base == AnchorView {
     
-    var dragGesture: ControlEvent<UIPanGestureRecognizer> {
+    var move: Observable<(CGFloat, UIGestureRecognizer.State)> {
         
-        base.panGesture.rx.event
+        base.panGestureMovingDistanceEvent.asObservable()
     }
     
     var poinColor: Binder<UIColor?> {

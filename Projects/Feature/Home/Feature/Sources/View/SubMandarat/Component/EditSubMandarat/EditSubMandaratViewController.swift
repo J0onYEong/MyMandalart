@@ -18,6 +18,7 @@ class EditSubMandaratViewController: UIViewController {
     // Sub view
     private let backgroundView: TappableView = .init()
     private let titleInputView: FocusTextField = .init()
+    private let acheivementLevelView: AdjustAcheivementLevelView = .init()
     private let inputContainerBackView: UIView = .init()
     
     // - Tool button
@@ -130,6 +131,7 @@ class EditSubMandaratViewController: UIViewController {
         // MARK: inputStackView
         let inputStackView: UIStackView = .init(arrangedSubviews: [
             titleInputView,
+            acheivementLevelView,
         ])
         inputStackView.axis = .vertical
         inputStackView.spacing = 12
