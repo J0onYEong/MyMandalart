@@ -48,9 +48,38 @@ public class FocusTextView: UIView, UITextViewDelegate {
     }
     public required init?(coder: NSCoder) { nil }
     
+    
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        // 변경될 뷰의 레이어의 크기로 재조정
+        if isFirstResponder {
+            
+            focusLineLayer1?.removeAnimation(forKey: "focus-line-animation1")
+            focusLineLayer1?.frame = layer.bounds
+            focusLineLayer1?.path = drawFocusLine1(
+                rect: layer.bounds,
+                cornerRadius: layer.cornerRadius,
+                endPosForX: layer.cornerRadius
+            )
+            focusLineLayer1?.strokeEnd = 1
+            
+            focusLineLayer2?.removeAnimation(forKey: "focus-line-animation2")
+            focusLineLayer2?.frame = layer.bounds
+            focusLineLayer2?.path = drawFocusLine2(
+                rect: layer.bounds,
+                cornerRadius: layer.cornerRadius,
+                endPosForX: layer.cornerRadius
+            )
+            focusLineLayer2?.strokeEnd = 1
+        }
+    }
+    
+    
     public func setPlaceholderText(_ text: String) {
         placeHolderLabel.text = text
     }
+    
     
     public func setFocusLineColor(_ color: UIColor) {
         self.focusColor = color.cgColor
@@ -59,19 +88,23 @@ public class FocusTextView: UIView, UITextViewDelegate {
         focusLineLayer2?.strokeColor = self.focusColor
     }
     
+    
     @discardableResult
     public override func becomeFirstResponder() -> Bool {
         textView.becomeFirstResponder()
     }
+    
     
     @discardableResult
     public override func resignFirstResponder() -> Bool {
         textView.resignFirstResponder()
     }
     
+    
     public override var isFirstResponder: Bool {
         textView.isFirstResponder
     }
+    
     
     private func setTextView() {
         
@@ -87,10 +120,12 @@ public class FocusTextView: UIView, UITextViewDelegate {
         placeHolderLabel.textColor = UIColor.gray.withAlphaComponent(0.5)
     }
     
+    
     private func setLayer() {
         
         layer.cornerRadius = 15
     }
+    
     
     private func setLayout() {
         
@@ -115,6 +150,7 @@ public class FocusTextView: UIView, UITextViewDelegate {
         }
     }
     
+    
     // MARK: Animations
     private func startFocusLineAnimation(duration: CFTimeInterval, endPosForX: CGFloat) {
         
@@ -131,6 +167,7 @@ public class FocusTextView: UIView, UITextViewDelegate {
         playFocusLine2(duration: duration, endPosForX: endPosForX, focusColor: self.focusColor)
         
     }
+    
     
     private func dismissFocusLineAnimation(duration: CFTimeInterval) {
         
@@ -177,6 +214,62 @@ extension FocusTextView {
 // MARK: Dismiss focus line
 private extension FocusTextView {
     
+    func drawFocusLine1(rect: CGRect, cornerRadius: CGFloat, endPosForX: CGFloat) -> CGPath {
+        
+        let path: CGMutablePath = .init()
+        
+        path.move(to: .init(x: rect.midX, y: rect.maxY))
+        
+        path.addLine(
+            to: .init(x: rect.minX+cornerRadius, y: rect.maxY)
+        )
+        
+        path.addQuadCurve(
+            to: .init(x: rect.minX, y: rect.maxY-cornerRadius),
+            control: .init(x: rect.minX, y: rect.maxY)
+        )
+        
+        path.addLine(to: .init(x: rect.minX, y: rect.minY+cornerRadius))
+        
+        path.addQuadCurve(
+            to: .init(x: rect.minX+cornerRadius, y: rect.minY),
+            control: .init(x: rect.minX, y: rect.minY)
+        )
+        
+        path.addLine(to: .init(x: endPosForX, y: rect.minY))
+        
+        return path
+    }
+    
+    
+    func drawFocusLine2(rect: CGRect, cornerRadius: CGFloat, endPosForX: CGFloat) -> CGPath {
+        
+        let path: CGMutablePath = .init()
+        
+        path.move(to: .init(x: rect.midX, y: rect.maxY))
+        
+        path.addLine(
+            to: .init(x: rect.maxX-cornerRadius, y: rect.maxY)
+        )
+        
+        path.addQuadCurve(
+            to: .init(x: rect.maxX, y: rect.maxY-cornerRadius),
+            control: .init(x: rect.maxX, y: rect.maxY)
+        )
+        
+        path.addLine(to: .init(x: rect.maxX, y: rect.minY+cornerRadius))
+        
+        path.addQuadCurve(
+            to: .init(x: rect.maxX-cornerRadius, y: rect.minY),
+            control: .init(x: rect.maxX, y: rect.minY)
+        )
+        
+        path.addLine(to: .init(x: endPosForX, y: rect.minY))
+        
+        return path
+    }
+    
+    
     func dismissFocusLineAnimation1(duration: CFTimeInterval) {
         
         guard let focusLineLayer1 else { return }
@@ -193,6 +286,7 @@ private extension FocusTextView {
         
         focusLineLayer1.add(animation, forKey: "unfocus-line-animation1")
     }
+    
     
     func dismissFocusLineAnimation2(duration: CFTimeInterval) {
         
@@ -221,31 +315,7 @@ private extension FocusTextView {
         let focusLineLayer: CAShapeLayer = .init()
         let cornerRadius = layer.cornerRadius
         focusLineLayer.frame = layer.bounds
-        
-        let path: CGMutablePath = .init()
-        let rect = focusLineLayer.bounds
-        
-        path.move(to: .init(x: rect.midX, y: rect.maxY))
-        
-        path.addLine(
-            to: .init(x: rect.minX+cornerRadius, y: rect.maxY)
-        )
-        
-        path.addQuadCurve(
-            to: .init(x: rect.minX, y: rect.maxY-cornerRadius),
-            control: .init(x: rect.minX, y: rect.maxY)
-        )
-        
-        path.addLine(to: .init(x: rect.minX, y: rect.minY+cornerRadius))
-        
-        path.addQuadCurve(
-            to: .init(x: rect.minX+cornerRadius, y: rect.minY),
-            control: .init(x: rect.minX, y: rect.minY)
-        )
-        
-        path.addLine(to: .init(x: endPosForX, y: rect.minY))
-        
-        focusLineLayer.path = path
+        focusLineLayer.path = drawFocusLine1(rect: focusLineLayer.bounds, cornerRadius: cornerRadius, endPosForX: endPosForX)
         focusLineLayer.strokeColor = focusColor
         focusLineLayer.fillColor = UIColor.clear.cgColor
         focusLineLayer.lineWidth = 1
@@ -266,36 +336,13 @@ private extension FocusTextView {
         focusLineLayer.add(animation, forKey: "focus-line-animation1")
     }
     
+    
     func playFocusLine2(duration: CFTimeInterval, endPosForX: CGFloat, focusColor: CGColor) {
         
         let focusLineLayer: CAShapeLayer = .init()
         let cornerRadius = layer.cornerRadius
         focusLineLayer.frame = layer.bounds
-        
-        let path: CGMutablePath = .init()
-        let rect = focusLineLayer.bounds
-        
-        path.move(to: .init(x: rect.midX, y: rect.maxY))
-        
-        path.addLine(
-            to: .init(x: rect.maxX-cornerRadius, y: rect.maxY)
-        )
-        
-        path.addQuadCurve(
-            to: .init(x: rect.maxX, y: rect.maxY-cornerRadius),
-            control: .init(x: rect.maxX, y: rect.maxY)
-        )
-        
-        path.addLine(to: .init(x: rect.maxX, y: rect.minY+cornerRadius))
-        
-        path.addQuadCurve(
-            to: .init(x: rect.maxX-cornerRadius, y: rect.minY),
-            control: .init(x: rect.maxX, y: rect.minY)
-        )
-        
-        path.addLine(to: .init(x: endPosForX, y: rect.minY))
-        
-        focusLineLayer.path = path
+        focusLineLayer.path = drawFocusLine2(rect: focusLineLayer.bounds, cornerRadius: cornerRadius, endPosForX: endPosForX)
         focusLineLayer.strokeColor = focusColor
         focusLineLayer.fillColor = UIColor.clear.cgColor
         focusLineLayer.lineWidth = 1
