@@ -29,6 +29,9 @@ class EditSubMandaratViewController: UIViewController {
     private let transitionDelegate = TransitionDelegate()
     
     
+    // Reactor
+    var disposeBag: DisposeBag = .init()
+    
     init() {
         super.init(nibName: nil, bundle: nil)
         
@@ -42,6 +45,7 @@ class EditSubMandaratViewController: UIViewController {
         
         setBackgroundView()
         setLayout()
+        subscribeToKeyboardEvent()
     }
     
     
@@ -59,6 +63,12 @@ class EditSubMandaratViewController: UIViewController {
         super.viewDidLayoutSubviews()
         
         setInputContainerViewShape()
+    }
+    
+    
+    private func setUI() {
+        
+        titleInputView.setPlaceholderText("목표정보를 입력해주세요!")
     }
     
     
@@ -93,8 +103,8 @@ class EditSubMandaratViewController: UIViewController {
         view.addSubview(inputContainerBackView)
         
         inputContainerBackView.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            make.trailing.equalToSuperview()
+            make.leading.equalTo(view.safeAreaLayoutGuide.snp.leading)
+            make.trailing.equalTo(view.safeAreaLayoutGuide.snp.trailing)
             make.bottom.equalToSuperview()
         }
         
@@ -126,6 +136,7 @@ class EditSubMandaratViewController: UIViewController {
         inputStackView.alignment = .fill
         inputStackView.distribution = .fill
         
+        inputContainerBackView.addSubview(inputStackView)
         
         inputStackView.snp.makeConstraints { make in
             make.top.equalTo(toolButtonStack.snp.bottom).offset(10)
@@ -263,5 +274,56 @@ private extension EditSubMandaratViewController {
                 context: transitionContext
             )
         }
+    }
+}
+
+
+
+private extension EditSubMandaratViewController {
+    
+    func subscribeToKeyboardEvent() {
+        
+        NotificationCenter.default.rx
+            .notification(UIApplication.keyboardWillShowNotification)
+            .withUnretained(self)
+            .subscribe(onNext: { vc, notfication in
+                
+                guard
+                    let keyboardFrame = notfication.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect,
+                    let keyboardDisplayDuration = notfication.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double
+                else { return }
+                
+                UIView.animate(withDuration: keyboardDisplayDuration) {
+                    
+                    vc.inputContainerBackView.snp.updateConstraints { make in
+                        
+                        make.bottom.equalToSuperview().inset(CGFloat(keyboardFrame.height))
+                    }
+                    
+                    vc.view.layoutIfNeeded()
+                }
+            })
+            .disposed(by: disposeBag)
+        
+        NotificationCenter.default.rx
+            .notification(UIApplication.keyboardWillHideNotification)
+            .withUnretained(self)
+            .subscribe(onNext: { vc, notfication in
+                
+                guard
+                    let keyboardDisplayDuration = notfication.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double
+                else { return }
+                
+                UIView.animate(withDuration: keyboardDisplayDuration) {
+                    
+                    vc.inputContainerBackView.snp.updateConstraints { make in
+                        
+                        make.bottom.equalToSuperview()
+                    }
+                    
+                    vc.view.layoutIfNeeded()
+                }
+            })
+            .disposed(by: disposeBag)
     }
 }

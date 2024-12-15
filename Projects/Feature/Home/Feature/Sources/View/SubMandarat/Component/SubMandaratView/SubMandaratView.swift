@@ -59,7 +59,12 @@ class SubMandaratView: UIView, View {
             .bind(to: addSubMandaratView.rx.color)
             .disposed(by: disposeBag)
         
-        
+        addSubMandaratView.rx.tap
+            .map { _ in
+                Reactor.Action.editSubMandaratButtonClicked
+            }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
     }
 }
 

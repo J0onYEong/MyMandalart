@@ -18,6 +18,8 @@ class SubMandaratViewModel: Reactor {
     
     private let position: MandaratPosition
     
+    weak var deleate: SubMandaratViewModelDelegate?
+    
     init(position: MandaratPosition, color: UIColor) {
         
         self.position = position
@@ -26,6 +28,21 @@ class SubMandaratViewModel: Reactor {
             titleColor: color
         )
     }
+    
+    func mutate(action: Action) -> Observable<Action> {
+        switch action {
+        case .editSubMandaratButtonClicked:
+            
+            deleate?.subMandarat(edit: position)
+            
+            return .never()
+        }
+    }
+    
+    func reduce(state: State, mutation: Action) -> State {
+        
+        return state
+    }
 }
 
 // MARK: Action & State
@@ -33,6 +50,7 @@ extension SubMandaratViewModel {
     
     enum Action {
         
+        case editSubMandaratButtonClicked
     }
     
     struct State {
