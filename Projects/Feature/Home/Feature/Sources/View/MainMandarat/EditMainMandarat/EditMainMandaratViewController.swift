@@ -27,15 +27,17 @@ class EditMainMandaratViewController: UIViewController, View, UIColorPickerViewC
     private let exitButton: ImageButton = .init(imageName: "xmark")
     private let saveButton: TextButton = .init(text: "저장")
     
-    private var isLayerIsSetted = false
     
+    // Reactor
     var reactor: EditMainMandaratViewModel?
     private let selectedColor: PublishSubject<UIColor> = .init()
     private let colorPickerClosed: PublishSubject<Void> = .init()
     var disposeBag: DisposeBag = .init()
     
+    
     // Transition
     private let transitionDelegate = TransitionDelegate()
+    
     
     init() {
         
@@ -56,6 +58,7 @@ class EditMainMandaratViewController: UIViewController, View, UIColorPickerViewC
         subscribeToKeyboardEvent()
     }
     
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -65,15 +68,13 @@ class EditMainMandaratViewController: UIViewController, View, UIColorPickerViewC
         titleInputView.becomeFirstResponder()
     }
     
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        if !isLayerIsSetted {
-            isLayerIsSetted = true
-            
-            setInputContainerView()
-        }
+        setInputContainerView()
     }
+    
     
     private func setBackgroundView() {
         
@@ -84,6 +85,8 @@ class EditMainMandaratViewController: UIViewController, View, UIColorPickerViewC
         backgroundView.addGestureRecognizer(tapGesture)
         tapGesture.addTarget(self, action: #selector(onBackgroundViewTapped))
     }
+    
+    
     @objc private func onBackgroundViewTapped() {
         
         [
@@ -96,6 +99,7 @@ class EditMainMandaratViewController: UIViewController, View, UIColorPickerViewC
         }
     }
     
+    
     private func setInputFields() {
         
         titleInputView.backgroundColor = UIColor.gray.withAlphaComponent(0.1)
@@ -106,6 +110,7 @@ class EditMainMandaratViewController: UIViewController, View, UIColorPickerViewC
         descriptionInputView.setFocusLineColor(.gray)
         descriptionInputView.setPlaceholderText("목표를 설명해주세요!")
     }
+    
     
     private func setLayout() {
         
@@ -121,8 +126,8 @@ class EditMainMandaratViewController: UIViewController, View, UIColorPickerViewC
         view.addSubview(inputContainerBackView)
         
         inputContainerBackView.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            make.trailing.equalToSuperview()
+            make.leading.equalTo(view.safeAreaLayoutGuide.snp.leading)
+            make.trailing.equalTo(view.safeAreaLayoutGuide.snp.trailing)
             make.bottom.equalToSuperview()
         }
         
@@ -178,6 +183,7 @@ class EditMainMandaratViewController: UIViewController, View, UIColorPickerViewC
             make.bottom.equalToSuperview().inset(20)
         }
     }
+    
     
     func bind(reactor: EditMainMandaratViewModel) {
         
