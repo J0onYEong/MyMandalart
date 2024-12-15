@@ -17,11 +17,22 @@ class EditSubMandaratViewController: UIViewController {
     
     // Sub view
     private let backgroundView: TappableView = .init()
+    private let titleInputView: FocusTextField = .init()
     private let inputContainerBackView: UIView = .init()
+    
+    // - Tool button
+    private let exitButton: ImageButton = .init(imageName: "xmark")
+    private let saveButton: TextButton = .init(text: "저장")
+    
+    
+    // Transition
+    private let transitionDelegate = TransitionDelegate()
     
     
     init() {
         super.init(nibName: nil, bundle: nil)
+        
+        self.transitioningDelegate = transitionDelegate
     }
     required init?(coder: NSCoder) { nil }
     
@@ -31,6 +42,16 @@ class EditSubMandaratViewController: UIViewController {
         
         setBackgroundView()
         setLayout()
+    }
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.view.layoutIfNeeded()
+        
+        // MARK: Keyboard
+        titleInputView.becomeFirstResponder()
     }
     
     
@@ -67,6 +88,7 @@ class EditSubMandaratViewController: UIViewController {
             make.edges.equalToSuperview()
         }
         
+        
         // MARK: inputContainerBackView
         view.addSubview(inputContainerBackView)
         
@@ -74,6 +96,42 @@ class EditSubMandaratViewController: UIViewController {
             make.leading.equalToSuperview()
             make.trailing.equalToSuperview()
             make.bottom.equalToSuperview()
+        }
+        
+        
+        // MARK: toolButtonStack
+        let toolButtonStack: UIStackView = .init(
+            arrangedSubviews: [saveButton, exitButton]
+        )
+        toolButtonStack.axis = .horizontal
+        toolButtonStack.spacing = 5
+        toolButtonStack.distribution = .fill
+        toolButtonStack.alignment = .fill
+        
+        inputContainerBackView.addSubview(toolButtonStack)
+        
+        toolButtonStack.snp.makeConstraints { make in
+            
+            make.top.equalToSuperview().inset(40)
+            make.trailing.equalToSuperview().inset(20)
+        }
+        
+        
+        // MARK: inputStackView
+        let inputStackView: UIStackView = .init(arrangedSubviews: [
+            titleInputView,
+        ])
+        inputStackView.axis = .vertical
+        inputStackView.spacing = 12
+        inputStackView.alignment = .fill
+        inputStackView.distribution = .fill
+        
+        
+        inputStackView.snp.makeConstraints { make in
+            make.top.equalTo(toolButtonStack.snp.bottom).offset(10)
+            make.leading.equalToSuperview().inset(20)
+            make.trailing.equalToSuperview().inset(20)
+            make.bottom.equalToSuperview().inset(20)
         }
     }
 }
@@ -121,4 +179,89 @@ private extension EditSubMandaratViewController {
         inputContainerBackView.layer.mask = shapeLayer
     }
     
+}
+
+
+// MARK: Transition
+private extension EditSubMandaratViewController {
+    
+    func onAppearTask(duration: CFTimeInterval, context: UIViewControllerContextTransitioning) {
+        
+        let containerView = context.containerView
+        containerView.addSubview(view)
+        
+        // MARK: Animation
+        view.layoutIfNeeded()
+        let height = self.inputContainerBackView.layer.bounds.height
+        inputContainerBackView.transform = .init(translationX: 0, y: height)
+        backgroundView.alpha = 0
+        
+        UIView.animate(withDuration: duration) {
+            
+            self.backgroundView.alpha = 1
+            
+            self.inputContainerBackView.transform = .identity
+            
+        } completion: { completed in
+            
+            context.completeTransition(completed)
+        }
+    }
+    
+    func onDissmissTask(duration: CFTimeInterval, context: UIViewControllerContextTransitioning) {
+        
+        UIView.animate(withDuration: duration) {
+            
+            self.backgroundView.alpha = 0
+            
+            let height = self.inputContainerBackView.layer.bounds.height
+            self.inputContainerBackView.transform = .init(translationX: 0, y: height)
+            
+        } completion: { [weak self] completed in
+            
+            self?.view.removeFromSuperview()
+            context.completeTransition(completed)
+        }
+    }
+    
+    class TransitionDelegate: NSObject, UIViewControllerTransitioningDelegate {
+        
+        func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> (any UIViewControllerAnimatedTransitioning)? {
+            PresentAnimation()
+        }
+        
+        func animationController(forDismissed dismissed: UIViewController) -> (any UIViewControllerAnimatedTransitioning)? {
+            DismissAnimation()
+        }
+    }
+    
+    class PresentAnimation: NSObject, UIViewControllerAnimatedTransitioning {
+        func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
+            return 0.25
+        }
+
+        func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+            guard let viewController = transitionContext.viewController(forKey: .to) as? EditSubMandaratViewController else { return }
+            
+            viewController.onAppearTask(
+                duration: transitionDuration(using: transitionContext),
+                context: transitionContext
+            )
+        }
+    }
+
+    class DismissAnimation: NSObject, UIViewControllerAnimatedTransitioning {
+        func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
+            return 0.25
+        }
+
+        func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+            guard let viewController = transitionContext.viewController(forKey: .from) as? EditSubMandaratViewController else { return }
+            
+            viewController.onDissmissTask(
+                duration: transitionDuration(using: transitionContext),
+                context: transitionContext
+            )
+        }
+    }
 }
