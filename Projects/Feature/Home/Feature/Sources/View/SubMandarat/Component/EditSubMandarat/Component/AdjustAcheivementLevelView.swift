@@ -25,6 +25,16 @@ class AdjustAcheivementLevelView: UIView {
     private var leftAnchorForAnchorView: Constraint!
     private var previousLeftAnchorInset: CGFloat = 0
     private var currentLeftAnchorInset: CGFloat = 0
+    
+    // - Auto drag
+    private let dragPoints: [DragPoint] = [
+        .init(targetPrecent: 0.0),
+        .init(targetPrecent: 0.25),
+        .init(targetPrecent: 0.5),
+        .init(targetPrecent: 0.75),
+        .init(targetPrecent: 1.00),
+    ]
+    
  
     
     // Reactor
@@ -91,7 +101,7 @@ class AdjustAcheivementLevelView: UIView {
 
 
 // MARK: Drag action
-extension AdjustAcheivementLevelView {
+private extension AdjustAcheivementLevelView {
     
     func updateAnchor(_ state: UIGestureRecognizer.State, _ distance: CGFloat) {
         
@@ -107,9 +117,74 @@ extension AdjustAcheivementLevelView {
             self.currentLeftAnchorInset = nextLeftAnchorInset
             
         case .ended:
+            
+            if let moveInterpolation = checkAdjacentToDragPoint() {
+                
+                leftAnchorForAnchorView.update(inset: moveInterpolation)
+            }
+            
             self.previousLeftAnchorInset = currentLeftAnchorInset
         default:
             break
+        }
+    }
+    
+    
+    func checkAdjacentToDragPoint() -> CGFloat? {
+        
+        guard let dragMaxDistance else { return nil }
+        
+        let moveDistance = anchorView.frame.origin.x
+        let movePercent: CGFloat = moveDistance / dragMaxDistance
+        
+        for point in dragPoints {
+            
+            if point.checkInclude(percent: movePercent) {
+                
+                // 특정 구간에 포함되는 경우
+                
+                return dragMaxDistance * point.targetPrecent
+            }
+        }
+                
+        return nil
+    }
+}
+
+
+// MARK: Native type
+extension AdjustAcheivementLevelView {
+    
+    struct DragPoint {
+        
+        let targetPrecent: CGFloat
+        
+        init!(targetPrecent: CGFloat) {
+            
+            if (0.0...1.0).contains(targetPrecent) {
+                
+                self.targetPrecent = targetPrecent
+                
+            } else {
+                
+                return nil
+            }
+        }
+        
+        private let insetForRange: CGFloat = 0.05
+        
+        private var leftBound: CGFloat {
+            max(0, targetPrecent - insetForRange)
+        }
+        
+        private var rightBound: CGFloat {
+            min(100, targetPrecent + insetForRange)
+        }
+        
+        // public
+        func checkInclude(percent check: CGFloat) -> Bool {
+            
+            (leftBound...rightBound).contains(check)
         }
     }
 }
