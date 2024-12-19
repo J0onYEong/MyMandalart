@@ -70,6 +70,12 @@ class AdjustAcheivementLevelView: UIView {
             self.leftAnchorForAnchorView?.isActive = true
         }
         
+        
+        // MARK: Anchor background
+        
+        
+        
+        
         // MARK: Cotainer
         let stackView: UIStackView = .init(
             arrangedSubviews: [progressAreaView]
@@ -118,12 +124,23 @@ private extension AdjustAcheivementLevelView {
             
         case .ended:
             
-            if let moveInterpolation = checkAdjacentToDragPoint() {
+            if let adjustedInset = checkAdjacentToDragPoint() {
                 
-                leftAnchorForAnchorView.update(inset: moveInterpolation)
+                UIView.animate(withDuration: 0.1) {
+                    
+                    self.anchorView.isUserInteractionEnabled = false
+                    self.leftAnchorForAnchorView.update(inset: adjustedInset)
+                    self.layoutIfNeeded()
+                    
+                } completion: { _ in
+                    self.anchorView.isUserInteractionEnabled = true
+                }
+                
+                self.currentLeftAnchorInset = adjustedInset
             }
             
             self.previousLeftAnchorInset = currentLeftAnchorInset
+            
         default:
             break
         }
@@ -171,7 +188,7 @@ extension AdjustAcheivementLevelView {
             }
         }
         
-        private let insetForRange: CGFloat = 0.05
+        private let insetForRange: CGFloat = 0.1
         
         private var leftBound: CGFloat {
             max(0, targetPrecent - insetForRange)
