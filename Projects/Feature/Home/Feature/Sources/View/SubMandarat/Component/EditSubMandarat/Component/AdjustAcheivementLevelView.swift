@@ -11,6 +11,7 @@ import SwiftUI
 import SharedDesignSystem
 
 import RxSwift
+import RxRelay
 import SnapKit
 
 class AdjustAcheivementLevelView: UIView {
@@ -25,10 +26,11 @@ class AdjustAcheivementLevelView: UIView {
     
     
     // Drag gesture
-    fileprivate var dragMaxDistance: CGFloat?
+    fileprivate let dragMaxDistance: BehaviorRelay<CGFloat?> = .init(value: nil)
     private var leftAnchorForAnchorView: Constraint!
     private var previousLeftAnchorInset: CGFloat = 0
     private var currentLeftAnchorInset: CGFloat = 0
+    
     
     // - Auto drag
     private let dragPoints: [DragPoint] = [
@@ -39,7 +41,11 @@ class AdjustAcheivementLevelView: UIView {
         .init(targetPrecent: 1.00),
     ]
     
- 
+    
+    //
+    fileprivate let initialdragPrecent: PublishRelay<CGFloat> = .init()
+    fileprivate let dragPrecent: PublishRelay<CGFloat> = .init()
+    
     
     // Reactor
     private let disposeBag: DisposeBag = .init()
@@ -62,7 +68,7 @@ class AdjustAcheivementLevelView: UIView {
         
         let viewWidth = progressAreaView.bounds.width
         
-        dragMaxDistance = viewWidth - anchorView.bounds.width
+        dragMaxDistance.accept(viewWidth - anchorView.bounds.width)
         
         
         // Set anchorPrecentView corner radius
@@ -75,7 +81,7 @@ class AdjustAcheivementLevelView: UIView {
             view.snp.updateConstraints { make in
                 
                 let anchorHalfWidth = anchorView.bounds.width/2
-                let percentAmount = dragMaxDistance! * point.targetPrecent
+                let percentAmount = dragMaxDistance.value! * point.targetPrecent
                 
                 make.centerX.equalTo(percentLabelContainer.snp.left)
                     .inset(anchorHalfWidth + percentAmount)
@@ -161,6 +167,24 @@ class AdjustAcheivementLevelView: UIView {
                 updateAnchor(state, distance)
             })
             .disposed(by: disposeBag)
+        
+        
+        Observable
+            .combineLatest(
+                initialdragPrecent.take(1),
+                dragMaxDistance.distinctUntilChanged()
+            )
+            .observe(on: MainScheduler.asyncInstance)
+            .subscribe(onNext: { [weak self] percent, distance in
+                
+                guard let self, let distance else { return }
+                
+                let inset = distance * percent
+                
+                leftAnchorForAnchorView.update(inset: inset)
+                previousLeftAnchorInset = inset
+            })
+            .disposed(by: disposeBag)
     }
 }
 
@@ -173,7 +197,7 @@ private extension AdjustAcheivementLevelView {
         dragPoints.forEach { point in
             
             let labelView = UILabel()
-            labelView.text = "\(point.targetPrecent)%"
+            labelView.text = "\(Int(point.targetPrecent * 100))%"
             labelView.font = .preferredFont(forTextStyle: .caption2)
             labelView.textColor = .gray
             
@@ -188,7 +212,7 @@ private extension AdjustAcheivementLevelView {
     
     func updateAnchor(_ state: UIGestureRecognizer.State, _ distance: CGFloat) {
         
-        guard let dragMaxDistance else { return }
+        guard let dragMaxDistance = dragMaxDistance.value else { return }
         
         switch state {
         case .began, .changed:
@@ -218,15 +242,23 @@ private extension AdjustAcheivementLevelView {
             
             self.previousLeftAnchorInset = currentLeftAnchorInset
             
+            
+            // Publish percent
+            let movePercent: CGFloat = currentLeftAnchorInset / dragMaxDistance
+            dragPrecent.accept(movePercent)
+            
         default:
             break
         }
     }
     
     
+    
+    
+    
     func checkAdjacentToDragPoint() -> CGFloat? {
         
-        guard let dragMaxDistance else { return nil }
+        guard let dragMaxDistance = dragMaxDistance.value else { return nil }
         
         let moveDistance = anchorView.frame.origin.x
         let movePercent: CGFloat = moveDistance / dragMaxDistance
@@ -281,5 +313,21 @@ extension AdjustAcheivementLevelView {
             
             (leftBound...rightBound).contains(check)
         }
+    }
+}
+
+
+
+// MARK: Reactive
+extension Reactive where Base == AdjustAcheivementLevelView {
+    
+    var dragPecent: Observable<CGFloat> {
+        
+        base.dragPrecent.asObservable()
+    }
+    
+    var initialDragPercent: PublishRelay<CGFloat> {
+        
+        base.initialdragPrecent
     }
 }
