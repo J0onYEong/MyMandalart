@@ -16,8 +16,12 @@ import SnapKit
 class AdjustAcheivementLevelView: UIView {
     
     // Sub view
-    private let anchorView: AnchorView = .init()
     private let progressAreaView: UIView = .init()
+    private let anchorView: AnchorView = .init()
+    private let anchorPrecentView: UIView = .init()
+    
+    private let percentLabelContainer: UIView = .init()
+    private var precentLabelViews: [DragPoint: UIView] = [:]
     
     
     // Drag gesture
@@ -44,6 +48,9 @@ class AdjustAcheivementLevelView: UIView {
     init() {
         super.init(frame: .zero)
         
+        createPrecentLabelViews()
+        
+        setUI()
         setLayout()
         setReative()
     }
@@ -53,11 +60,52 @@ class AdjustAcheivementLevelView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        dragMaxDistance = progressAreaView.bounds.width - anchorView.bounds.width
+        let viewWidth = progressAreaView.bounds.width
+        
+        dragMaxDistance = viewWidth - anchorView.bounds.width
+        
+        
+        // Set anchorPrecentView corner radius
+        anchorPrecentView.layer.cornerRadius = anchorPrecentView.layer.bounds.height/2
+        
+        
+        // Set label views
+        precentLabelViews.forEach { point, view in
+            
+            view.snp.updateConstraints { make in
+                
+                let anchorHalfWidth = anchorView.bounds.width/2
+                let percentAmount = dragMaxDistance! * point.targetPrecent
+                
+                make.centerX.equalTo(percentLabelContainer.snp.left)
+                    .inset(anchorHalfWidth + percentAmount)
+            }
+        }
+    }
+    
+    
+    private func setUI() {
+        
+        // anchorPrecentView
+        anchorPrecentView.backgroundColor = .lightGray
+        anchorPrecentView.layer.borderColor = UIColor.black.cgColor
+        anchorPrecentView.layer.borderWidth = 1
     }
     
     
     private func setLayout() {
+        
+        // MARK: Anchor background
+        progressAreaView.addSubview(anchorPrecentView)
+        
+        anchorPrecentView.snp.makeConstraints { make in
+            
+            make.centerY.equalToSuperview()
+            make.left.equalToSuperview()
+            make.right.equalToSuperview()
+            make.height.equalToSuperview().multipliedBy(0.33)
+        }
+        
         
         // MARK: anchorView
         progressAreaView.addSubview(anchorView)
@@ -65,22 +113,33 @@ class AdjustAcheivementLevelView: UIView {
         anchorView.snp.makeConstraints { make in
             make.top.equalToSuperview()
             make.bottom.equalToSuperview()
+            make.width.equalTo(anchorView.snp.height)
             
             self.leftAnchorForAnchorView = make.left.equalToSuperview().constraint
             self.leftAnchorForAnchorView?.isActive = true
         }
         
         
-        // MARK: Anchor background
-        
-        
+        // MARK: percent label view
+        precentLabelViews.forEach { dragPoint, view in
+            
+            percentLabelContainer.addSubview(view)
+            
+            view.snp.makeConstraints { make in
+                
+                make.top.greaterThanOrEqualToSuperview()
+                make.bottom.lessThanOrEqualToSuperview()
+                make.centerX.equalTo(percentLabelContainer.snp.left)
+            }
+        }
         
         
         // MARK: Cotainer
         let stackView: UIStackView = .init(
-            arrangedSubviews: [progressAreaView]
+            arrangedSubviews: [percentLabelContainer, progressAreaView]
         )
         stackView.axis = .vertical
+        stackView.spacing = 5
         stackView.distribution = .fill
         stackView.alignment = .fill
         
@@ -102,6 +161,24 @@ class AdjustAcheivementLevelView: UIView {
                 updateAnchor(state, distance)
             })
             .disposed(by: disposeBag)
+    }
+}
+
+
+// MARK: Percent label view
+private extension AdjustAcheivementLevelView {
+    
+    func createPrecentLabelViews() {
+        
+        dragPoints.forEach { point in
+            
+            let labelView = UILabel()
+            labelView.text = "\(point.targetPrecent)%"
+            labelView.font = .preferredFont(forTextStyle: .caption2)
+            labelView.textColor = .gray
+            
+            self.precentLabelViews[point] = labelView
+        }
     }
 }
 
@@ -172,8 +249,9 @@ private extension AdjustAcheivementLevelView {
 // MARK: Native type
 extension AdjustAcheivementLevelView {
     
-    struct DragPoint {
+    struct DragPoint: Identifiable, Hashable {
         
+        var id: CGFloat { targetPrecent }
         let targetPrecent: CGFloat
         
         init!(targetPrecent: CGFloat) {
@@ -188,7 +266,7 @@ extension AdjustAcheivementLevelView {
             }
         }
         
-        private let insetForRange: CGFloat = 0.1
+        private let insetForRange: CGFloat = 0.15
         
         private var leftBound: CGFloat {
             max(0, targetPrecent - insetForRange)

@@ -15,7 +15,7 @@ class AnchorView: UIView {
     
     // Sub view
     fileprivate let iconView: UIImageView = {
-        let view: UIImageView = .init(image: .init(systemName: "star.fill"))
+        let view: UIImageView = .init(image: .init(systemName: "checkmark.circle.fill"))
         view.contentMode = .scaleAspectFit
         return view
     }()
@@ -66,7 +66,10 @@ class AnchorView: UIView {
         addSubview(iconView)
         
         iconView.snp.makeConstraints { make in
-            make.edges.equalToSuperview().inset(10)
+            
+            make.width.equalTo(40)
+            make.height.equalTo(40)
+            make.edges.equalToSuperview()
         }
     }
 }
