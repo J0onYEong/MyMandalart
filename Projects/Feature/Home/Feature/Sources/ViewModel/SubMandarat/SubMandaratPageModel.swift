@@ -28,6 +28,10 @@ class SubMandaratPageModel: Reactor, MainMandaratViewModelDelegate, SubMandaratV
     var initialState: State = .init()
     
     
+    // State for viewModel
+    private var subMandarats: [MandaratPosition : SubMandaratVO] = [:]
+    
+    
     // Sub ViewModel
     let mainMandaratViewModel: MainMandaratViewModel
     private(set) var subMandaratViewModels: [MandaratPosition: SubMandaratViewModel] = [:]
@@ -44,6 +48,12 @@ class SubMandaratPageModel: Reactor, MainMandaratViewModelDelegate, SubMandaratV
     init(mainMandarat: MainMandaratVO, subMandarats: [SubMandaratVO]) {
         
         self.mainMandaratVO = mainMandarat
+        
+        
+        // 서브 만다라트 데이터를 뷰모델이 보유
+        for subMandarat in subMandarats {
+            self.subMandarats[subMandarat.position] = subMandarat
+        }
         
         
         // 메인 만다라트 뷰모델 생성
@@ -65,7 +75,8 @@ class SubMandaratPageModel: Reactor, MainMandaratViewModelDelegate, SubMandaratV
             
         case .requestEditSubMandarat(let position):
             
-            self.presentEditSubMandaratView()
+            let subMandaratVO = subMandarats[position]!
+            presentEditSubMandaratViewController(subMandaratVO)
             
             return .never()
         }
@@ -137,9 +148,12 @@ extension SubMandaratPageModel {
 // MARK: Navigation
 private extension SubMandaratPageModel {
     
-    func presentEditSubMandaratView() {
+    func presentEditSubMandaratViewController(_ subMandaratVO: SubMandaratVO) {
+        
+        let viewModel: EditSubMandartViewModel = .init(subMandaratVO)
         
         let viewController: EditSubMandaratViewController = .init()
+        viewController.bind(reactor: viewModel)
         
         router
             .present(

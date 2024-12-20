@@ -14,7 +14,7 @@ import RxSwift
 import RxRelay
 import SnapKit
 
-class AdjustAcheivementLevelView: UIView {
+class AdjustAcheivementRateView: UIView {
     
     // Sub view
     private let progressAreaView: UIView = .init()
@@ -43,7 +43,6 @@ class AdjustAcheivementLevelView: UIView {
     
     
     //
-    fileprivate let initialdragPrecent: PublishRelay<CGFloat> = .init()
     fileprivate let dragPrecent: PublishRelay<CGFloat> = .init()
     
     
@@ -171,7 +170,7 @@ class AdjustAcheivementLevelView: UIView {
         
         Observable
             .combineLatest(
-                initialdragPrecent.take(1),
+                dragPrecent,
                 dragMaxDistance.distinctUntilChanged()
             )
             .observe(on: MainScheduler.asyncInstance)
@@ -190,7 +189,7 @@ class AdjustAcheivementLevelView: UIView {
 
 
 // MARK: Percent label view
-private extension AdjustAcheivementLevelView {
+private extension AdjustAcheivementRateView {
     
     func createPrecentLabelViews() {
         
@@ -208,7 +207,7 @@ private extension AdjustAcheivementLevelView {
 
 
 // MARK: Drag action
-private extension AdjustAcheivementLevelView {
+private extension AdjustAcheivementRateView {
     
     func updateAnchor(_ state: UIGestureRecognizer.State, _ distance: CGFloat) {
         
@@ -279,7 +278,7 @@ private extension AdjustAcheivementLevelView {
 
 
 // MARK: Native type
-extension AdjustAcheivementLevelView {
+extension AdjustAcheivementRateView {
     
     struct DragPoint: Identifiable, Hashable {
         
@@ -319,15 +318,10 @@ extension AdjustAcheivementLevelView {
 
 
 // MARK: Reactive
-extension Reactive where Base == AdjustAcheivementLevelView {
+extension Reactive where Base == AdjustAcheivementRateView {
     
-    var dragPecent: Observable<CGFloat> {
+    var dragPecent: PublishRelay<CGFloat> {
         
-        base.dragPrecent.asObservable()
-    }
-    
-    var initialDragPercent: PublishRelay<CGFloat> {
-        
-        base.initialdragPrecent
+        base.dragPrecent
     }
 }

@@ -13,12 +13,12 @@ import ReactorKit
 import RxSwift
 import RxCocoa
 
-class EditSubMandaratViewController: UIViewController {
+class EditSubMandaratViewController: UIViewController, View {
     
     // Sub view
     private let backgroundView: TappableView = .init()
     private let titleInputView: FocusTextField = .init()
-    private let acheivementLevelView: AdjustAcheivementLevelView = .init()
+    private let acheivementRateView: AdjustAcheivementRateView = .init()
     private let inputContainerBackView: UIView = .init()
     
     // - Tool button
@@ -31,6 +31,7 @@ class EditSubMandaratViewController: UIViewController {
     
     
     // Reactor
+    var reactor: EditSubMandartViewModel?
     var disposeBag: DisposeBag = .init()
     
     init() {
@@ -131,7 +132,7 @@ class EditSubMandaratViewController: UIViewController {
         // MARK: inputStackView
         let inputStackView: UIStackView = .init(arrangedSubviews: [
             titleInputView,
-            acheivementLevelView,
+            acheivementRateView,
         ])
         inputStackView.axis = .vertical
         inputStackView.spacing = 12
@@ -148,6 +149,57 @@ class EditSubMandaratViewController: UIViewController {
         }
     }
 }
+
+
+// MARK: View
+extension EditSubMandaratViewController {
+    
+    func bind(reactor: EditSubMandartViewModel) {
+        
+        self.reactor = reactor
+        
+        // Bind, textfield
+        reactor.state
+            .map(\.titleText)
+            .bind(to: titleInputView.rx.text)
+            .disposed(by: disposeBag)
+        
+        titleInputView.rx.text
+            .compactMap({ $0 })
+            .distinctUntilChanged()
+            .map({ Reactor.Action.titleChanged(text: $0) })
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        
+        // Bind, acheivementRateView
+        reactor.state
+            .map(\.acheiveRate)
+            .take(1)
+            .map({ CGFloat($0) })
+            .bind(to: acheivementRateView.rx.dragPecent)
+            .disposed(by: disposeBag)
+        
+        acheivementRateView.rx.dragPecent
+            .distinctUntilChanged()
+            .map({ Reactor.Action.acheivePercentChanged(percent: $0) })
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        
+        // Bind, Buttons
+        exitButton.rx.tap
+            .map({ Reactor.Action.exitButtonClicked })
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        saveButton.rx.tap
+            .map({ Reactor.Action.saveButtonClicked })
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)       
+    }
+}
+
 
 // MARK: InputContainerView drawing
 private extension EditSubMandaratViewController {

@@ -5,12 +5,18 @@
 //  Created by choijunios on 12/20/24.
 //
 
+import Foundation
+
+import SharedNavigationInterface
+import SharedDependencyInjector
 import DomainMandaratInterface
 
 import ReactorKit
 import RxSwift
 
 class EditSubMandartViewModel: Reactor {
+    
+    @Inject private var router: Router
     
     var initialState: State
     
@@ -30,6 +36,9 @@ class EditSubMandartViewModel: Reactor {
     func mutate(action: Action) -> Observable<Action> {
         switch action {
         case .exitButtonClicked:
+            
+            router.dismissModule(animated: true)
+            
             return .never()
         default:
             return .just(action)
@@ -41,13 +50,13 @@ class EditSubMandartViewModel: Reactor {
         
         switch mutation {
         case .acheivePercentChanged(let percent):
-            
+            print(percent)
             var newState = state
             newState.acheiveRate = percent
             return newState
             
         case .titleChanged(let text):
-            
+            print(text)
             var newState = state
             newState.titleText = text
             return newState
