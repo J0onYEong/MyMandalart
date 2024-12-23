@@ -87,7 +87,11 @@ class EditSubMandaratViewController: UIViewController, View {
     
     @objc private func onBackgroundViewTapped() {
         
-        
+        // 배경 클릭시 리스폰더 해제
+        if titleInputView.isFirstResponder {
+            
+            titleInputView.resignFirstResponder()
+        }
     }
     
     
