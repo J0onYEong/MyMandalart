@@ -45,6 +45,7 @@ class EditSubMandaratViewController: UIViewController, View {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setUI()
         setBackgroundView()
         setLayout()
         subscribeToKeyboardEvent()
@@ -70,15 +71,16 @@ class EditSubMandaratViewController: UIViewController, View {
     
     private func setUI() {
         
+        view.backgroundColor = .clear
+        backgroundView.backgroundColor = UIColor.gray.withAlphaComponent(0.7)
+        
+        titleInputView.backgroundColor = UIColor.gray.withAlphaComponent(0.1)
         titleInputView.setPlaceholderText("목표정보를 입력해주세요!")
     }
     
     
     private func setBackgroundView() {
         
-        view.backgroundColor = .clear
-        
-        backgroundView.backgroundColor = UIColor.gray.withAlphaComponent(0.7)
         let tapGesture: UITapGestureRecognizer = .init()
         backgroundView.addGestureRecognizer(tapGesture)
         tapGesture.addTarget(self, action: #selector(onBackgroundViewTapped))

@@ -172,6 +172,10 @@ extension SubMandaratPageModel {
     
     func editFinishedWithSavingRequest(edited subMandarat: SubMandaratVO) {
         
+        let position = subMandarat.position
+        self.subMandarats[position] = subMandarat
+        
+        
         // #1. save, not implmented
         
         
@@ -184,7 +188,6 @@ extension SubMandaratPageModel {
             primaryColor: primaryColor
         )
         
-        let position = subMandarat.position
         subMandaratViewModels[position]?.render(object: renderObject)
     }
 }
