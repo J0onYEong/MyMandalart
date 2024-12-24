@@ -20,4 +20,13 @@ public struct SubMandaratVO {
         self.acheivementRate = acheivementRate
         self.position = position
     }
+    
+    public static func createEmpty(with position: MandaratPosition) -> Self {
+        
+        return .init(
+            title: "",
+            acheivementRate: 0.0,
+            position: position
+        )
+    }
 }

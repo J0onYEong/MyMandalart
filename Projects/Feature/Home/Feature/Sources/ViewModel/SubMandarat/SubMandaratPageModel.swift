@@ -75,7 +75,7 @@ class SubMandaratPageModel: Reactor, MainMandaratViewModelDelegate, SubMandaratV
             
         case .requestEditSubMandarat(let position):
             
-            let subMandaratVO = subMandarats[position]!
+            let subMandaratVO = subMandarats[position] ?? .createEmpty(with: position)
             presentEditSubMandaratViewController(subMandaratVO)
             
             return .never()

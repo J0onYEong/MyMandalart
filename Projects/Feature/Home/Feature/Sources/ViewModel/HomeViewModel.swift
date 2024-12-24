@@ -25,7 +25,12 @@ class HomeViewModel: Reactor, MainMandaratViewModelDelegate, EditMainMandaratVie
     
     // Sub reactors
     private(set) var mainMandaratViewReactors: [MandaratPosition: MainMandaratViewModel] = [:]
+    
+    
+    // View model state
     private var mainMandaratVO: [MandaratPosition: MainMandaratVO] = [:]
+    private var subMandaratList: [MandaratPosition: [SubMandaratVO]] = [:]
+    
     
     init(mandaratUseCase: MandaratUseCase) {
         
@@ -46,14 +51,44 @@ class HomeViewModel: Reactor, MainMandaratViewModelDelegate, EditMainMandaratVie
             
             mandaratUseCase
                 .requestMainMandarats()
+                .observe(on: MainScheduler.asyncInstance)
                 .asObservable()
-                .withUnretained(self)
-                .subscribe(onNext: { viewModel, mainMandarats in
+                .subscribe(onNext: { [weak self] mainMandarats in
                     
+                    guard let self else { return }
+                    
+                    let subMandaratRequests = mainMandarats.map { mainManadartVO in
+                        
+                        self.mandaratUseCase
+                            .requestSubMandarats(mainMandarat: mainManadartVO)
+                            .asObservable()
+                    }
+                    
+                    
+                    // 메인 만다라트 등록
                     mainMandarats.forEach { mainMandaratVO in
                         
-                        viewModel.updateMainMandarat(updated: mainMandaratVO)
+                        self.updateMainMandarat(updated: mainMandaratVO)
                     }
+                    
+                    
+                    // 서브만다라트 등록
+                    Observable
+                        .zip(subMandaratRequests)
+                        .observe(on: MainScheduler.asyncInstance)
+                        .withUnretained(self)
+                        .subscribe(onNext: { viewModel, parties in
+                            
+                            for party in parties {
+                                
+                                if let position = party.first?.position {
+                                    
+                                    viewModel.subMandaratList[position] = party
+                                }
+                            }
+                            
+                        })
+                        .disposed(by: disposeBag)
                 })
                 .disposed(by: disposeBag)
             
@@ -155,9 +190,12 @@ private extension HomeViewModel {
     /// 서브 만다라트 화면 표출
     func presentSubMandaratViewController(_ mainMandaratVO: MainMandaratVO) {
         
+        let position = mainMandaratVO.position
+        let subMandarats = self.subMandaratList[position]
+        
         let viewModel: SubMandaratPageModel = .init(
             mainMandarat: mainMandaratVO,
-            subMandarats: []
+            subMandarats: subMandarats ?? []
         )
         
         let viewController = SubMandaratViewController()
