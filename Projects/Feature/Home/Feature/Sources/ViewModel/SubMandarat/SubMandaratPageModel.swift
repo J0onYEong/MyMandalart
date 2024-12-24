@@ -14,7 +14,7 @@ import SharedDependencyInjector
 import ReactorKit
 import RxSwift
 
-class SubMandaratPageModel: Reactor, MainMandaratViewModelDelegate, SubMandaratViewModelDelegate {
+class SubMandaratPageModel: Reactor, MainMandaratViewModelDelegate, SubMandaratViewModelDelegate, EditSubMandaratViewModelDelegate {
     
     // DI
     @Inject private var router: Router
@@ -151,6 +151,7 @@ private extension SubMandaratPageModel {
     func presentEditSubMandaratViewController(_ subMandaratVO: SubMandaratVO) {
         
         let viewModel: EditSubMandartViewModel = .init(subMandaratVO)
+        viewModel.delegate = self
         
         let viewController: EditSubMandaratViewController = .init()
         viewController.bind(reactor: viewModel)
@@ -161,5 +162,15 @@ private extension SubMandaratPageModel {
                 animated: true,
                 modalPresentationSytle: .custom
             )
+    }
+}
+
+
+// MARK: EditSubMandaratViewModelDelegate
+extension SubMandaratPageModel {
+    
+    func editFinishedWithSavingRequest(edited subMandarat: SubMandaratVO) {
+        
+        print(subMandarat)
     }
 }

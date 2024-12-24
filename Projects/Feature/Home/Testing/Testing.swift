@@ -24,4 +24,8 @@ class MockMandaratUseCase: MandaratUseCase {
     func saveMainMandarat(mainMandarat: DomainMandaratInterface.MainMandaratVO) {
         
     }
+    
+    func saveSubMandarat(mainMandarat: DomainMandaratInterface.MainMandaratVO) {
+        
+    }
 }

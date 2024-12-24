@@ -20,14 +20,11 @@ public class DefaultMandaratUseCase: MandaratUseCase {
         self.mandaratRepository = mandaratRepository
     }
     
+    
+    // MARK: Main mandarat
     public func requestMainMandarats() -> RxSwift.Single<[DomainMandaratInterface.MainMandaratVO]> {
         
         mandaratRepository.requestMainMandarat()
-    }
-    
-    public func requestSubMandarats(mainMandarat: DomainMandaratInterface.MainMandaratVO) -> RxSwift.Single<[DomainMandaratInterface.SubMandaratVO]> {
-        
-        mandaratRepository.requestSubMandarat(root: mainMandarat)
     }
     
     public func saveMainMandarat(mainMandarat: MainMandaratVO) {
@@ -42,5 +39,18 @@ public class DefaultMandaratUseCase: MandaratUseCase {
                 
             })
             .disposed(by: disposeBag)
+    }
+    
+    
+    // MARK: Sub mandarat
+    public func requestSubMandarats(mainMandarat: DomainMandaratInterface.MainMandaratVO) -> RxSwift.Single<[DomainMandaratInterface.SubMandaratVO]> {
+        
+        mandaratRepository.requestSubMandarat(root: mainMandarat)
+    }
+    
+    public func saveSubMandarat(mainMandarat: MainMandaratVO) {
+        
+        // 서브 만다라트 저장로직
+        
     }
 }

@@ -18,6 +18,11 @@ class EditSubMandartViewModel: Reactor {
     
     @Inject private var router: Router
     
+    
+    // Delegate
+    weak var delegate: EditSubMandaratViewModelDelegate?
+    
+    
     var initialState: State
     
     private let initialSubMandartVO: SubMandaratVO
@@ -50,30 +55,47 @@ class EditSubMandartViewModel: Reactor {
         
         switch mutation {
         case .acheivePercentChanged(let percent):
-            print(percent)
+            
             var newState = state
             newState.acheiveRate = percent
             return newState
             
         case .titleChanged(let text):
-            print(text)
+            
             var newState = state
             newState.titleText = text
             return newState
             
         case .saveButtonClicked:
             
-            var newState = state
+            let subMandaratVO: SubMandaratVO = createSubmandarat(state)
+            delegate?.editFinishedWithSavingRequest(edited: subMandaratVO)
             
-            
-            
-            return newState
+            router.dismissModule(animated: true)
+                        
+            return state
             
         default:
             return state
         }
     }
     
+}
+
+
+// MARK: Create sub vo
+private extension EditSubMandartViewModel {
+    
+    func createSubmandarat(_ state: State) -> SubMandaratVO {
+        
+        let position: MandaratPosition = self.initialSubMandartVO.position
+        
+        return .init(
+            title: state.titleText,
+            acheivementRate: state.acheiveRate,
+            position: position
+        )
+    }
 }
 
 
