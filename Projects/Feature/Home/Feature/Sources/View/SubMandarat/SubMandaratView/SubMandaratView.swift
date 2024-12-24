@@ -16,7 +16,7 @@ class SubMandaratView: UIView, View {
     
     // Sub view
     private let addSubMandaratView: AddSubMandaratView = .init()
-    
+    private let subMandaratDisplayView: SubMandaratDisplayView = .init()
     
     var reactor: SubMandaratViewModel?
     var disposeBag: DisposeBag = .init()
@@ -31,14 +31,23 @@ class SubMandaratView: UIView, View {
     
     private func setUI() {
         
-        self.layer.cornerRadius = SubMandaratConfig.corenrRadius
+        self.layer.cornerRadius = SubMandaratConfig.cornerRadius
         self.backgroundColor = UIColor.black
     }
     
     private func setLayout() {
         
+        // addSubMandaratView
         addSubview(addSubMandaratView)
         addSubMandaratView.snp.makeConstraints { make in
+            
+            make.edges.equalToSuperview()
+        }
+        
+        
+        // subMandaratDisplayView
+        addSubview(subMandaratDisplayView)
+        subMandaratDisplayView.snp.makeConstraints { make in
             
             make.edges.equalToSuperview()
         }
@@ -64,6 +73,19 @@ class SubMandaratView: UIView, View {
                 Reactor.Action.editSubMandaratButtonClicked
             }
             .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        
+        // Bind, subMandaratDisplayView
+        reactor.state
+            .map(\.isAvailable)
+            .map({ !$0 })
+            .bind(to: subMandaratDisplayView.rx.isHidden)
+            .disposed(by: disposeBag)
+        
+        reactor.state
+            .compactMap(\.renderObject)
+            .bind(to: subMandaratDisplayView.rx.renderObject)
             .disposed(by: disposeBag)
     }
 }

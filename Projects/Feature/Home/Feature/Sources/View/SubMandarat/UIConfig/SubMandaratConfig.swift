@@ -9,5 +9,5 @@ import Foundation
 
 enum SubMandaratConfig  {
     
-    static let corenrRadius: CGFloat = 15
+    static let cornerRadius: CGFloat = 15
 }

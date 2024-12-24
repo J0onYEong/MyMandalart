@@ -40,21 +40,23 @@ class AcheivementRateView: UIView {
         
         let widthOfView = layer.bounds.width
         let heightOfView = layer.bounds.height
-        let padding: CGFloat = 2
+        let padding: CGFloat = 3
         
-        let stickOrigin: CGPoint = .init(x: 2, y: 2)
+        let stickOrigin: CGPoint = .init(x: padding, y: padding)
         let stickSize: CGSize = .init(
             width: (widthOfView-2*padding) * percent,
             height: heightOfView-2*padding
         )
         
         rateStick.frame = .init(origin: stickOrigin, size: stickSize)
+        
+        rateStick.layer.cornerRadius = rateStick.layer.bounds.height / 3
+        self.layer.cornerRadius = self.layer.bounds.height / 3
     }
     
     private func setUI() {
         
-        layer.cornerRadius = 5
-        layer.borderWidth = 1
+        layer.borderWidth = 2
     }
     
     
@@ -94,7 +96,7 @@ class AcheivementRateView: UIView {
                 view.layer.borderColor = secondColor.cgColor
                 
                 // #3. stick color
-                view.rateStick.backgroundColor = color
+                view.rateStick.backgroundColor = mainColor
                 
             })
             .disposed(by: disposBag)

@@ -10,6 +10,7 @@ import UIKit
 import SharedNavigationInterface
 import DomainMandaratInterface
 import SharedDependencyInjector
+import SharedCore
 
 import ReactorKit
 import RxSwift
@@ -111,7 +112,7 @@ private extension SubMandaratPageModel {
             .forEach { position in
                 
                 let viewModel: SubMandaratViewModel = .init(
-                    position: mainMandaratVO.position,
+                    position: position,
                     color: .color(mainMandaratVO.hexColor) ?? .white
                 )
                 viewModel.deleate = self
@@ -171,6 +172,19 @@ extension SubMandaratPageModel {
     
     func editFinishedWithSavingRequest(edited subMandarat: SubMandaratVO) {
         
-        print(subMandarat)
+        // #1. save, not implmented
+        
+        
+        // #2. render
+        let primaryColor: UIColor! = .color(mainMandaratVO.hexColor)
+        
+        let renderObject: SubMandaratRO = .init(
+            title: subMandarat.title,
+            percent: subMandarat.acheivementRate,
+            primaryColor: primaryColor
+        )
+        
+        let position = subMandarat.position
+        subMandaratViewModels[position]?.render(object: renderObject)
     }
 }

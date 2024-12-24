@@ -36,26 +36,53 @@ class SubMandaratViewModel: Reactor {
             deleate?.subMandarat(edit: position)
             
             return .never()
+        default:
+            return .just(action)
         }
     }
     
     func reduce(state: State, mutation: Action) -> State {
         
-        return state
+        switch mutation {
+        case .mandaratDataFromOutside(let subMandaratRO):
+            
+            var newState = state
+            newState.renderObject = subMandaratRO
+            newState.isAvailable = true
+            
+            return newState
+            
+        default:
+            return state
+        }
     }
 }
 
-// MARK: Action & State
+
+// MARK: public interface
+extension SubMandaratViewModel {
+    
+    func render(object: SubMandaratRO) {
+        
+        action.onNext(.mandaratDataFromOutside(object))
+    }
+}
+
+
+// MARK: Reactor
 extension SubMandaratViewModel {
     
     enum Action {
         
         case editSubMandaratButtonClicked
+        case mandaratDataFromOutside(SubMandaratRO)
     }
     
     struct State {
         
         var isAvailable: Bool = false
         var titleColor: UIColor
+        
+        var renderObject: SubMandaratRO?
     }
 }

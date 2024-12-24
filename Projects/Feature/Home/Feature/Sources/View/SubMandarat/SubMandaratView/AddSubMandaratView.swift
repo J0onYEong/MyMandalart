@@ -38,9 +38,9 @@ class AddSubMandaratView: UIView {
     private func setLayer() {
         
         self.backgroundColor = .white
-        self.layer.cornerRadius = SubMandaratConfig.corenrRadius
+        self.layer.cornerRadius = SubMandaratConfig.cornerRadius
         
-        tapView.layer.cornerRadius = SubMandaratConfig.corenrRadius
+        tapView.layer.cornerRadius = SubMandaratConfig.cornerRadius
         tapView.layer.borderColor = UIColor.gray.cgColor
         tapView.layer.borderWidth = 2
     }
