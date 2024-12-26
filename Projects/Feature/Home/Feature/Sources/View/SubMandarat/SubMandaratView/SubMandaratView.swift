@@ -7,6 +7,8 @@
 
 import UIKit
 
+import SharedPresentationExt
+
 import ReactorKit
 import SnapKit
 import RxSwift
@@ -59,28 +61,24 @@ class SubMandaratView: UIView, View {
         
         // Bind, AddSubMandaratView
         reactor.state
-            .map(\.isAvailable)
-            .bind(to: addSubMandaratView.rx.isHidden)
+            .distinctDriver(\.isAvailable, addSubMandaratView.rx.isHidden)
             .disposed(by: disposeBag)
         
         reactor.state
-            .map(\.titleColor)
-            .bind(to: addSubMandaratView.rx.color)
+            .distinctDriver(\.titleColor, addSubMandaratView.rx.color)
             .disposed(by: disposeBag)
         
         addSubMandaratView.rx.tap
-            .map { _ in
-                Reactor.Action.editSubMandaratButtonClicked
-            }
+            .map { _ in Reactor.Action.editSubMandaratButtonClicked }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
         
         // Bind, subMandaratDisplayView
         reactor.state
-            .map(\.isAvailable)
+            .distinctDriver(\.isAvailable)
             .map({ !$0 })
-            .bind(to: subMandaratDisplayView.rx.isHidden)
+            .drive(subMandaratDisplayView.rx.isHidden)
             .disposed(by: disposeBag)
         
         reactor.state

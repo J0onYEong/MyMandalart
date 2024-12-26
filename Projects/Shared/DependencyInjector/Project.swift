@@ -19,19 +19,8 @@ let project = Project(
             bundleId: "\(Project.Environment.bundlePrefix).shared.DependencyInjector",
             sources: ["Sources/**"],
             dependencies: [
-                .shared(interface: .DependencyInjector),
-            ]
-        ),
-
-        // Interface
-        .target(
-            name: "SharedDependencyInjectorInterface",
-            destinations: .iOS,
-            product: .framework,
-            bundleId: "\(Project.Environment.bundlePrefix).shared.DependencyInjector.interface",
-            sources: ["Interface/**"],
-            dependencies: [
-                
+                .shared(implements: .PresentationExt),
+                .thirdParty(library: .Swinject),
             ]
         ),
     ]

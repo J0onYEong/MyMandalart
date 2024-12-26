@@ -7,7 +7,6 @@
 
 import Swinject
 
-
 @propertyWrapper
 public class Inject<T> {
     

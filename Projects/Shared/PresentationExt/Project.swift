@@ -1,26 +1,27 @@
 //
 //  Project.swift
 //
-//  Created by choijunios on 2024/12/03
+//  Created by choijunios on 2024/12/26
 //
 
 import ProjectDescription
 import DependencyPlugin
 
 let project = Project(
-    name: "DesignSystem",
+    name: "PresentationExt",
     targets: [
 
         // Shared
         .target(
-            name: "SharedDesignSystem",
+            name: "SharedPresentationExt",
             destinations: .iOS,
             product: .staticLibrary,
-            bundleId: "\(Project.Environment.bundlePrefix).shared.DesignSystem",
+            bundleId: "\(Project.Environment.bundlePrefix).shared.PresentationExt",
             sources: ["Sources/**"],
             dependencies: [
+                .shared(implements: .Core),
                 .thirdParty(library: .RxCocoa),
-                .thirdParty(library: .SnapKit),
+                .thirdParty(library: .RxSwift),
             ]
         ),
     ]

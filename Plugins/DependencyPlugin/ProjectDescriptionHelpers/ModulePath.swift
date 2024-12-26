@@ -87,6 +87,7 @@ public extension ModulePath {
         
         case Core
         case DesignSystem
+        case PresentationExt
         case DependencyInjector
         case Navigation
         case AlertHelper

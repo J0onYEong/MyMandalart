@@ -8,7 +8,6 @@
 import UIKit
 
 import SharedNavigationInterface
-import SharedDependencyInjector
 
 private protocol AlertHelperProtocol {
     

@@ -88,7 +88,8 @@ let project = Project(
                 .domain(interface: .Mandarat),
                 .shared(interface: .Navigation),
                 .shared(interface: .AlertHelper),
-                .shared(implements: .Core),
+                .shared(implements: .PresentationExt),
+                .shared(implements: .DesignSystem)
             ]
         ),
     ]

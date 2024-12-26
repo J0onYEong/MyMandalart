@@ -19,18 +19,6 @@ let project = Project(
             bundleId: "\(Project.Environment.bundlePrefix).shared.Core",
             sources: ["Sources/**"],
             dependencies: [
-                .shared(interface: .Core),
-            ]
-        ),
-
-        // Interface
-        .target(
-            name: "SharedCoreInterface",
-            destinations: .iOS,
-            product: .framework,
-            bundleId: "\(Project.Environment.bundlePrefix).shared.Core.interface",
-            sources: ["Interface/**"],
-            dependencies: [
                 
             ]
         ),

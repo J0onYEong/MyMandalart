@@ -7,6 +7,8 @@
 
 import UIKit
 
+import SharedPresentationExt
+
 import RxCocoa
 import RxSwift
 import SnapKit
@@ -106,16 +108,11 @@ class SubMandaratDisplayView: UIView {
         
         // Bind, titleLabel
         renderObject
-            .asDriver(onErrorDriveWith: .never())
-            .map(\.title)
-            .distinctUntilChanged()
-            .drive(titleLabel.rx.text)
+            .distinctDriver(\.title, titleLabel.rx.text)
             .disposed(by: disposeBag)
         
         renderObject
-            .asDriver(onErrorDriveWith: .never())
-            .map(\.primaryColor)
-            .distinctUntilChanged()
+            .distinctDriver(\.primaryColor)
             .map({ $0.getInvertedColor() })
             .drive(titleLabel.rx.textColor)
             .disposed(by: disposeBag)
@@ -123,43 +120,31 @@ class SubMandaratDisplayView: UIView {
         
         // Bind, acheivementRate
         renderObject
-            .asDriver(onErrorDriveWith: .never())
-            .map(\.percent)
-            .distinctUntilChanged()
+            .distinctDriver(\.percent)
             .drive(acheivementRate.rx.percent)
             .disposed(by: disposeBag)
         
         renderObject
-            .asDriver(onErrorDriveWith: .never())
-            .map(\.primaryColor)
-            .distinctUntilChanged()
+            .distinctDriver(\.primaryColor)
             .drive(acheivementRate.rx.color)
             .disposed(by: disposeBag)
         
         
         // acheivementLabel
         renderObject
-            .asDriver(onErrorDriveWith: .never())
-            .map(\.primaryColor)
-            .distinctUntilChanged()
+            .distinctDriver(\.primaryColor)
             .map({ $0.getInvertedColor() })
             .drive(acheivementLabel.rx.textColor)
             .disposed(by: disposeBag)
         
         renderObject
-            .asDriver(onErrorDriveWith: .never())
-            .map(\.percentText)
-            .distinctUntilChanged()
-            .drive(acheivementLabel.rx.text)
+            .distinctDriver(\.percentText, acheivementLabel.rx.text)
             .disposed(by: disposeBag)
         
         
         // Bind, self
         renderObject
-            .asDriver(onErrorDriveWith: .never())
-            .map(\.primaryColor)
-            .distinctUntilChanged()
-            .drive(rx.backgroundColor)
+            .distinctDriver(\.primaryColor, rx.backgroundColor)
             .disposed(by: disposeBag)
     }
 }
