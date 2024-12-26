@@ -34,8 +34,13 @@ class SubMandaratViewModel: Reactor {
         case .editSubMandaratButtonClicked:
             
             deleate?.subMandarat(edit: position)
-            
             return .never()
+            
+        case .longPress:
+            
+            deleate?.subMandarat(edit: position)
+            return .never()
+            
         default:
             return .just(action)
         }
@@ -76,6 +81,7 @@ extension SubMandaratViewModel {
         
         case editSubMandaratButtonClicked
         case mandaratDataFromOutside(SubMandaratRO)
+        case longPress
     }
     
     struct State {

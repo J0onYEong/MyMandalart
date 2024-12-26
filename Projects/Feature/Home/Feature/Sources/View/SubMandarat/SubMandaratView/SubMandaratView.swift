@@ -85,6 +85,11 @@ class SubMandaratView: UIView, View {
             .compactMap(\.renderObject)
             .bind(to: subMandaratDisplayView.rx.renderObject)
             .disposed(by: disposeBag)
+        
+        subMandaratDisplayView.rx.longPressEvent
+            .map { _ in Reactor.Action.longPress }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
     }
 }
 

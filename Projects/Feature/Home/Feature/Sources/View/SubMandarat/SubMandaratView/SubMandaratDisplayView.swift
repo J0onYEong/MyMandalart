@@ -21,6 +21,10 @@ class SubMandaratDisplayView: UIView {
     private let acheivementRate: AcheivementRateView = .init()
     
     
+    // Gesture
+    fileprivate var longPressGesture: UILongPressGestureRecognizer!
+    
+    
     // Reactive
     fileprivate let renderObject: PublishRelay<SubMandaratRO> = .init()
     private let disposeBag: DisposeBag = .init()
@@ -32,6 +36,7 @@ class SubMandaratDisplayView: UIView {
         setUI()
         setLayout()
         setReactive()
+        setLongPressGesture()
     }
     required init?(coder: NSCoder) { nil }
 
@@ -149,10 +154,36 @@ class SubMandaratDisplayView: UIView {
     }
 }
 
+
+// MARK: Press action
+private extension SubMandaratDisplayView {
+    
+    func setLongPressGesture() {
+        
+        if longPressGesture != nil { return }
+        
+        let gesture: UILongPressGestureRecognizer = .init(target: self, action: #selector(onLongPress(_:)))
+        gesture.minimumPressDuration = 0.75
+        self.addGestureRecognizer(gesture)
+        
+        self.longPressGesture = gesture
+    }
+    
+    @objc
+    func onLongPress(_ gesture: UILongPressGestureRecognizer) { }
+}
+
+
+// MARK: Reactive+Ext
 extension Reactive where Base == SubMandaratDisplayView {
     
     var renderObject: PublishRelay<SubMandaratRO> {
         
         base.renderObject
+    }
+    
+    var longPressEvent: Observable<Void> {
+        
+        base.longPressGesture.rx.event.map({ _ in })
     }
 }
