@@ -7,18 +7,25 @@
 
 import UIKit
 
+import FeatureHomeInterface
 import SharedDependencyInjector
 import SharedNavigationInterface
+import SharedPresentationExt
 import DomainMandaratInterface
 
 import ReactorKit
 
-class HomeViewModel: Reactor, MainMandaratViewModelDelegate, EditMainMandaratViewModelDelegate {
+
+class MainMandaratPageViewModel: Reactor, MainMandaratPageViewModelable, MainMandaratViewModelDelegate, EditMainMandaratViewModelDelegate {
     
-    @Inject private var router: Router
-    
+
     // 의존성 주입
     private let mandaratUseCase: MandaratUseCase
+    
+    
+    // Coordinator
+    weak var router: MainMandaratPageRouting!
+    
     
     let initialState: State = .init()
     private let disposeBag: DisposeBag = .init()
@@ -115,7 +122,7 @@ class HomeViewModel: Reactor, MainMandaratViewModelDelegate, EditMainMandaratVie
 }
 
 
-extension HomeViewModel {
+extension MainMandaratPageViewModel {
     
     enum ViewAction: Equatable {
         
@@ -144,43 +151,49 @@ extension HomeViewModel {
 
 
 // MARK: Navigations
-private extension HomeViewModel {
+private extension MainMandaratPageViewModel {
     
     /// 메인 만다라트 수정 및 생성 화면
     func presentEditMainMandaratViewController(_ mainMandaratVO: MainMandaratVO) {
         
-        let viewModel: EditMainMandaratViewModel = .init(mainMandaratVO)
-        viewModel.delegate = self
+        router
+            .presentEditMainMandaratPage(mainMandarat: mainMandaratVO)
         
-        let viewController = EditMainMandaratViewController()
-        viewController.bind(reactor: viewModel)
-        
-        router.present(viewController, animated: true, modalPresentationSytle: .custom)
+//        let viewModel: EditMainMandaratViewModel = .init(mainMandaratVO)
+//        viewModel.delegate = self
+//        
+//        let viewController = EditMainMandaratViewController()
+//        viewController.bind(reactor: viewModel)
+//        
+//        router.present(viewController, animated: true, modalPresentationSytle: .custom)
     }
     
     
     /// 서브 만다라트 화면 표출
     func presentSubMandaratViewController(_ mainMandaratVO: MainMandaratVO) {
         
-        let viewModel: SubMandaratPageModel = .init(
-            mandaratUseCase: mandaratUseCase,
-            mainMandarat: mainMandaratVO
-        )
+        router
+            .presentSubMandaratPage(mainMandarat: mainMandaratVO)
         
-        let viewController = SubMandaratPageViewController()
-        viewController.bind(reactor: viewModel)
-        
-        router.push(
-            viewController,
-            animated: true,
-            delegate: viewModel.transitionDelegate
-        )
+//        let viewModel: SubMandaratPageModel = .init(
+//            mandaratUseCase: mandaratUseCase,
+//            mainMandarat: mainMandaratVO
+//        )
+//        
+//        let viewController = SubMandaratPageViewController()
+//        viewController.bind(reactor: viewModel)
+//        
+//        router.push(
+//            viewController,
+//            animated: true,
+//            delegate: viewModel.transitionDelegate
+//        )
     }
 }
 
 
 // MARK: MainMandaratViewModelDelegate
-extension HomeViewModel {
+extension MainMandaratPageViewModel {
     
     func mainMandarat(editButtonClicked position: MandaratPosition) {
         
@@ -197,7 +210,7 @@ extension HomeViewModel {
 
 
 // MARK: Create main mandarat reactors
-private extension HomeViewModel {
+private extension MainMandaratPageViewModel {
     
     func createMainMandaratReactors() {
         
@@ -217,7 +230,7 @@ private extension HomeViewModel {
 
 
 // MARK: EditMainMandaratViewModelDelegate
-extension HomeViewModel {
+extension MainMandaratPageViewModel {
     
     func editFinishedWithSavingRequest(edited mainMandarat: MainMandaratVO) {
         
@@ -229,7 +242,7 @@ extension HomeViewModel {
 
 
 // MARK: 만다라트 상태를 상태에 반영
-private extension HomeViewModel {
+private extension MainMandaratPageViewModel {
     
     /// HomeViewModel상태 업데이트 및 변경 사항을 MainMandaratViewModel에 전파
     func updateMainMandarat(updated mainMandarat: MainMandaratVO) {

@@ -24,8 +24,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         dependencyInjection()
         
-        let viewModel: HomeViewModel = .init(mandaratUseCase: MockMandaratUseCase())
-        let viewController: HomeViewController = .init(reactor: viewModel)
+        let viewModel: MainMandaratPageViewModel = .init(mandaratUseCase: MockMandaratUseCase())
+        let viewController: MainMandaratPageViewController = .init(reactor: viewModel)
         
         window?.rootViewController = UINavigationController()
         window?.makeKeyAndVisible()

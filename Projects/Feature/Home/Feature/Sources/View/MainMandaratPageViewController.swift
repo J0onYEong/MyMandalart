@@ -7,12 +7,14 @@
 
 import UIKit
 
+import FeatureHomeInterface
 import DomainMandaratInterface
+import SharedPresentationExt
 
 import ReactorKit
 import RxCocoa
 
-class HomeViewController: UIViewController, View {
+class MainMandaratPageViewController: UIViewController, MainMandaratPageViewControllable,  View {
     
     // Sub view
     private var mainMandaratViews: [MandaratPosition: MainMandaratView] = [:]
@@ -28,7 +30,7 @@ class HomeViewController: UIViewController, View {
     
     var disposeBag: DisposeBag = .init()
     
-    init(reactor: HomeViewModel) {
+    init(reactor: MainMandaratPageViewModel) {
         
         super.init(nibName: nil, bundle: nil)
         
@@ -77,7 +79,7 @@ class HomeViewController: UIViewController, View {
     
     
     
-    func bind(reactor: HomeViewModel) {
+    func bind(reactor: MainMandaratPageViewModel) {
         
         // Bind reactors to MainMandaratViews
         MandaratPosition.allCases.forEach { position in
@@ -133,7 +135,7 @@ class HomeViewController: UIViewController, View {
     }
 }
 
-private extension HomeViewController {
+private extension MainMandaratPageViewController {
     
     func setMainMandaratViewLayout() {
         
@@ -214,7 +216,7 @@ private extension HomeViewController {
 }
 
 // MARK: MainMandarats
-private extension HomeViewController {
+private extension MainMandaratPageViewController {
     
     func createMainMandaratViews() {
         
@@ -247,7 +249,7 @@ private extension HomeViewController {
 
 
 // MARK: Animation
-private extension HomeViewController {
+private extension MainMandaratPageViewController {
     
     func resetMainMandaratPositions(selected position: MandaratPosition, completion: @escaping (Bool) -> ()) {
         
@@ -301,7 +303,7 @@ private extension HomeViewController {
 
 
 // MARK: Portrait & Landscape
-private extension HomeViewController {
+private extension MainMandaratPageViewController {
     
     enum DeviceMode {
         case portrait, landscape
