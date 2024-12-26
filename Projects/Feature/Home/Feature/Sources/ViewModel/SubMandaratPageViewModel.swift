@@ -13,7 +13,7 @@ import SharedCore
 import ReactorKit
 import RxSwift
 
-class SubMandaratPageModel: Reactor, MainMandaratViewModelListener, SubMandaratViewModelListener, EditSubMandaratViewModelDelegate {
+class SubMandaratPageViewModel: Reactor, MainMandaratViewModelListener, SubMandaratViewModelListener, EditSubMandaratViewModelDelegate {
     
     // DI
     private let mandaratUseCase: MandaratUseCase
@@ -24,7 +24,7 @@ class SubMandaratPageModel: Reactor, MainMandaratViewModelListener, SubMandaratV
     
     
     // State for view
-    var initialState: State = .init()
+    var initialState: State
     
     
     // State for viewModel
@@ -32,7 +32,6 @@ class SubMandaratPageModel: Reactor, MainMandaratViewModelListener, SubMandaratV
     
     
     // Sub ViewModel
-    let mainMandaratViewModel: MainMandaratViewModel
     private(set) var subMandaratViewModels: [MandaratPosition: SubMandaratViewModel] = [:]
     
     
@@ -48,12 +47,10 @@ class SubMandaratPageModel: Reactor, MainMandaratViewModelListener, SubMandaratV
 
         self.mandaratUseCase = mandaratUseCase
         self.mainMandaratVO = mainMandarat
-
         
-        // 메인 만다라트 뷰모델 생성
-        mainMandaratViewModel = .init(position: .TWO_TWO)
-        mainMandaratViewModel.delegate = self
-        
+        self.initialState = .init(
+            centerMandarat: mainMandaratVO
+        )
         
         // 서브 만다라트 뷰모델 생성
         createSubMandaratViewModels()
@@ -62,10 +59,6 @@ class SubMandaratPageModel: Reactor, MainMandaratViewModelListener, SubMandaratV
     func mutate(action: Action) -> Observable<Action> {
         switch action {
         case .viewDidLoad:
-            
-            // 사이드 이펙트, 메인만다라트 랜더링 지시
-            mainMandaratViewModel.requestRender(.create(from: mainMandaratVO))
-            
             
             // 사이드 이펙트, 서브만다라트 데이터 fetch
             mandaratUseCase
@@ -112,7 +105,7 @@ class SubMandaratPageModel: Reactor, MainMandaratViewModelListener, SubMandaratV
 }
 
 // MARK: Action & State
-extension SubMandaratPageModel {
+extension SubMandaratPageViewModel {
     
     enum Action {
         case viewDidLoad
@@ -120,11 +113,11 @@ extension SubMandaratPageModel {
     }
     
     struct State {
-        
+        let centerMandarat: MainMandaratVO
     }
 }
 
-private extension SubMandaratPageModel {
+private extension SubMandaratPageViewModel {
     
     func createSubMandaratViewModels() {
         
@@ -135,7 +128,7 @@ private extension SubMandaratPageModel {
                     position: position,
                     color: .color(mainMandaratVO.hexColor) ?? .white
                 )
-                viewModel.deleate = self
+                viewModel.listener = self
                 
                 self.subMandaratViewModels[position] = viewModel
             }
@@ -144,7 +137,7 @@ private extension SubMandaratPageModel {
 
 
 // MARK: MainMandaratViewModelDelegate
-extension SubMandaratPageModel {
+extension SubMandaratPageViewModel {
     
     func mainMandarat(detailButtonClicked position: MandaratPosition) {
         
@@ -157,7 +150,7 @@ extension SubMandaratPageModel {
 
 
 // MARK: SubMandaratViewModelDelegate
-extension SubMandaratPageModel {
+extension SubMandaratPageViewModel {
     
     func subMandarat(edit position: MandaratPosition) {
         
@@ -167,7 +160,7 @@ extension SubMandaratPageModel {
 
 
 // MARK: Navigation
-private extension SubMandaratPageModel {
+private extension SubMandaratPageViewModel {
     
     func presentEditSubMandaratViewController(_ subMandaratVO: SubMandaratVO) {
         
@@ -188,7 +181,7 @@ private extension SubMandaratPageModel {
 
 
 // MARK: EditSubMandaratViewModelDelegate
-extension SubMandaratPageModel {
+extension SubMandaratPageViewModel {
     
     func editFinishedWithSavingRequest(edited subMandarat: SubMandaratVO) {
         
@@ -210,7 +203,7 @@ extension SubMandaratPageModel {
 
 
 // MARK: Private functions
-private extension SubMandaratPageModel {
+private extension SubMandaratPageViewModel {
     
     func render(subMandarat: SubMandaratVO) {
         

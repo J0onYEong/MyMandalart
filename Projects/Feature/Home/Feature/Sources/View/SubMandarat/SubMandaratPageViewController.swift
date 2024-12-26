@@ -20,7 +20,7 @@ class SubMandaratPageViewController: UIViewController, View {
     fileprivate var subMandaratViewsExceptForCenter: [MandaratPosition: SubMandaratView] {
         subMandaratViews.filter { key, _ in key != .TWO_TWO }
     }
-    fileprivate let mainMandaratView: MainMandaratView = .init()
+    fileprivate let centerMandaratView: CenterMandaratView = .init()
     fileprivate var subMandaratContainerView: UIStackView?
     
     private var portraitConstraints: [NSLayoutConstraint] = []
@@ -28,7 +28,7 @@ class SubMandaratPageViewController: UIViewController, View {
     
     
     // Reactor
-    var reactor: SubMandaratPageModel?
+    var reactor: SubMandaratPageViewModel?
     var disposeBag: DisposeBag = .init()
     
     init() {
@@ -85,18 +85,26 @@ class SubMandaratPageViewController: UIViewController, View {
     }
     
     
-    func bind(reactor: SubMandaratPageModel) {
+    func bind(reactor: SubMandaratPageViewModel) {
         
         self.reactor = reactor
-        
-        // Bind, mainMandaratView
-        mainMandaratView.bind(reactor: reactor.mainMandaratViewModel)
         
         // Bind, subMandaratViews
         reactor.subMandaratViewModels.forEach { position, viewModel in
             
             self.subMandaratViews[position]!.bind(reactor: viewModel)
         }
+        
+        
+        // Render main mandarat
+        reactor.state
+            .map(\.centerMandarat)
+            .withUnretained(self)
+            .subscribe(onNext: { vc, centerMandaratVO in
+                
+                vc.centerMandaratView.render(centerMandaratVO)
+            })
+            .disposed(by: disposeBag)
     }
 }
 
@@ -105,11 +113,11 @@ private extension SubMandaratPageViewController {
     
     func setMainMandaratViewLayout() {
         
-        view.addSubview(mainMandaratView)
+        view.addSubview(centerMandaratView)
         
         let middleCell: UIView = subMandaratViews[.TWO_TWO]!
         
-        mainMandaratView.snp.makeConstraints { make in
+        centerMandaratView.snp.makeConstraints { make in
             make.edges.equalTo(middleCell)
         }
     }
@@ -227,7 +235,7 @@ extension SubMandaratPageViewController {
             subMandaratView.moveOneInch(direction: .random)
         }
         
-        mainMandaratView.alpha = 0
+        centerMandaratView.alpha = 0
         
         
         // 동시에 모든 셀을 사방으로 보낸다. + Animation
@@ -242,7 +250,7 @@ extension SubMandaratPageViewController {
         } completion: { completed in
             
             self.view.backgroundColor = .white
-            self.mainMandaratView.alpha = 1
+            self.centerMandaratView.alpha = 1
             context.completeTransition(completed)
         }
     }

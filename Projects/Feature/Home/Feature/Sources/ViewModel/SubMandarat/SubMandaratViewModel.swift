@@ -18,7 +18,7 @@ class SubMandaratViewModel: Reactor {
     
     private let position: MandaratPosition
     
-    weak var listner: SubMandaratViewModelListener!
+    weak var listener: SubMandaratViewModelListener!
     
     init(position: MandaratPosition, color: UIColor) {
         
@@ -33,12 +33,12 @@ class SubMandaratViewModel: Reactor {
         switch action {
         case .editSubMandaratButtonClicked:
             
-            listner.subMandarat(edit: position)
+            listener.subMandarat(edit: position)
             return .never()
             
         case .longPress:
             
-            listner.subMandarat(edit: position)
+            listener.subMandarat(edit: position)
             return .never()
             
         default:
