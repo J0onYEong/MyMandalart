@@ -14,7 +14,7 @@ import DomainMandaratInterface
 import ReactorKit
 
 
-class MainMandaratPageViewModel: Reactor, MainMandaratPageViewModelable, MainMandaratViewModelDelegate, EditMainMandaratViewModelDelegate {
+class MainMandaratPageViewModel: Reactor, MainMandaratPageViewModelable, MainMandaratViewModelListener, EditMainMandaratViewModelDelegate {
     
 
     // 의존성 주입

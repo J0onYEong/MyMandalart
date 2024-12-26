@@ -13,7 +13,7 @@ import SharedCore
 import ReactorKit
 import RxSwift
 
-class SubMandaratPageModel: Reactor, MainMandaratViewModelDelegate, SubMandaratViewModelDelegate, EditSubMandaratViewModelDelegate {
+class SubMandaratPageModel: Reactor, MainMandaratViewModelListener, SubMandaratViewModelListener, EditSubMandaratViewModelDelegate {
     
     // DI
     private let mandaratUseCase: MandaratUseCase

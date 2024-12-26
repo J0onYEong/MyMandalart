@@ -17,7 +17,7 @@ class MainMandaratViewModel: Reactor {
     let initialState: State
     private let position: MandaratPosition
     
-    public weak var delegate: MainMandaratViewModelDelegate?
+    public weak var listener: MainMandaratViewModelListener!
     
     init(position: MandaratPosition) {
         
@@ -30,18 +30,18 @@ class MainMandaratViewModel: Reactor {
         switch action {
         case .addMandaratButtonClicked:
             
-            delegate?.mainMandarat(editButtonClicked: position)
+            listener.mainMandarat(editButtonClicked: position)
             return .never()
             
         case .mainMandaratDisplayViewClicked:
             
-            delegate?.mainMandarat(detailButtonClicked: position)
+            listener.mainMandarat(detailButtonClicked: position)
             return .never()
             
         case .longPressMainMandarat:
             
             // request edit screen
-            delegate?.mainMandarat(editButtonClicked: position)
+            listener.mainMandarat(editButtonClicked: position)
             
             return .never()
             

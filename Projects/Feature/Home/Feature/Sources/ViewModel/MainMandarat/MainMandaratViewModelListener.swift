@@ -7,14 +7,14 @@
 
 import DomainMandaratInterface
 
-protocol MainMandaratViewModelDelegate: AnyObject {
+protocol MainMandaratViewModelListener: AnyObject {
     
     func mainMandarat(editButtonClicked position: MandaratPosition)
     
     func mainMandarat(detailButtonClicked position: MandaratPosition)
 }
 
-extension MainMandaratViewModelDelegate {
+extension MainMandaratViewModelListener {
     
     func mainMandarat(editButtonClicked position: MandaratPosition) { }
     func mainMandarat(detailButtonClicked position: MandaratPosition) { }
