@@ -18,6 +18,10 @@ class HomeViewController: UIViewController, View {
     private var mainMandaratViews: [MandaratPosition: MainMandaratView] = [:]
     fileprivate var mainMandaratContainerView: UIStackView!
     
+    private var portraitConstraints: [NSLayoutConstraint] = []
+    private var landscapeConstraints: [NSLayoutConstraint] = []
+    
+    
     // Color picker
     private let selectedColor: PublishSubject<UIColor> = .init()
     private var editingColor: UIColor?
@@ -50,6 +54,27 @@ class HomeViewController: UIViewController, View {
         
         reactor?.sendEvent(.viewDidAppear)
     }
+
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        let deviceOrientation = UIDevice.current.orientation
+        
+        switch deviceOrientation {
+        case .portrait:
+            
+            fitLayoutTo(mode: .portrait)
+            
+        case .landscapeRight, .landscapeLeft:
+            
+            fitLayoutTo(mode: .landscape)
+            
+        default:
+            return
+        }
+    }
+    
     
     
     func bind(reactor: HomeViewModel) {
@@ -150,15 +175,39 @@ private extension HomeViewController {
         
         mainMandaratContainerStackView.snp.makeConstraints { make in
             
-            make.leading.equalTo(view.safeAreaLayoutGuide.snp.leading)
-            make.trailing.equalTo(view.safeAreaLayoutGuide.snp.trailing)
+            portraitConstraints = [
+                make.leading.equalTo(view.safeAreaLayoutGuide.snp.leading)
+                    .constraint.layoutConstraints.first!,
+                
+                make.trailing.equalTo(view.safeAreaLayoutGuide.snp.trailing)
+                    .constraint.layoutConstraints.first!,
+                
+                make.height.equalTo(mainMandaratContainerStackView.snp.width)
+                    .constraint.layoutConstraints.first!,
+                
+                make.centerY.equalToSuperview()
+                    .constraint.layoutConstraints.first!,
+            ]
             
-            // width == height
-            make.height.equalTo(mainMandaratContainerStackView.snp.width)
-            
-            // y position
-            make.centerY.equalToSuperview()
+            landscapeConstraints = [
+                make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+                    .constraint.layoutConstraints.first!,
+                
+                make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+                    .constraint.layoutConstraints.first!,
+                
+                make.width.equalTo(mainMandaratContainerStackView.snp.height)
+                    .constraint.layoutConstraints.first!,
+                
+                make.centerX.equalToSuperview()
+                    .constraint.layoutConstraints.first!,
+            ]
         }
+        
+        
+        // 최초 설정 : Portrait
+        fitLayoutTo(mode: .portrait)
+        
         
         self.mainMandaratContainerView = mainMandaratContainerStackView
     }
@@ -247,5 +296,30 @@ private extension HomeViewController {
                 }
             
         }, completion: completion)
+    }
+}
+
+
+// MARK: Portrait & Landscape
+private extension HomeViewController {
+    
+    enum DeviceMode {
+        case portrait, landscape
+    }
+    
+    func fitLayoutTo(mode: DeviceMode) {
+        
+        switch mode {
+        case .portrait:
+            
+            landscapeConstraints.forEach({ $0.isActive = false })
+            portraitConstraints.forEach({ $0.isActive = true })
+            
+        case .landscape:
+            
+            portraitConstraints.forEach({ $0.isActive = false })
+            landscapeConstraints.forEach({ $0.isActive = true })
+            
+        }
     }
 }
