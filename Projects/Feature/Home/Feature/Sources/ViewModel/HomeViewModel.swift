@@ -162,8 +162,6 @@ private extension HomeViewModel {
     /// 서브 만다라트 화면 표출
     func presentSubMandaratViewController(_ mainMandaratVO: MainMandaratVO) {
         
-        let position = mainMandaratVO.position
-        
         let viewModel: SubMandaratPageModel = .init(
             mandaratUseCase: mandaratUseCase,
             mainMandarat: mainMandaratVO

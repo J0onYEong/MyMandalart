@@ -21,7 +21,7 @@ class AcheivementRateView: UIView {
     
     // Reactive
     fileprivate let percentPublisher: BehaviorRelay<CGFloat> = .init(value: 0.0)
-    fileprivate let colorPublisher: PublishRelay<UIColor> = .init()
+    fileprivate let colorPublisher: BehaviorRelay<UIColor> = .init(value: .clear)
     private let disposBag: DisposeBag = .init()
     
     init() {
@@ -56,7 +56,6 @@ class AcheivementRateView: UIView {
     
     private func setUI() {
         
-        layer.borderWidth = 2
     }
     
     
@@ -84,18 +83,13 @@ class AcheivementRateView: UIView {
             .withUnretained(self)
             .subscribe(onNext: { view, color in
                 
-                let colors = color.getTriadicColors()
                 let mainColor = color
-                let firstColor = colors[0]
-                let secondColor = colors[1]
+                let flipColor = color.getInvertedColor()
                 
                 // #1. background
-                view.backgroundColor = firstColor
+                view.backgroundColor = flipColor
                 
-                // #2. border
-                view.layer.borderColor = secondColor.cgColor
-                
-                // #3. stick color
+                // #2. stick color
                 view.rateStick.backgroundColor = mainColor
                 
             })
@@ -105,7 +99,7 @@ class AcheivementRateView: UIView {
 
 extension Reactive where Base == AcheivementRateView {
     
-    var color: PublishRelay<UIColor> {
+    var color: BehaviorRelay<UIColor> {
         base.colorPublisher
     }
     

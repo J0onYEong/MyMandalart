@@ -15,6 +15,7 @@ class SubMandaratDisplayView: UIView {
     
     // Sub view
     private let titleLabel: UILabel = .init()
+    private let acheivementLabel: UILabel = .init()
     private let acheivementRate: AcheivementRateView = .init()
     
     
@@ -40,37 +41,63 @@ class SubMandaratDisplayView: UIView {
         self.layer.borderWidth = 2
         self.layer.borderColor = UIColor.gray.cgColor
         
+        
+        // titleLabel
         titleLabel.font = .systemFont(ofSize: 17, weight: .bold)
         titleLabel.textAlignment = .center
-        titleLabel.textColor = UIColor.black
         titleLabel.adjustsFontSizeToFitWidth = true
+        
+        
+        // acheivementLabel
+        acheivementLabel.font = .systemFont(ofSize: 10, weight: .semibold)
+        acheivementLabel.textAlignment = .center
+        acheivementLabel.adjustsFontSizeToFitWidth = true
     }
     
     
     private func setLayout() {
         
-        let stackView: UIStackView = .init(arrangedSubviews: [
-            titleLabel, acheivementRate
+        let achievementStack: UIStackView = .init(arrangedSubviews: [
+            acheivementRate, acheivementLabel
         ])
-        stackView.axis = .vertical
-        stackView.spacing = 3
-        stackView.distribution = .fill
-        stackView.alignment = .fill
-        
+        achievementStack.axis = .vertical
+        achievementStack.spacing = 2
+        achievementStack.distribution = .fill
+        achievementStack.alignment = .center
         
         acheivementRate.snp.makeConstraints { make in
             
             make.height.equalTo(20)
+            make.horizontalEdges.equalToSuperview()
         }
         
-        // MARK: titleLabel
-        addSubview(stackView)
+        acheivementLabel.snp.makeConstraints { make in
+            
+            make.width.equalTo(acheivementRate.snp.width).multipliedBy(0.75)
+        }
         
-        stackView.snp.makeConstraints { make in
+        
+        let mainStack: UIStackView = .init(arrangedSubviews: [
+            titleLabel, achievementStack
+        ])
+        mainStack.axis = .vertical
+        mainStack.spacing = 10
+        mainStack.distribution = .fill
+        mainStack.alignment = .fill
+        
+        addSubview(mainStack)
+        
+        mainStack.snp.makeConstraints { make in
             
             make.centerY.equalToSuperview()
             make.leading.equalToSuperview().inset(10)
             make.trailing.equalToSuperview().inset(10)
+        }
+        
+        
+        achievementStack.snp.makeConstraints { make in
+            
+            make.width.equalToSuperview()
         }
     }
     
@@ -79,31 +106,60 @@ class SubMandaratDisplayView: UIView {
         
         // Bind, titleLabel
         renderObject
-            .observe(on: MainScheduler.instance)
+            .asDriver(onErrorDriveWith: .never())
             .map(\.title)
-            .bind(to: titleLabel.rx.text)
+            .distinctUntilChanged()
+            .drive(titleLabel.rx.text)
+            .disposed(by: disposeBag)
+        
+        renderObject
+            .asDriver(onErrorDriveWith: .never())
+            .map(\.primaryColor)
+            .distinctUntilChanged()
+            .map({ $0.getInvertedColor() })
+            .drive(titleLabel.rx.textColor)
             .disposed(by: disposeBag)
         
         
         // Bind, acheivementRate
         renderObject
-            .observe(on: MainScheduler.instance)
+            .asDriver(onErrorDriveWith: .never())
             .map(\.percent)
-            .bind(to: acheivementRate.rx.percent)
+            .distinctUntilChanged()
+            .drive(acheivementRate.rx.percent)
             .disposed(by: disposeBag)
         
         renderObject
-            .observe(on: MainScheduler.instance)
+            .asDriver(onErrorDriveWith: .never())
             .map(\.primaryColor)
-            .bind(to: acheivementRate.rx.color)
+            .distinctUntilChanged()
+            .drive(acheivementRate.rx.color)
+            .disposed(by: disposeBag)
+        
+        
+        // acheivementLabel
+        renderObject
+            .asDriver(onErrorDriveWith: .never())
+            .map(\.primaryColor)
+            .distinctUntilChanged()
+            .map({ $0.getInvertedColor() })
+            .drive(acheivementLabel.rx.textColor)
+            .disposed(by: disposeBag)
+        
+        renderObject
+            .asDriver(onErrorDriveWith: .never())
+            .map(\.percentText)
+            .distinctUntilChanged()
+            .drive(acheivementLabel.rx.text)
             .disposed(by: disposeBag)
         
         
         // Bind, self
         renderObject
-            .observe(on: MainScheduler.instance)
+            .asDriver(onErrorDriveWith: .never())
             .map(\.primaryColor)
-            .bind(to: self.rx.backgroundColor)
+            .distinctUntilChanged()
+            .drive(rx.backgroundColor)
             .disposed(by: disposeBag)
     }
 }
