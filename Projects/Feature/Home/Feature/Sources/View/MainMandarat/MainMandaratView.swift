@@ -36,18 +36,14 @@ final class MainMandaratView: UIView, View {
         
         // Add MainMandarat button clicked
         addMandaratView.tap
-            .map { _ in
-                return Reactor.Action.addMandaratButtonClicked
-            }
+            .map { _ in Reactor.Action.addMandaratButtonClicked }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
         
         // Display button clicked
         mainMandaratDisplayView.tap
-            .map { _ in
-                return Reactor.Action.mainMandaratDisplayViewClicked
-            }
+            .map({ _ in Reactor.Action.mainMandaratDisplayViewClicked })
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
             
@@ -70,6 +66,11 @@ final class MainMandaratView: UIView, View {
             .compactMap(\.mandarat)
             .distinctUntilChanged()
             .bind(to: mainMandaratDisplayView.rx.renderObject)
+            .disposed(by: disposeBag)
+        
+        mainMandaratDisplayView.rx.longPressEvent
+            .map({ _ in Reactor.Action.longPressMainMandarat })
+            .bind(to: reactor.action)
             .disposed(by: disposeBag)
     }
     

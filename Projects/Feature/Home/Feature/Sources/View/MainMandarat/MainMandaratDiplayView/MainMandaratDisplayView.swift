@@ -14,10 +14,16 @@ import RxCocoa
 
 class MainMandaratDisplayView: TappableView {
     
+    // Sub view
     private let titleLabel: UILabel = .init()
-    
     private var gradientLayer: CAGradientLayer = .init()
     
+    
+    // Gesture
+    fileprivate var longPressGesture: UILongPressGestureRecognizer!
+    
+    
+    // Reactive
     fileprivate let renderObject: PublishSubject<MainMandaratRO> = .init()
     private let disposeBag: DisposeBag = .init()
     
@@ -27,6 +33,7 @@ class MainMandaratDisplayView: TappableView {
         setUI()
         setLayout()
         setReactive()
+        setLongPressGesture()
     }
     required init?(coder: NSCoder) { nil }
     
@@ -118,10 +125,35 @@ class MainMandaratDisplayView: TappableView {
 }
 
 
+// MARK: Press action
+private extension MainMandaratDisplayView {
+    
+    func setLongPressGesture() {
+        
+        if longPressGesture != nil { return }
+        
+        let gesture: UILongPressGestureRecognizer = .init(target: self, action: #selector(onLongPress(_:)))
+        gesture.minimumPressDuration = 0.75
+        self.addGestureRecognizer(gesture)
+        
+        self.longPressGesture = gesture
+    }
+    
+    @objc
+    func onLongPress(_ gesture: UILongPressGestureRecognizer) { }
+}
+
+
+// MARK: Reactive+Ext
 extension Reactive where Base == MainMandaratDisplayView {
     
     var renderObject: PublishSubject<MainMandaratRO> {
         
         base.renderObject
+    }
+    
+    var longPressEvent: Observable<Void> {
+        
+        base.longPressGesture.rx.event.map({ _ in })
     }
 }

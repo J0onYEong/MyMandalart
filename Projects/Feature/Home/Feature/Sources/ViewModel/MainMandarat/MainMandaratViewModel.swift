@@ -38,6 +38,13 @@ class MainMandaratViewModel: Reactor {
             delegate?.mainMandarat(detailButtonClicked: position)
             return .never()
             
+        case .longPressMainMandarat:
+            
+            // request edit screen
+            delegate?.mainMandarat(editButtonClicked: position)
+            
+            return .never()
+            
         default:
             return .just(action)
         }
@@ -79,6 +86,7 @@ extension MainMandaratViewModel {
         case addMandaratButtonClicked
         case mainMandaratDisplayViewClicked
         case mandaratDataFromOutside(MainMandaratRO)
+        case longPressMainMandarat
         
         // Side effect
         
