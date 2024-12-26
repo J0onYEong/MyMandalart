@@ -15,7 +15,7 @@ let project = Project(
         .target(
             name: "SharedDesignSystem",
             destinations: .iOS,
-            product: .staticLibrary,
+            product: .framework,
             bundleId: "\(Project.Environment.bundlePrefix).shared.DesignSystem",
             sources: ["Sources/**"],
             dependencies: [

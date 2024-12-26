@@ -52,9 +52,6 @@ let project = Project(
             dependencies: [
                 .feature(interface: .Home),
                 
-                .shared(implements: .DesignSystem),
-                .shared(implements: .DependencyInjector),
-                
                 .thirdParty(library: .RxCocoa),
                 .thirdParty(library: .ReactorKit),
                 .thirdParty(library: .SnapKit),
@@ -86,10 +83,10 @@ let project = Project(
             dependencies: [
                 
                 .domain(interface: .Mandarat),
-                .shared(interface: .Navigation),
+                
                 .shared(interface: .AlertHelper),
                 .shared(implements: .PresentationExt),
-                .shared(implements: .DesignSystem)
+                .shared(implements: .DesignSystem),
             ]
         ),
     ]

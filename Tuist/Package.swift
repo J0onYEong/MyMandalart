@@ -12,6 +12,7 @@ import PackageDescription
             "RxSwift": .framework,
             "RxCocoa": .framework,
             "ReactorKit": .framework,
+            "SnapKit": .framework,
         ]
     )
 #endif

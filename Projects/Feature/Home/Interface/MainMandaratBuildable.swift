@@ -1,6 +1,6 @@
 //
-//  asd.swift
-//  Home
+//  MainMandaratBuildable.swift
+//  HomeInterface
 //
 //  Created by choijunios on 12/26/24.
 //

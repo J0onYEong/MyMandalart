@@ -8,8 +8,6 @@
 import UIKit
 
 import FeatureHomeInterface
-import SharedDependencyInjector
-import SharedNavigationInterface
 import SharedPresentationExt
 import DomainMandaratInterface
 
@@ -156,16 +154,7 @@ private extension MainMandaratPageViewModel {
     /// 메인 만다라트 수정 및 생성 화면
     func presentEditMainMandaratViewController(_ mainMandaratVO: MainMandaratVO) {
         
-        router
-            .presentEditMainMandaratPage(mainMandarat: mainMandaratVO)
-        
-//        let viewModel: EditMainMandaratViewModel = .init(mainMandaratVO)
-//        viewModel.delegate = self
-//        
-//        let viewController = EditMainMandaratViewController()
-//        viewController.bind(reactor: viewModel)
-//        
-//        router.present(viewController, animated: true, modalPresentationSytle: .custom)
+        router.presentEditMainMandaratPage(mainMandarat: mainMandaratVO)
     }
     
     

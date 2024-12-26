@@ -15,7 +15,7 @@ let project = Project(
         .target(
             name: "SharedPresentationExt",
             destinations: .iOS,
-            product: .staticLibrary,
+            product: .framework,
             bundleId: "\(Project.Environment.bundlePrefix).shared.PresentationExt",
             sources: ["Sources/**"],
             dependencies: [

@@ -9,17 +9,19 @@ import DomainMandaratInterface
 
 import RxSwift
 
-class MockMandaratUseCase: MandaratUseCase {
+public class MockMandaratUseCase: MandaratUseCase {
     
     private var memoryStore_MM: [MandaratPosition: MainMandaratVO] = [:]
     private var memoryStore_SM: [MandaratPosition: [MandaratPosition: SubMandaratVO]] = [:]
     
-    func requestMainMandarats() -> RxSwift.Single<[DomainMandaratInterface.MainMandaratVO]> {
+    public init() { }
+    
+    public func requestMainMandarats() -> RxSwift.Single<[DomainMandaratInterface.MainMandaratVO]> {
         
         return .just(memoryStore_MM.values.map({ $0 }))
     }
     
-    func requestSubMandarats(mainMandarat: DomainMandaratInterface.MainMandaratVO) -> RxSwift.Single<[DomainMandaratInterface.SubMandaratVO]> {
+    public func requestSubMandarats(mainMandarat: DomainMandaratInterface.MainMandaratVO) -> RxSwift.Single<[DomainMandaratInterface.SubMandaratVO]> {
         
         if let subMandaratDic = memoryStore_SM[mainMandarat.position] {
             
@@ -31,14 +33,14 @@ class MockMandaratUseCase: MandaratUseCase {
         return .just([])
     }
     
-    func saveMainMandarat(mainMandarat: DomainMandaratInterface.MainMandaratVO) {
+    public func saveMainMandarat(mainMandarat: DomainMandaratInterface.MainMandaratVO) {
         
         let position = mainMandarat.position
         
         memoryStore_MM[position] = mainMandarat
     }
     
-    func saveSubMandarat(mainMandarat: MainMandaratVO, subMandarat: SubMandaratVO) {
+    public func saveSubMandarat(mainMandarat: MainMandaratVO, subMandarat: SubMandaratVO) {
         
         let mainPosition = mainMandarat.position
         let subPosition = subMandarat.position

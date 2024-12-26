@@ -7,9 +7,7 @@
 
 import UIKit
 
-import SharedDependencyInjector
-import SharedAlertHelperInterface
-import SharedNavigationInterface
+import FeatureHomeInterface
 import DomainMandaratInterface
 import SharedCore
 
@@ -18,11 +16,10 @@ import RxSwift
 
 class EditMainMandaratViewModel: NSObject, Reactor, UIColorPickerViewControllerDelegate {
     
-    @Inject private var router: Router
-    
     let initialState: State
     
-    weak var delegate: EditMainMandaratViewModelDelegate?
+    weak var router: MainMandaratPageRouting!
+    weak var delegate: EditMainMandaratViewModelDelegate!
     
     private let initialMandarat: MainMandaratVO
     
@@ -45,7 +42,7 @@ class EditMainMandaratViewModel: NSObject, Reactor, UIColorPickerViewControllerD
         switch action {
         case .exitButtonClicked:
             
-            router.dismissModule(animated: true)
+            router.dismiss()
             
             return .empty()
             
@@ -95,9 +92,9 @@ class EditMainMandaratViewModel: NSObject, Reactor, UIColorPickerViewControllerD
             
             let mandaratVO: MainMandaratVO = createMandaratVO(state: state)
             
-            delegate?.editFinishedWithSavingRequest(edited: mandaratVO)
+            delegate.editFinishedWithSavingRequest(edited: mandaratVO)
             
-            router.dismissModule(animated: true)
+            router.dismiss()
             
             return state
             

@@ -6,39 +6,47 @@
 
 import UIKit
 
-@testable import FeatureHomeTesting
-@testable import FeatureHome
+import FeatureHomeTesting
+import FeatureHomeInterface
+import FeatureHome
 
-import SharedDependencyInjector
-import SharedNavigationInterface
+import DomainMandaratInterface
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var window: UIWindow?
     
+    var rootRouter: MainMandaratRoutable?
+    
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
         guard let windowScene = scene as? UIWindowScene else { return }
         
+        let navigationController = UINavigationController()
+        
         window = UIWindow(windowScene: windowScene)
         
-        dependencyInjection()
-        
-        let viewModel: MainMandaratPageViewModel = .init(mandaratUseCase: MockMandaratUseCase())
-        let viewController: MainMandaratPageViewController = .init(reactor: viewModel)
-        
-        window?.rootViewController = UINavigationController()
-        window?.makeKeyAndVisible()
-        
-        DependencyInjector.shared.resolve(Router.self).setRootModuleTo(
-            module: viewController
+    
+        let component: RootComponent = .init(
+            mandaratUseCase: MockMandaratUseCase(),
+            navigationController: navigationController
         )
+        
+        let router = MainMandaratBuilder(dependency: component).build()
+        self.rootRouter = router
+        
+        navigationController.viewControllers = [
+            router.viewController
+        ]
+        
+        window?.rootViewController = navigationController
+        window?.makeKeyAndVisible()
     }
     
-    func dependencyInjection() {
+    struct RootComponent: MainMandaratDependency {
         
-        DependencyInjector.shared.assemble([
-            MockAssembly()
-        ])
+        var mandaratUseCase: MandaratUseCase
+        var navigationController: UINavigationController
     }
 }
+

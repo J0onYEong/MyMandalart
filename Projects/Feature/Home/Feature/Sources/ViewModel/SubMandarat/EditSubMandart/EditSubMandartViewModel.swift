@@ -7,17 +7,12 @@
 
 import Foundation
 
-import SharedNavigationInterface
-import SharedDependencyInjector
 import DomainMandaratInterface
 
 import ReactorKit
 import RxSwift
 
 class EditSubMandartViewModel: Reactor {
-    
-    @Inject private var router: Router
-    
     
     // Delegate
     weak var delegate: EditSubMandaratViewModelDelegate?
@@ -42,7 +37,7 @@ class EditSubMandartViewModel: Reactor {
         switch action {
         case .exitButtonClicked:
             
-            router.dismissModule(animated: true)
+//            router.dismissModule(animated: true)
             
             return .never()
         default:
@@ -71,7 +66,7 @@ class EditSubMandartViewModel: Reactor {
             let subMandaratVO: SubMandaratVO = createSubmandarat(state)
             delegate?.editFinishedWithSavingRequest(edited: subMandaratVO)
             
-            router.dismissModule(animated: true)
+//            router.dismissModule(animated: true)
                         
             return state
             

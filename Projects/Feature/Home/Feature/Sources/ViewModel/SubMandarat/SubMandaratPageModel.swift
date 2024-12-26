@@ -7,9 +7,7 @@
 
 import UIKit
 
-import SharedNavigationInterface
 import DomainMandaratInterface
-import SharedDependencyInjector
 import SharedCore
 
 import ReactorKit
@@ -18,7 +16,6 @@ import RxSwift
 class SubMandaratPageModel: Reactor, MainMandaratViewModelDelegate, SubMandaratViewModelDelegate, EditSubMandaratViewModelDelegate {
     
     // DI
-    @Inject private var router: Router
     private let mandaratUseCase: MandaratUseCase
     
     
@@ -151,10 +148,10 @@ extension SubMandaratPageModel {
     
     func mainMandarat(detailButtonClicked position: MandaratPosition) {
         
-        router.pop(
-            animated: true,
-            delegate: transitionDelegate
-        )
+//        router.pop(
+//            animated: true,
+//            delegate: transitionDelegate
+//        )
     }
 }
 
@@ -180,12 +177,12 @@ private extension SubMandaratPageModel {
         let viewController: EditSubMandaratViewController = .init()
         viewController.bind(reactor: viewModel)
         
-        router
-            .present(
-                viewController,
-                animated: true,
-                modalPresentationSytle: .custom
-            )
+//        router
+//            .present(
+//                viewController,
+//                animated: true,
+//                modalPresentationSytle: .custom
+//            )
     }
 }
 
