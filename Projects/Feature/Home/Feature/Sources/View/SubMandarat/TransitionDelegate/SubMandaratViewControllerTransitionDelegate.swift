@@ -13,9 +13,9 @@ class SubMandaratViewControllerTransitionDelegate: NSObject, UINavigationControl
         
         switch operation {
         case .push:
-            return SubMandaratViewController.PresentAnimation()
+            return SubMandaratPageViewController.PresentAnimation()
         case .pop:
-            return SubMandaratViewController.DismissAnimation()
+            return SubMandaratPageViewController.DismissAnimation()
         default:
             return nil
         }

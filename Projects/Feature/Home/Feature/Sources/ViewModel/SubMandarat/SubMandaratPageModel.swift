@@ -19,6 +19,7 @@ class SubMandaratPageModel: Reactor, MainMandaratViewModelDelegate, SubMandaratV
     
     // DI
     @Inject private var router: Router
+    private let mandaratUseCase: MandaratUseCase
     
     
     // State for view model
@@ -46,16 +47,11 @@ class SubMandaratPageModel: Reactor, MainMandaratViewModelDelegate, SubMandaratV
     
     
     
-    init(mainMandarat: MainMandaratVO, subMandarats: [SubMandaratVO]) {
-        
+    init(mandaratUseCase: MandaratUseCase, mainMandarat: MainMandaratVO) {
+
+        self.mandaratUseCase = mandaratUseCase
         self.mainMandaratVO = mainMandarat
-        
-        
-        // 서브 만다라트 데이터를 뷰모델이 보유
-        for subMandarat in subMandarats {
-            self.subMandarats[subMandarat.position] = subMandarat
-        }
-        
+
         
         // 메인 만다라트 뷰모델 생성
         mainMandaratViewModel = .init(position: .TWO_TWO)
@@ -70,9 +66,32 @@ class SubMandaratPageModel: Reactor, MainMandaratViewModelDelegate, SubMandaratV
         switch action {
         case .viewDidLoad:
             
+            // 사이드 이펙트, 메인만다라트 랜더링 지시
             mainMandaratViewModel.requestRender(.create(from: mainMandaratVO))
             
-            return .just(action)
+            
+            // 사이드 이펙트, 서브만다라트 데이터 fetch
+            mandaratUseCase
+                .requestSubMandarats(mainMandarat: mainMandaratVO)
+                .asObservable()
+                .subscribe(onNext: { [weak self] fetchedSubMandarats in
+                    
+                    guard let self else { return }
+                    
+                    // 사이드 이펙트, 서브 만다라트 데이터 홀드
+                    fetchedSubMandarats.forEach { subMandarat in
+                        
+                        let position = subMandarat.position
+                        self.subMandarats[position] = subMandarat
+                        
+                        // Rendering
+                        self.render(subMandarat: subMandarat)
+                    }
+                })
+                .disposed(by: disposeBag)
+            
+            
+            return .never()
             
         case .requestEditSubMandarat(let position):
             
@@ -80,6 +99,10 @@ class SubMandaratPageModel: Reactor, MainMandaratViewModelDelegate, SubMandaratV
             presentEditSubMandaratViewController(subMandaratVO)
             
             return .never()
+            
+        
+        default:
+            return .just(action)
         }
     }
     
@@ -176,18 +199,30 @@ extension SubMandaratPageModel {
         self.subMandarats[position] = subMandarat
         
         
-        // #1. save, not implmented
+        // #1. save
+        mandaratUseCase.saveSubMandarat(
+            mainMandarat: self.mainMandaratVO,
+            subMandarat: subMandarat
+        )
         
         
         // #2. render
+        self.render(subMandarat: subMandarat)
+    }
+}
+
+
+// MARK: Private functions
+private extension SubMandaratPageModel {
+    
+    func render(subMandarat: SubMandaratVO) {
+        
+        let position = subMandarat.position
+        
         let primaryColor: UIColor! = .color(mainMandaratVO.hexColor)
         
-        let renderObject: SubMandaratRO = .init(
-            title: subMandarat.title,
-            percent: subMandarat.acheivementRate,
-            primaryColor: primaryColor
+        subMandaratViewModels[position]?.render(
+            object: .create(vo: subMandarat, primaryColor: primaryColor)
         )
-        
-        subMandaratViewModels[position]?.render(object: renderObject)
     }
 }

@@ -48,9 +48,9 @@ public class DefaultMandaratUseCase: MandaratUseCase {
         mandaratRepository.requestSubMandarat(root: mainMandarat)
     }
     
-    public func saveSubMandarat(mainMandarat: MainMandaratVO) {
+    public func saveSubMandarat(mainMandarat: MainMandaratVO, subMandarat: SubMandaratVO) {
         
-        // 서브 만다라트 저장로직
+        // Not implemented
         
     }
 }

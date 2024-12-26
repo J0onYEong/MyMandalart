@@ -14,4 +14,13 @@ struct SubMandaratRO {
     let title: String
     let percent: CGFloat
     let primaryColor: UIColor
+    
+    static func create(vo: SubMandaratVO, primaryColor color: UIColor) -> Self {
+        
+        return .init(
+            title: vo.title,
+            percent: vo.acheivementRate,
+            primaryColor: color
+        )
+    }
 }

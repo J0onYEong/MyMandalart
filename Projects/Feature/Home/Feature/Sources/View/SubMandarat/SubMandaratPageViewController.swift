@@ -13,7 +13,7 @@ import ReactorKit
 import RxSwift
 import RxCocoa
 
-class SubMandaratViewController: UIViewController, View {
+class SubMandaratPageViewController: UIViewController, View {
     
     // Sub view
     fileprivate var subMandaratViews: [MandaratPosition: SubMandaratView] = [:]
@@ -78,7 +78,7 @@ class SubMandaratViewController: UIViewController, View {
 }
 
 // MARK: Sub mandarat views
-private extension SubMandaratViewController {
+private extension SubMandaratPageViewController {
     
     func setMainMandaratViewLayout() {
         
@@ -162,7 +162,7 @@ private extension SubMandaratViewController {
 }
 
 
-extension SubMandaratViewController {
+extension SubMandaratPageViewController {
     
     func onAppearAnimation(duration: CFTimeInterval, context: UIViewControllerContextTransitioning) {
         
@@ -236,7 +236,7 @@ extension SubMandaratViewController {
         }
         
         func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-            guard let viewController = transitionContext.viewController(forKey: .to) as? SubMandaratViewController else { return }
+            guard let viewController = transitionContext.viewController(forKey: .to) as? SubMandaratPageViewController else { return }
             
             viewController.onAppearAnimation(
                 duration: transitionDuration(using: transitionContext),
@@ -251,7 +251,7 @@ extension SubMandaratViewController {
         }
         
         func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-            guard let viewController = transitionContext.viewController(forKey: .from) as? SubMandaratViewController else { return }
+            guard let viewController = transitionContext.viewController(forKey: .from) as? SubMandaratPageViewController else { return }
             
             viewController.onDisappearAnimation(
                 duration: transitionDuration(using: transitionContext),

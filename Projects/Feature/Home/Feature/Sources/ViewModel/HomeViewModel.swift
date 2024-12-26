@@ -29,7 +29,6 @@ class HomeViewModel: Reactor, MainMandaratViewModelDelegate, EditMainMandaratVie
     
     // View model state
     private var mainMandaratVO: [MandaratPosition: MainMandaratVO] = [:]
-    private var subMandaratList: [MandaratPosition: [SubMandaratVO]] = [:]
     
     
     init(mandaratUseCase: MandaratUseCase) {
@@ -57,38 +56,11 @@ class HomeViewModel: Reactor, MainMandaratViewModelDelegate, EditMainMandaratVie
                     
                     guard let self else { return }
                     
-                    let subMandaratRequests = mainMandarats.map { mainManadartVO in
-                        
-                        self.mandaratUseCase
-                            .requestSubMandarats(mainMandarat: mainManadartVO)
-                            .asObservable()
-                    }
-                    
-                    
                     // 메인 만다라트 등록
                     mainMandarats.forEach { mainMandaratVO in
                         
                         self.updateMainMandarat(updated: mainMandaratVO)
                     }
-                    
-                    
-                    // 서브만다라트 등록
-                    Observable
-                        .zip(subMandaratRequests)
-                        .observe(on: MainScheduler.asyncInstance)
-                        .withUnretained(self)
-                        .subscribe(onNext: { viewModel, parties in
-                            
-                            for party in parties {
-                                
-                                if let position = party.first?.position {
-                                    
-                                    viewModel.subMandaratList[position] = party
-                                }
-                            }
-                            
-                        })
-                        .disposed(by: disposeBag)
                 })
                 .disposed(by: disposeBag)
             
@@ -191,14 +163,13 @@ private extension HomeViewModel {
     func presentSubMandaratViewController(_ mainMandaratVO: MainMandaratVO) {
         
         let position = mainMandaratVO.position
-        let subMandarats = self.subMandaratList[position]
         
         let viewModel: SubMandaratPageModel = .init(
-            mainMandarat: mainMandaratVO,
-            subMandarats: subMandarats ?? []
+            mandaratUseCase: mandaratUseCase,
+            mainMandarat: mainMandaratVO
         )
         
-        let viewController = SubMandaratViewController()
+        let viewController = SubMandaratPageViewController()
         viewController.bind(reactor: viewModel)
         
         router.push(
@@ -265,12 +236,16 @@ private extension HomeViewModel {
     /// HomeViewModel상태 업데이트 및 변경 사항을 MainMandaratViewModel에 전파
     func updateMainMandarat(updated mainMandarat: MainMandaratVO) {
         
-        //#1. HomeViewModel 업데이트
+        //#1. 사이드이팩트, 상태저장
+        mandaratUseCase.saveMainMandarat(mainMandarat: mainMandarat)
+        
+        
+        //#2. 사이드이팩트, HomeViewModel 업데이트
         let position = mainMandarat.position
         self.mainMandaratVO[position] = mainMandarat
         
         
-        //#2. 변경 상태를 메인 만다라트 뷰모델에 전달
+        //#3. 사이드이팩트, 변경 상태를 메인 만다라트 뷰모델에 전달
         let mainMandaratViewModel = mainMandaratViewReactors[position]
         mainMandaratViewModel?.requestRender(.create(from: mainMandarat))
     }

@@ -11,21 +11,43 @@ import RxSwift
 
 class MockMandaratUseCase: MandaratUseCase {
     
+    private var memoryStore_MM: [MandaratPosition: MainMandaratVO] = [:]
+    private var memoryStore_SM: [MandaratPosition: [MandaratPosition: SubMandaratVO]] = [:]
+    
     func requestMainMandarats() -> RxSwift.Single<[DomainMandaratInterface.MainMandaratVO]> {
         
-        return .just([])
+        return .just(memoryStore_MM.values.map({ $0 }))
     }
     
     func requestSubMandarats(mainMandarat: DomainMandaratInterface.MainMandaratVO) -> RxSwift.Single<[DomainMandaratInterface.SubMandaratVO]> {
+        
+        if let subMandaratDic = memoryStore_SM[mainMandarat.position] {
+            
+            let arr = subMandaratDic.values.map({ $0 })
+            
+            return .just(arr)
+        }
         
         return .just([])
     }
     
     func saveMainMandarat(mainMandarat: DomainMandaratInterface.MainMandaratVO) {
         
+        let position = mainMandarat.position
+        
+        memoryStore_MM[position] = mainMandarat
     }
     
-    func saveSubMandarat(mainMandarat: DomainMandaratInterface.MainMandaratVO) {
+    func saveSubMandarat(mainMandarat: MainMandaratVO, subMandarat: SubMandaratVO) {
         
+        let mainPosition = mainMandarat.position
+        let subPosition = subMandarat.position
+        
+        if memoryStore_SM[mainPosition] == nil {
+           
+            memoryStore_SM[mainPosition] = [:]
+        }
+        
+        memoryStore_SM[mainPosition]![subPosition] = subMandarat
     }
 }
