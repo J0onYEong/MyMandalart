@@ -48,7 +48,15 @@ class AcheivementRateView: UIView {
             height: heightOfView-2*padding
         )
         
-        rateStick.frame = .init(origin: stickOrigin, size: stickSize)
+        self.rateStick.frame = .init(origin: stickOrigin, size: .init(width: 0, height: stickSize.height))
+        
+        UIView.animate(
+            withDuration: 0.5,
+            delay: 0,
+            options: .curveEaseOut) {
+                
+            self.rateStick.frame = .init(origin: stickOrigin, size: stickSize)
+        }
         
         rateStick.layer.cornerRadius = rateStick.layer.bounds.height / 3
         self.layer.cornerRadius = self.layer.bounds.height / 3
