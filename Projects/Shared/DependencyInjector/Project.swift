@@ -17,6 +17,7 @@ let project = Project(
             destinations: .iOS,
             product: .staticLibrary,
             bundleId: "\(Project.Environment.bundlePrefix).shared.DependencyInjector",
+            deploymentTargets: Project.Environment.deploymentTarget,
             sources: ["Sources/**"],
             dependencies: [
                 .shared(implements: .PresentationExt),

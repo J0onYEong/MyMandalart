@@ -7,7 +7,6 @@
 
 import UIKit
 
-import FeatureSubMandaratInterface
 import DomainMandaratInterface
 
 import ReactorKit

@@ -47,10 +47,18 @@ let project = Project(
             destinations: .iOS,
             product: .staticFramework,
             bundleId: "\(Project.Environment.bundlePrefix).feature.Home",
+            deploymentTargets: Project.Environment.deploymentTarget,
             sources: ["Feature/Sources/**"],
             resources: ["Feature/Resources/**"],
             dependencies: [
-                .feature(interface: .Home),
+                
+                .feature(implements: .SubMandarat),
+                
+                .domain(interface: .Mandarat),
+                
+                .shared(interface: .AlertHelper),
+                .shared(implements: .PresentationExt),
+                .shared(implements: .DesignSystem),
                 
                 .thirdParty(library: .RxCocoa),
                 .thirdParty(library: .ReactorKit),
@@ -67,26 +75,7 @@ let project = Project(
             bundleId: "\(Project.Environment.bundlePrefix).feature.Home.testing",
             sources: ["Testing/**"],
             dependencies: [
-                .feature(interface: .Home),
-
-            ]
-        ),
-
-
-        // Interface
-        .target(
-            name: "FeatureHomeInterface",
-            destinations: .iOS,
-            product: .framework,
-            bundleId: "\(Project.Environment.bundlePrefix).feature.Home.interface",
-            sources: ["Interface/**"],
-            dependencies: [
-                
-                .domain(interface: .Mandarat),
-                
-                .shared(interface: .AlertHelper),
-                .shared(implements: .PresentationExt),
-                .shared(implements: .DesignSystem),
+                .feature(implements: .Home),
             ]
         ),
     ]

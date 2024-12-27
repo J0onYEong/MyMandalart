@@ -7,7 +7,6 @@
 import UIKit
 
 import FeatureSubMandarat
-import FeatureSubMandaratInterface
 import FeatureSubMandaratTesting
 
 import DomainMandaratInterface
@@ -27,11 +26,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let component = RootComponent(
             mandaratUseCase: MockMandaratUseCase(),
-            navigationController: navigationController,
-            mainMandaratVO: .mock
+            navigationController: navigationController
         )
         
-        self.router = SubMandaratPageBuilder(dependency: component).build()
+        self.router = SubMandaratPageBuilder(dependency: component)
+            .build(mainMandaratVO: .mock)
+        
         navigationController.viewControllers = [ router.viewController ]
         
         window?.rootViewController = navigationController
@@ -41,6 +41,5 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     struct RootComponent: SubMandaratPageDependency {
         var mandaratUseCase: MandaratUseCase
         var navigationController: UINavigationController
-        var mainMandaratVO: MainMandaratVO
     }
 }

@@ -41,7 +41,7 @@ public class DefaultMandaratRepository: MandaratRepository {
                             id: coreDataEntity.id!,
                             title: coreDataEntity.title!,
                             position: .init(x: mandaratPos.xpos, y: mandaratPos.ypos)!,
-                            hexColor: coreDataEntity.hexColor,
+                            hexColor: coreDataEntity.hexColor ?? "#000000",
                             description: coreDataEntity.story,
                             imageURL: coreDataEntity.imageURL
                         )

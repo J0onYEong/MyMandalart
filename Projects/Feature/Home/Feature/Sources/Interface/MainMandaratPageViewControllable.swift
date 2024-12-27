@@ -1,6 +1,6 @@
 //
 //  MainMandaratPageViewControllable.swift
-//  HomeInterface
+//  Home
 //
 //  Created by choijunios on 12/26/24.
 //

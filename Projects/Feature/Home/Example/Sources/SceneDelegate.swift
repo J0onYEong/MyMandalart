@@ -6,9 +6,8 @@
 
 import UIKit
 
-import FeatureHomeTesting
-import FeatureHomeInterface
 import FeatureHome
+import FeatureHomeTesting
 
 import DomainMandaratInterface
 

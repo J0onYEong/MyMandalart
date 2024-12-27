@@ -7,17 +7,19 @@
 
 import UIKit
 
-import FeatureHomeInterface
+import FeatureSubMandarat
 import DomainMandaratInterface
 import SharedPresentationExt
 
 protocol MainMandaratPageRouting: AnyObject {
     
     func presentEditMainMandaratPage(mainMandarat: MainMandaratVO)
+    
+    func dismissEditMainMandaratPage()
 
     func presentSubMandaratPage(mainMandarat: MainMandaratVO)
     
-    func dismiss()
+    func dismissSubMandaratPage()
 }
 
 class MainMandaratRouter: MainMandaratRoutable, MainMandaratPageRouting {
@@ -27,13 +29,16 @@ class MainMandaratRouter: MainMandaratRoutable, MainMandaratPageRouting {
     
     
     private let navigationController: UINavigationController
+    private let subMandaratBuilder: SubMandaratPageBuildable
     
     
     init(
+        subMandaratBuilder: SubMandaratPageBuildable,
         navigationController: UINavigationController,
         viewModel: MainMandaratPageViewModel,
         viewController: MainMandaratPageViewController)
     {
+        self.subMandaratBuilder = subMandaratBuilder
         self.navigationController = navigationController
         self.viewModel = viewModel
         self.viewController = viewController
@@ -47,6 +52,18 @@ class MainMandaratRouter: MainMandaratRoutable, MainMandaratPageRouting {
 extension MainMandaratRouter {
     
     func presentSubMandaratPage(mainMandarat: MainMandaratVO) {
+        
+        let router = subMandaratBuilder.build(mainMandaratVO: mainMandarat)
+        
+        let viewController = router.viewController
+        
+        navigationController.delegate = router.transitionDelegate
+        navigationController.pushViewController(viewController, animated: true)
+        navigationController.delegate = nil
+    }
+    
+    
+    func dismissSubMandaratPage() {
         
         
     }
@@ -76,9 +93,9 @@ extension MainMandaratRouter {
     }
     
     
-    func dismiss() {
+    func dismissEditMainMandaratPage() {
         
-        if navigationController.presentedViewController != nil {
+        if navigationController.presentedViewController is EditMainMandaratViewController {
             
             navigationController.dismiss(animated: true)
         }

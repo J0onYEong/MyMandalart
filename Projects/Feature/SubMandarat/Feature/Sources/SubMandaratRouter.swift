@@ -7,28 +7,26 @@
 
 import UIKit
 
-import FeatureSubMandaratInterface
 import DomainMandaratInterface
 
 protocol SubMandaratPageRouting: AnyObject {
     
     func presentEditSubMandaratPage(subMandaratVO: SubMandaratVO)
     
-    func dismiss()
-    
-    func dismissSubMandaratPage()
+    func dismissEditSubMandaratPage()
 }
 
 
 class SubMandaratPageRouter: SubMandaratPageRoutable, SubMandaratPageRouting {
     
+    // Public interface
     let viewModel: SubMandaratPageViewModelable
     let viewController: SubMandaratPageViewControllable
-
+    let transitionDelegate: UINavigationControllerDelegate = SubMandaratViewControllerTransitionDelegate()
+    
     
     // Navigation
     private let navigationController: UINavigationController
-    private let transitionDelegate: SubMandaratViewControllerTransitionDelegate = .init()
     
     
     init(navigationController: UINavigationController, viewModel: SubMandaratPageViewModel, viewController: SubMandaratPageViewController) {
@@ -65,17 +63,9 @@ extension SubMandaratPageRouter {
     }
     
     
-    func dismissSubMandaratPage() {
+    func dismissEditSubMandaratPage() {
         
-        navigationController.delegate = transitionDelegate
-        navigationController.popViewController(animated: true)
-        navigationController.delegate = nil
-    }
-    
-    
-    func dismiss() {
-        
-        if navigationController.presentedViewController != nil {
+        if navigationController.presentedViewController is EditSubMandaratViewController {
             
             navigationController.dismiss(animated: true)
         }

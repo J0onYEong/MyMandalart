@@ -32,6 +32,7 @@ let project = Project(
             destinations: .iOS,
             product: .staticLibrary,
             bundleId: "\(Project.Environment.bundlePrefix).data.CoreData",
+            deploymentTargets: Project.Environment.deploymentTarget,
             sources: ["Data/**"],
             dependencies: [
                 .data(interface: .CoreData),
@@ -58,6 +59,7 @@ let project = Project(
             destinations: .iOS,
             product: .framework,
             bundleId: "\(Project.Environment.bundlePrefix).data.CoreData.interface",
+            deploymentTargets: Project.Environment.deploymentTarget,
             sources: ["Interface/Sources/**"],
             resources: ["Interface/Resources/**"],
             dependencies: [

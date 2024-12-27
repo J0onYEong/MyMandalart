@@ -7,19 +7,18 @@
 
 import UIKit
 
-import FeatureSubMandaratInterface
 import SharedPresentationExt
 import DomainMandaratInterface
 
 public class SubMandaratPageBuilder: Buildable<SubMandaratPageDependency>, SubMandaratPageBuildable {
     
-    public func build() -> any SubMandaratPageRoutable {
+    public func build(mainMandaratVO: MainMandaratVO) -> any SubMandaratPageRoutable {
         
         let component = SubMandaratPageComponent(dependency: dependency)
         
         let viewModel = SubMandaratPageViewModel(
             mandaratUseCase: component.mandaratUseCase,
-            mainMandarat: component.mandaratVO
+            mainMandarat: mainMandaratVO
         )
         
         let viewController = SubMandaratPageViewController()

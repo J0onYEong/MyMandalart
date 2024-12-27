@@ -7,7 +7,6 @@
 
 import UIKit
 
-import FeatureHomeInterface
 import SharedPresentationExt
 import DomainMandaratInterface
 
@@ -161,22 +160,7 @@ private extension MainMandaratPageViewModel {
     /// 서브 만다라트 화면 표출
     func presentSubMandaratViewController(_ mainMandaratVO: MainMandaratVO) {
         
-        router
-            .presentSubMandaratPage(mainMandarat: mainMandaratVO)
-        
-//        let viewModel: SubMandaratPageModel = .init(
-//            mandaratUseCase: mandaratUseCase,
-//            mainMandarat: mainMandaratVO
-//        )
-//        
-//        let viewController = SubMandaratPageViewController()
-//        viewController.bind(reactor: viewModel)
-//        
-//        router.push(
-//            viewController,
-//            animated: true,
-//            delegate: viewModel.transitionDelegate
-//        )
+        router.presentSubMandaratPage(mainMandarat: mainMandaratVO)
     }
 }
 

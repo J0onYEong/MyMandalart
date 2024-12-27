@@ -7,7 +7,6 @@
 
 import UIKit
 
-import FeatureSubMandaratInterface
 import DomainMandaratInterface
 import SharedPresentationExt
 
@@ -19,9 +18,5 @@ class SubMandaratPageComponent: Componentable<SubMandaratPageDependency> {
     
     var mandaratUseCase: MandaratUseCase {
         dependency.mandaratUseCase
-    }
-    
-    var mandaratVO: MainMandaratVO {
-        dependency.mainMandaratVO
     }
 }

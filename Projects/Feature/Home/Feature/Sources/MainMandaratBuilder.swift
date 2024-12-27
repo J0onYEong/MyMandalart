@@ -5,7 +5,7 @@
 //  Created by choijunios on 12/26/24.
 //
 
-import FeatureHomeInterface
+import FeatureSubMandarat
 import SharedPresentationExt
 
 public class MainMandaratBuilder: Buildable<MainMandaratDependency>, MainMandaratBuildable {
@@ -14,15 +14,23 @@ public class MainMandaratBuilder: Buildable<MainMandaratDependency>, MainMandara
     
         let component = MainMandaratComponent(dependency: dependency)
         
+        
         let viewModel = MainMandaratPageViewModel(
             mandaratUseCase: component.mandaratUseCase
         )
+        
         
         let viewController = MainMandaratPageViewController(
             reactor: viewModel
         )
         
+        
+        // SubMandaratPageBuilder
+        let subMandaratBuilder = SubMandaratPageBuilder(dependency: component)
+        
+        
         let router = MainMandaratRouter(
+            subMandaratBuilder: subMandaratBuilder,
             navigationController: component.navigationController,
             viewModel: viewModel,
             viewController: viewController

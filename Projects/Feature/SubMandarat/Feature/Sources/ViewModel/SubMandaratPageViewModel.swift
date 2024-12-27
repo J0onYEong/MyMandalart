@@ -7,7 +7,6 @@
 
 import UIKit
 
-import FeatureSubMandaratInterface
 import DomainMandaratInterface
 import SharedCore
 
@@ -18,6 +17,10 @@ class SubMandaratPageViewModel: Reactor,  SubMandaratViewModelListener, EditSubM
     
     // DI
     private let mandaratUseCase: MandaratUseCase
+    
+    
+    // Listener
+    weak var listener: SubMandaratPageViewModelListener?
     
     
     // Router
@@ -93,7 +96,7 @@ class SubMandaratPageViewModel: Reactor,  SubMandaratViewModelListener, EditSubM
             
         case .centerMandaratClicked:
             
-            router.dismissSubMandaratPage()
+            listener?.subMandaratPageFinished()
             
             return .never()
             

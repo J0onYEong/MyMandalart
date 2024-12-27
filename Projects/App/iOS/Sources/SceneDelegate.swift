@@ -1,18 +1,29 @@
+//
+
 import UIKit
+
+import FeatureHome
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
     
-    private var rootCoordinator: RootCoordinator?
+    var rootRouter: MainMandaratRoutable!
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         window = UIWindow(windowScene: windowScene)
         
-//        window?.rootViewController
+        let navigationController: UINavigationController = .init()
+        navigationController.isNavigationBarHidden = true
         
+        let rootComponent: RootComponent = .init(navigationController: navigationController)
+        
+        self.rootRouter = MainMandaratBuilder(dependency: rootComponent).build()
+        
+        navigationController.viewControllers = [rootRouter.viewController]
+        window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
     }
     

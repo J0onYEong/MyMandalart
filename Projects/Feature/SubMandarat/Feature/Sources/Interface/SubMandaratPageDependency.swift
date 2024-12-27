@@ -13,5 +13,4 @@ public protocol SubMandaratPageDependency {
     
     var mandaratUseCase: MandaratUseCase { get }
     var navigationController: UINavigationController { get }
-    var mainMandaratVO: MainMandaratVO { get }
 }

@@ -17,6 +17,18 @@ let project = Project(
             resources: ["Resources/**"],
             dependencies: [
                 
+                .feature(implements: .Home),
+                .feature(implements: .SubMandarat),
+                
+                .domain(interface: .Mandarat),
+                .domain(implements: .Mandarat),
+                
+                .data(interface: .Mandarat),
+                .data(implements: .Mandarat),
+                
+                .data(interface: .CoreData),
+                .data(implements: .CoreData),
+                
                 .thirdParty(library: .Swinject)
             ]
         )

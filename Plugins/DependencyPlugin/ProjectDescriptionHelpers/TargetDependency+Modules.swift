@@ -39,15 +39,6 @@ public extension TargetDependency {
     }
     
     
-    static func feature(interface module: ModulePath.Feature) -> Self {
-        
-        return .project(
-            target: ModulePath.Feature.categoryName + module.rawValue + "Interface",
-            path: .feature(implementation: module)
-        )
-    }
-    
-    
     static func feature(tests module: ModulePath.Feature) -> Self {
         
         return .project(
