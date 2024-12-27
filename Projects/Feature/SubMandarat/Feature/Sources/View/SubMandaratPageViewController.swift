@@ -106,6 +106,9 @@ class SubMandaratPageViewController: UIViewController, SubMandaratPageViewContro
         
         self.reactor = reactor
         
+        view.layoutIfNeeded()
+        
+        
         // Bind, subMandaratViews
         reactor.subMandaratViewModels.forEach { position, viewModel in
             
@@ -158,19 +161,19 @@ private extension SubMandaratPageViewController {
             
             portraitConstraints.append(contentsOf: [
                 
-                make.top.equalTo(view.safeAreaLayoutGuide.snp.top).constraint.layoutConstraints.first!,
-                make.left.equalTo(view.safeAreaLayoutGuide.snp.left).constraint.layoutConstraints.first!,
-                make.right.equalTo(view.safeAreaLayoutGuide.snp.right).constraint.layoutConstraints.first!,
-                make.bottom.lessThanOrEqualTo(subMandaratContainerView.snp.top).constraint.layoutConstraints.first!,
+                make.top.equalTo(view.safeAreaLayoutGuide.snp.top).inset(10).priority(.high).constraint.layoutConstraints.first!,
+                make.left.equalTo(view.safeAreaLayoutGuide.snp.left).inset(10).priority(.high).constraint.layoutConstraints.first!,
+                make.right.equalTo(view.safeAreaLayoutGuide.snp.right).priority(.high).constraint.layoutConstraints.first!,
+                make.bottom.lessThanOrEqualTo(subMandaratContainerView.snp.top).priority(.high).constraint.layoutConstraints.first!,
                 
             ])
             
             landscapeConstraints.append(contentsOf: [
                 
-                make.top.equalTo(view.safeAreaLayoutGuide.snp.top).constraint.layoutConstraints.first!,
-                make.left.equalTo(view.safeAreaLayoutGuide.snp.left).constraint.layoutConstraints.first!,
-                make.right.lessThanOrEqualTo(subMandaratContainerView.snp.left).constraint.layoutConstraints.first!,
-                make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).constraint.layoutConstraints.first!,
+                make.top.equalTo(view.safeAreaLayoutGuide.snp.top).inset(10).priority(.high).constraint.layoutConstraints.first!,
+                make.left.equalTo(view.safeAreaLayoutGuide.snp.left).priority(.high).constraint.layoutConstraints.first!,
+                make.right.lessThanOrEqualTo(subMandaratContainerView.snp.left).priority(.high).constraint.layoutConstraints.first!,
+                make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).priority(.high).constraint.layoutConstraints.first!,
                 
             ])
         }
