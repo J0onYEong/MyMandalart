@@ -14,7 +14,7 @@ import SnapKit
 
 public class FocusTextView: UIView, UITextViewDelegate {
     
-    private let textView: UITextView = .init()
+    fileprivate let textView: UITextView = .init()
     private let placeHolderLabel: UILabel = .init()
     
     private var focusLineLayer1: CAShapeLayer?
@@ -25,7 +25,8 @@ public class FocusTextView: UIView, UITextViewDelegate {
     
     private let disposeBag: DisposeBag = .init()
     
-    public let text: BehaviorSubject<String?> = .init(value: nil)
+    public let setText: BehaviorSubject<String?> = .init(value: nil)
+    public let publishText: BehaviorSubject<String?> = .init(value: nil)
     
     
     public init() {
@@ -38,11 +39,13 @@ public class FocusTextView: UIView, UITextViewDelegate {
         
         setLayout()
         
-        text
-            .distinctUntilChanged()
-            .withUnretained(self)
-            .subscribe(onNext: { view, text in
-                view.textView.text = text
+        setText
+            .subscribe(onNext: { [weak self] text in
+                
+                guard let self else { return }
+                
+                textView.text = text
+                updatePlaceholderLabel(onTextState: text ?? "")
             })
             .disposed(by: disposeBag)
     }
@@ -175,6 +178,12 @@ public class FocusTextView: UIView, UITextViewDelegate {
         dismissFocusLineAnimation2(duration: duration)
     }
     
+    
+    private func updatePlaceholderLabel(onTextState text: String) {
+        
+        placeHolderLabel.isHidden = !text.isEmpty
+    }
+    
 }
 
 // MARK: TextView delegate
@@ -188,8 +197,8 @@ extension FocusTextView {
             
             let updatedText = currentText.replacingCharacters(in: textRange, with: text)
             
-            self.text.onNext(updatedText)
-            placeHolderLabel.isHidden = !updatedText.isEmpty
+            self.publishText.onNext(updatedText)
+            updatePlaceholderLabel(onTextState: updatedText)
         }
         
         return true

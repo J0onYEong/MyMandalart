@@ -63,7 +63,7 @@ class EditMainMandaratViewModel: NSObject, Reactor, UIColorPickerViewControllerD
         case .editDescriptionText(let text):
             
             var newState = state
-            newState.titleText = text
+            newState.descriptionText = text
             
             return newState
         case .editColor(let color):

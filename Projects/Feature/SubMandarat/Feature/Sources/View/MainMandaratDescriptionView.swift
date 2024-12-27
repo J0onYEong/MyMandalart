@@ -23,11 +23,24 @@ class MainMandaratDescriptionView: UIStackView {
     
     
     public func updateTitle(text: String) {
-        titleLabel.text = text
+        
+        self.titleLabel.text = text
+        self.titleLabel.alpha = 0
+        
+        UIView.animate(withDuration: 0.5) {
+            self.titleLabel.alpha = 1
+        }
     }
     
     public func updateDescription(text: String) {
-        descriptionLabel.text = text
+        
+        self.descriptionLabel.text = text
+        self.descriptionLabel.alpha = 0
+        
+        UIView.animate(withDuration: 0.5) {
+         
+            self.descriptionLabel.alpha = 1
+        }
     }
     
     

@@ -124,6 +124,14 @@ extension SubMandaratPageViewModel {
     
     struct State {
         let centerMandarat: MainMandaratVO
+        
+        var pageTitle: String {
+            centerMandarat.title
+        }
+        
+        var pageDescription: String {
+            centerMandarat.description ?? "이건 어떤 만다라트 인가요~?😆"
+        }
     }
 }
 

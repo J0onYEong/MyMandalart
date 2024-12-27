@@ -227,10 +227,10 @@ class EditMainMandaratViewController: UIViewController, View, UIColorPickerViewC
         reactor.state
             .map(\.descriptionText)
             .take(1)
-            .bind(to: descriptionInputView.text)
+            .bind(to: descriptionInputView.setText)
             .disposed(by: disposeBag)
         
-        descriptionInputView.text
+        descriptionInputView.publishText
             .compactMap({ $0 })
             .distinctUntilChanged()
             .map { text in

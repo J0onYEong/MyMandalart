@@ -16,12 +16,14 @@ import RxCocoa
 class SubMandaratPageViewController: UIViewController, SubMandaratPageViewControllable, View {
     
     // Sub view
+    private let mainMandaratDescriptionView: MainMandaratDescriptionView = .init()
+    
     fileprivate var subMandaratViews: [MandaratPosition: SubMandaratView] = [:]
     fileprivate var subMandaratViewsExceptForCenter: [MandaratPosition: SubMandaratView] {
         subMandaratViews.filter { key, _ in key != .TWO_TWO }
     }
     fileprivate let centerMandaratView: CenterMandaratView = .init()
-    fileprivate var subMandaratContainerView: UIStackView?
+    fileprivate var subMandaratContainerView: UIStackView!
     
     private var portraitConstraints: [NSLayoutConstraint] = []
     private var landscapeConstraints: [NSLayoutConstraint] = []
@@ -83,9 +85,20 @@ class SubMandaratPageViewController: UIViewController, SubMandaratPageViewContro
     
     private func setLayout() {
         
+        // #1.
         setSubMandaratViewLayout()
         
+        
+        // #2.
         setMainMandaratViewLayout()
+        
+        
+        // #3.
+        setMainMandaratDescriptionViewLayout()
+        
+        
+        // 최초 설정 : Portrait
+        fitLayoutTo(mode: .portrait)
     }
     
     
@@ -100,7 +113,23 @@ class SubMandaratPageViewController: UIViewController, SubMandaratPageViewContro
         }
         
         
-        // Render center mandarat
+        // Bind, title & description
+        reactor.state
+            .distinctDriver(\.pageTitle)
+            .drive(onNext: { [weak self] titleText in
+                self?.mainMandaratDescriptionView.updateTitle(text: titleText)
+            })
+            .disposed(by: disposeBag)
+        
+        reactor.state
+            .distinctDriver(\.pageDescription)
+            .drive(onNext: { [weak self] descriptionText in
+                self?.mainMandaratDescriptionView.updateDescription(text: descriptionText)
+            })
+            .disposed(by: disposeBag)
+        
+        
+        // Bind, center mandarat
         reactor.state
             .map(\.centerMandarat)
             .withUnretained(self)
@@ -116,6 +145,38 @@ class SubMandaratPageViewController: UIViewController, SubMandaratPageViewContro
             .disposed(by: disposeBag)
     }
 }
+
+
+// MARK: mainMandaratDescriptionView
+private extension SubMandaratPageViewController {
+    
+    func setMainMandaratDescriptionViewLayout() {
+        
+        view.addSubview(mainMandaratDescriptionView)
+        
+        mainMandaratDescriptionView.snp.makeConstraints { make in
+            
+            portraitConstraints.append(contentsOf: [
+                
+                make.top.equalTo(view.safeAreaLayoutGuide.snp.top).constraint.layoutConstraints.first!,
+                make.left.equalTo(view.safeAreaLayoutGuide.snp.left).constraint.layoutConstraints.first!,
+                make.right.equalTo(view.safeAreaLayoutGuide.snp.right).constraint.layoutConstraints.first!,
+                make.bottom.lessThanOrEqualTo(subMandaratContainerView.snp.top).constraint.layoutConstraints.first!,
+                
+            ])
+            
+            landscapeConstraints.append(contentsOf: [
+                
+                make.top.equalTo(view.safeAreaLayoutGuide.snp.top).constraint.layoutConstraints.first!,
+                make.left.equalTo(view.safeAreaLayoutGuide.snp.left).constraint.layoutConstraints.first!,
+                make.right.lessThanOrEqualTo(subMandaratContainerView.snp.left).constraint.layoutConstraints.first!,
+                make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).constraint.layoutConstraints.first!,
+                
+            ])
+        }
+    }
+}
+
 
 // MARK: Sub mandarat views
 private extension SubMandaratPageViewController {
@@ -171,7 +232,7 @@ private extension SubMandaratPageViewController {
         
         mainMandaratContainerStackView.snp.makeConstraints { make in
             
-            portraitConstraints = [
+            portraitConstraints.append(contentsOf: [
                 make.leading.equalTo(view.safeAreaLayoutGuide.snp.leading)
                     .constraint.layoutConstraints.first!,
                 
@@ -183,9 +244,9 @@ private extension SubMandaratPageViewController {
                 
                 make.centerY.equalToSuperview()
                     .constraint.layoutConstraints.first!,
-            ]
+            ])
             
-            landscapeConstraints = [
+            landscapeConstraints.append(contentsOf: [
                 make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
                     .constraint.layoutConstraints.first!,
                 
@@ -197,12 +258,8 @@ private extension SubMandaratPageViewController {
                 
                 make.centerX.equalToSuperview()
                     .constraint.layoutConstraints.first!,
-            ]
+            ])
         }
-        
-        // 최초 설정 : Portrait
-        fitLayoutTo(mode: .portrait)
-        
         
         self.subMandaratContainerView = mainMandaratContainerStackView
     }
