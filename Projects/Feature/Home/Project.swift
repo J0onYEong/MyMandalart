@@ -21,6 +21,7 @@ let project = Project(
             sources: ["Example/Sources/**"],
             resources: ["Example/Resources/**"],
             dependencies: [
+                
                 .feature(implements: .Home),
                 .feature(testing: .Home),
             ]
@@ -35,6 +36,7 @@ let project = Project(
             bundleId: "\(Project.Environment.bundlePrefix).feature.Home.tests",
             sources: ["Tests/**"],
             dependencies: [
+                
                 .feature(implements: .Home),
                 .feature(testing: .Home),
             ]
@@ -56,7 +58,6 @@ let project = Project(
                 
                 .domain(interface: .Mandarat),
                 
-                .shared(interface: .AlertHelper),
                 .shared(implements: .PresentationExt),
                 .shared(implements: .DesignSystem),
                 

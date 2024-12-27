@@ -7,13 +7,14 @@
 
 import UIKit
 
+import FeatureSubMandarat
 import SharedPresentationExt
 import DomainMandaratInterface
 
 import ReactorKit
 
 
-class MainMandaratPageViewModel: Reactor, MainMandaratPageViewModelable, MainMandaratViewModelListener, EditMainMandaratViewModelDelegate {
+class MainMandaratPageViewModel: Reactor, MainMandaratPageViewModelable, MainMandaratViewModelListener, EditMainMandaratViewModelDelegate, SubMandaratPageViewModelListener {
     
 
     // 의존성 주입
@@ -232,5 +233,15 @@ private extension MainMandaratPageViewModel {
         //#3. 사이드이팩트, 변경 상태를 메인 만다라트 뷰모델에 전달
         let mainMandaratViewModel = mainMandaratViewReactors[position]
         mainMandaratViewModel?.requestRender(.create(from: mainMandarat))
+    }
+}
+
+
+// MARK: SubMandaratPageViewModelListener
+extension MainMandaratPageViewModel {
+    
+    func subMandaratPageFinished() {
+        
+        router.dismissSubMandaratPage()
     }
 }

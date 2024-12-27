@@ -54,7 +54,6 @@ let project = Project(
                 
                 .domain(interface: .Mandarat),
                 
-                .shared(interface: .AlertHelper),
                 .shared(implements: .PresentationExt),
                 .shared(implements: .DesignSystem),
                 

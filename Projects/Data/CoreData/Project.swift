@@ -63,8 +63,11 @@ let project = Project(
             sources: ["Interface/Sources/**"],
             resources: ["Interface/Resources/**"],
             dependencies: [
+                
                 .domain(interface: .Mandarat),
+                
                 .shared(implements: .Core),
+                
                 .thirdParty(library: .RxSwift)
             ]
         ),

@@ -28,8 +28,6 @@ let project = Project(
                 
                 .data(interface: .CoreData),
                 .data(implements: .CoreData),
-                
-                .thirdParty(library: .Swinject)
             ]
         )
     ]

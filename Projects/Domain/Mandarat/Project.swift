@@ -63,6 +63,7 @@ let project = Project(
             dependencies: [
                 
                 .shared(implements: .Core),
+                
                 .thirdParty(library: .RxSwift),
             ]
         ),

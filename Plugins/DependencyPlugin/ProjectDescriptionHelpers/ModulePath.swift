@@ -89,9 +89,6 @@ public extension ModulePath {
         case Core
         case DesignSystem
         case PresentationExt
-        case DependencyInjector
-        case Navigation
-        case AlertHelper
         
         public static let categoryName: String = "Shared"
         
@@ -110,7 +107,6 @@ public extension ModulePath {
         case RxCocoa
         case RxTest
         case ReactorKit
-        case Swinject
         case SnapKit
         
         public static let categoryName: String = "ThirdParty"
