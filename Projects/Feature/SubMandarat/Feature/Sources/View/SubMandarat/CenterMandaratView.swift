@@ -36,7 +36,7 @@ class CenterMandaratView: TappableView {
     private func setUI() {
         
         // self
-        self.layer.cornerRadius = MainMandaratUIConfig.cornerRadius
+        self.layer.cornerRadius = SubMandaratConfig.cornerRadius
         self.layer.masksToBounds = true
         self.layer.borderWidth = 2
         self.layer.borderColor = UIColor.gray.cgColor
@@ -114,6 +114,8 @@ extension CenterMandaratView {
 
 
 // MARK: Reactive+Ext
-extension Reactive where Base == MainMandaratDisplayView {
-    
+extension Reactive where Base == CenterMandaratView {
+    var tap: Observable<Void> {
+        base.tap
+    }
 }

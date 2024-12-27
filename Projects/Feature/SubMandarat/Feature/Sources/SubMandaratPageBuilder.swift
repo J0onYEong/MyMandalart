@@ -7,6 +7,7 @@
 
 import UIKit
 
+import FeatureSubMandaratInterface
 import SharedPresentationExt
 import DomainMandaratInterface
 
@@ -32,32 +33,4 @@ public class SubMandaratPageBuilder: Buildable<SubMandaratPageDependency>, SubMa
         
         return router
     }
-}
-
-
-
-
-// MARK: Interface
-public protocol SubMandaratPageViewModelable { }
-
-public protocol SubMandaratPageViewControllable: UIViewController { }
-
-
-
-public protocol SubMandaratPageDependency {
-    
-    var mandaratUseCase: MandaratUseCase { get }
-    var navigationController: UINavigationController { get }
-    var mainMandaratVO: MainMandaratVO { get }
-}
-
-
-public protocol SubMandaratPageBuildable: Buildable<SubMandaratPageDependency> {
-    
-    func build() -> SubMandaratPageRoutable
-}
-
-public protocol SubMandaratPageRoutable {
-    var viewModel: SubMandaratPageViewModelable { get }
-    var viewController: SubMandaratPageViewControllable { get }
 }

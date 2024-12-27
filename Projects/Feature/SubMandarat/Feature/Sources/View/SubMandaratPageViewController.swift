@@ -7,6 +7,7 @@
 
 import UIKit
 
+import FeatureSubMandaratInterface
 import DomainMandaratInterface
 
 import ReactorKit
@@ -96,7 +97,7 @@ class SubMandaratPageViewController: UIViewController, SubMandaratPageViewContro
         }
         
         
-        // Render main mandarat
+        // Render center mandarat
         reactor.state
             .map(\.centerMandarat)
             .withUnretained(self)
@@ -104,6 +105,11 @@ class SubMandaratPageViewController: UIViewController, SubMandaratPageViewContro
                 
                 vc.centerMandaratView.render(centerMandaratVO)
             })
+            .disposed(by: disposeBag)
+        
+        centerMandaratView.rx.tap
+            .map({ _ in Reactor.Action.centerMandaratClicked })
+            .bind(to: reactor.action)
             .disposed(by: disposeBag)
     }
 }
