@@ -14,8 +14,12 @@ import RxSwift
 
 class EditSubMandartViewModel: Reactor {
     
-    // Delegate
-    weak var delegate: EditSubMandaratViewModelDelegate?
+    // Listener
+    weak var listener: EditSubMandaratViewModelListener!
+    
+    
+    // Router
+    weak var router: SubMandaratPageRouting!
     
     
     var initialState: State
@@ -37,7 +41,7 @@ class EditSubMandartViewModel: Reactor {
         switch action {
         case .exitButtonClicked:
             
-//            router.dismissModule(animated: true)
+            router.dismiss()
             
             return .never()
         default:
@@ -64,9 +68,9 @@ class EditSubMandartViewModel: Reactor {
         case .saveButtonClicked:
             
             let subMandaratVO: SubMandaratVO = createSubmandarat(state)
-            delegate?.editFinishedWithSavingRequest(edited: subMandaratVO)
+            listener.editFinishedWithSavingRequest(edited: subMandaratVO)
             
-//            router.dismissModule(animated: true)
+            router.dismiss()
                         
             return state
             

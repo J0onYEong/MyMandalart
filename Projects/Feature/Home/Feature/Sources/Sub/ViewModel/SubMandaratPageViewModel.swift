@@ -13,10 +13,14 @@ import SharedCore
 import ReactorKit
 import RxSwift
 
-class SubMandaratPageViewModel: Reactor, MainMandaratViewModelListener, SubMandaratViewModelListener, EditSubMandaratViewModelDelegate {
+class SubMandaratPageViewModel: Reactor,  SubMandaratViewModelListener, EditSubMandaratViewModelListener, SubMandaratPageViewModelable {
     
     // DI
     private let mandaratUseCase: MandaratUseCase
+    
+    
+    // Router
+    weak var router: SubMandaratPageRouting!
     
     
     // State for view model
@@ -35,12 +39,8 @@ class SubMandaratPageViewModel: Reactor, MainMandaratViewModelListener, SubManda
     private(set) var subMandaratViewModels: [MandaratPosition: SubMandaratViewModel] = [:]
     
     
-    // Navigation
-    let transitionDelegate: SubMandaratViewControllerTransitionDelegate = .init()
-    
     
     private let disposeBag: DisposeBag = .init()
-    
     
     
     init(mandaratUseCase: MandaratUseCase, mainMandarat: MainMandaratVO) {
@@ -90,7 +90,12 @@ class SubMandaratPageViewModel: Reactor, MainMandaratViewModelListener, SubManda
             
             return .never()
             
-        
+        case .centerMandaratClicked:
+            
+            router.dismissSubMandaratPage()
+            
+            return .never()
+            
         default:
             return .just(action)
         }
@@ -110,6 +115,7 @@ extension SubMandaratPageViewModel {
     enum Action {
         case viewDidLoad
         case requestEditSubMandarat(MandaratPosition)
+        case centerMandaratClicked
     }
     
     struct State {
@@ -136,19 +142,6 @@ private extension SubMandaratPageViewModel {
 }
 
 
-// MARK: MainMandaratViewModelDelegate
-extension SubMandaratPageViewModel {
-    
-    func mainMandarat(detailButtonClicked position: MandaratPosition) {
-        
-//        router.pop(
-//            animated: true,
-//            delegate: transitionDelegate
-//        )
-    }
-}
-
-
 // MARK: SubMandaratViewModelDelegate
 extension SubMandaratPageViewModel {
     
@@ -164,23 +157,12 @@ private extension SubMandaratPageViewModel {
     
     func presentEditSubMandaratViewController(_ subMandaratVO: SubMandaratVO) {
         
-        let viewModel: EditSubMandartViewModel = .init(subMandaratVO)
-        viewModel.delegate = self
-        
-        let viewController: EditSubMandaratViewController = .init()
-        viewController.bind(reactor: viewModel)
-        
-//        router
-//            .present(
-//                viewController,
-//                animated: true,
-//                modalPresentationSytle: .custom
-//            )
+        router.presentEditSubMandaratPage(subMandaratVO: subMandaratVO)
     }
 }
 
 
-// MARK: EditSubMandaratViewModelDelegate
+// MARK: EditSubMandaratViewModelListener
 extension SubMandaratPageViewModel {
     
     func editFinishedWithSavingRequest(edited subMandarat: SubMandaratVO) {

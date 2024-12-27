@@ -5,10 +5,7 @@
 //  Created by choijunios on 12/26/24.
 //
 
-import UIKit
-
 import FeatureHomeInterface
-import DomainMandaratInterface
 import SharedPresentationExt
 
 public class MainMandaratBuilder: Buildable<MainMandaratDependency>, MainMandaratBuildable {

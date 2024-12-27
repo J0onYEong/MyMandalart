@@ -209,7 +209,7 @@ private extension MainMandaratPageViewModel {
         MandaratPosition.allCases.forEach { position in
             
             let reactor: MainMandaratViewModel = .init(position: position)
-            reactor.delegate = self
+            reactor.listener = self
             mainMandaratReactors[position] = reactor
         }
         

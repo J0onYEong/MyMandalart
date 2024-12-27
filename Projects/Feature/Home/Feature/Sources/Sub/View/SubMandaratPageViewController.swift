@@ -13,7 +13,7 @@ import ReactorKit
 import RxSwift
 import RxCocoa
 
-class SubMandaratPageViewController: UIViewController, View {
+class SubMandaratPageViewController: UIViewController, SubMandaratPageViewControllable, View {
     
     // Sub view
     fileprivate var subMandaratViews: [MandaratPosition: SubMandaratView] = [:]
