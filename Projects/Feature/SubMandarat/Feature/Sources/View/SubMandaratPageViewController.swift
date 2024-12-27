@@ -336,6 +336,8 @@ extension SubMandaratPageViewController {
         
         UIView.animate(withDuration: duration) {
             
+            self.mainMandaratDescriptionView.alpha = 0
+            
             self.subMandaratViewsExceptForCenter.forEach { (key, subMandaratView) in
                 
                 subMandaratView.alpha = 0
