@@ -221,16 +221,12 @@ private extension MainMandaratPageViewModel {
     /// HomeViewModel상태 업데이트 및 변경 사항을 MainMandaratViewModel에 전파
     func updateMainMandarat(updated mainMandarat: MainMandaratVO) {
         
-        //#1. 사이드이팩트, 상태저장
-        mandaratUseCase.saveMainMandarat(mainMandarat: mainMandarat)
-        
-        
-        //#2. 사이드이팩트, HomeViewModel 업데이트
+        //#1. 사이드이팩트, HomeViewModel 업데이트
         let position = mainMandarat.position
         self.mainMandaratVO[position] = mainMandarat
         
         
-        //#3. 사이드이팩트, 변경 상태를 메인 만다라트 뷰모델에 전달
+        //#2. 사이드이팩트, 변경 상태를 메인 만다라트 뷰모델에 전달
         let mainMandaratViewModel = mainMandaratViewReactors[position]
         mainMandaratViewModel?.requestRender(.create(from: mainMandarat))
     }

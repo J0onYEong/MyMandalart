@@ -70,7 +70,6 @@ public class DefaultMandaratRepository: MandaratRepository {
         let fetchedMandarat: Observable<[MainMandaratEntity]> = coreDataService
             .fetch(predicate: predicate)
             .asObservable()
-            .share()
         
         
         return fetchedMandarat
