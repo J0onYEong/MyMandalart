@@ -41,7 +41,7 @@ class EditMainMandaratViewModel: NSObject, Reactor, UIColorPickerViewControllerD
         switch action {
         case .exitButtonClicked:
             
-            router.dismiss()
+            router.dismissEditMainMandaratPage()
             
             return .empty()
             
@@ -93,7 +93,7 @@ class EditMainMandaratViewModel: NSObject, Reactor, UIColorPickerViewControllerD
             
             delegate.editFinishedWithSavingRequest(edited: mandaratVO)
             
-            router.dismiss()
+            router.dismissEditMainMandaratPage()
             
             return state
             

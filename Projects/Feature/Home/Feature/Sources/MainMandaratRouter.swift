@@ -24,10 +24,6 @@ protocol MainMandaratPageRouting: AnyObject {
 
 class MainMandaratRouter: MainMandaratRoutable, MainMandaratPageRouting {
     
-    let viewModel: MainMandaratPageViewModelable
-    let viewController: MainMandaratPageViewControllable
-    
-    
     private let navigationController: UINavigationController
     private let subMandaratBuilder: SubMandaratPageBuildable
     
@@ -40,8 +36,8 @@ class MainMandaratRouter: MainMandaratRoutable, MainMandaratPageRouting {
     {
         self.subMandaratBuilder = subMandaratBuilder
         self.navigationController = navigationController
-        self.viewModel = viewModel
-        self.viewController = viewController
+        
+        super.init(viewModel: viewModel, viewController: viewController)
         
         viewModel.router = self
     }
@@ -55,17 +51,36 @@ extension MainMandaratRouter {
         
         let router = subMandaratBuilder.build(mainMandaratVO: mainMandarat)
         
+        let viewModel = router.viewModel
+        
+        if let listener = self.viewModel as? SubMandaratPageViewModelListener {
+            viewModel.listener = listener
+        }
+        
         let viewController = router.viewController
         
-        navigationController.delegate = router.transitionDelegate
+        navigationController.delegate = viewController.transitionDelegate
         navigationController.pushViewController(viewController, animated: true)
         navigationController.delegate = nil
+        
+        attach(router)
     }
     
     
     func dismissSubMandaratPage() {
         
+        guard let router = children.first(where: { $0 is SubMandaratPageRoutable }) as? SubMandaratPageRoutable else { return }
         
+        let viewController = router.viewController
+        
+        if navigationController.topViewController === viewController {
+            
+            navigationController.delegate = viewController.transitionDelegate
+            navigationController.popViewController(animated: true)
+            navigationController.delegate = nil
+            
+            dettach(router)
+        }
     }
     
     

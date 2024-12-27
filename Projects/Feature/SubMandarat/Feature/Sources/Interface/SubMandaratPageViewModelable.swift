@@ -5,7 +5,7 @@
 //  Created by choijunios on 12/27/24.
 //
 
-public protocol SubMandaratPageViewModelable {
+public protocol SubMandaratPageViewModelable: AnyObject {
     
-    var listener: SubMandaratPageViewModelListener? { get }
+    var listener: SubMandaratPageViewModelListener? { get set }
 }

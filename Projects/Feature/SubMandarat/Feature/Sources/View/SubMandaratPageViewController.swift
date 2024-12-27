@@ -27,6 +27,10 @@ class SubMandaratPageViewController: UIViewController, SubMandaratPageViewContro
     private var landscapeConstraints: [NSLayoutConstraint] = []
     
     
+    // UINavigationControllerDelegate
+    let transitionDelegate: UINavigationControllerDelegate = SubMandaratViewControllerTransitionDelegate()
+    
+    
     // Reactor
     var reactor: SubMandaratPageViewModel?
     var disposeBag: DisposeBag = .init()

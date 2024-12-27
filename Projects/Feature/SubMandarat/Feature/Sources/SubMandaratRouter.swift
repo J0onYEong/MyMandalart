@@ -19,20 +19,14 @@ protocol SubMandaratPageRouting: AnyObject {
 
 class SubMandaratPageRouter: SubMandaratPageRoutable, SubMandaratPageRouting {
     
-    // Public interface
-    let viewModel: SubMandaratPageViewModelable
-    let viewController: SubMandaratPageViewControllable
-    let transitionDelegate: UINavigationControllerDelegate = SubMandaratViewControllerTransitionDelegate()
-    
-    
     // Navigation
     private let navigationController: UINavigationController
     
     
     init(navigationController: UINavigationController, viewModel: SubMandaratPageViewModel, viewController: SubMandaratPageViewController) {
         self.navigationController = navigationController
-        self.viewModel = viewModel
-        self.viewController = viewController
+        
+        super.init(viewModel: viewModel, viewController: viewController)
         
         viewModel.router = self
     }

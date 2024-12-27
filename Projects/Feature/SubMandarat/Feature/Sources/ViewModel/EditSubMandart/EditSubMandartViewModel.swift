@@ -41,7 +41,7 @@ class EditSubMandartViewModel: Reactor {
         switch action {
         case .exitButtonClicked:
             
-            router.dismiss()
+            router.dismissEditSubMandaratPage()
             
             return .never()
         default:
@@ -70,7 +70,7 @@ class EditSubMandartViewModel: Reactor {
             let subMandaratVO: SubMandaratVO = createSubmandarat(state)
             listener.editFinishedWithSavingRequest(edited: subMandaratVO)
             
-            router.dismiss()
+            router.dismissEditSubMandaratPage()
                         
             return state
             

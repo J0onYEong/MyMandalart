@@ -5,8 +5,6 @@
 //  Created by choijunios on 12/26/24.
 //
 
-public protocol MainMandaratRoutable: AnyObject {
-    
-    var viewModel: MainMandaratPageViewModelable { get }
-    var viewController: MainMandaratPageViewControllable { get }
-}
+import SharedPresentationExt
+
+public typealias MainMandaratRoutable = Router<MainMandaratPageViewModelable, MainMandaratPageViewControllable>

@@ -12,7 +12,7 @@ import DomainMandaratInterface
 
 public class SubMandaratPageBuilder: Buildable<SubMandaratPageDependency>, SubMandaratPageBuildable {
     
-    public func build(mainMandaratVO: MainMandaratVO) -> any SubMandaratPageRoutable {
+    public func build(mainMandaratVO: MainMandaratVO) -> SubMandaratPageRoutable {
         
         let component = SubMandaratPageComponent(dependency: dependency)
         

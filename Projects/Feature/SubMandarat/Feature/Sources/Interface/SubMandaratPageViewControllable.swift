@@ -7,4 +7,7 @@
 
 import UIKit
 
-public protocol SubMandaratPageViewControllable: UIViewController { }
+public protocol SubMandaratPageViewControllable: UIViewController {
+    
+    var transitionDelegate: UINavigationControllerDelegate { get }
+}

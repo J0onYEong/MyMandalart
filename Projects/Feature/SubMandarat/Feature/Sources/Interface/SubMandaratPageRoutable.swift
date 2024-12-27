@@ -7,8 +7,6 @@
 
 import UIKit
 
-public protocol SubMandaratPageRoutable {
-    var viewModel: SubMandaratPageViewModelable { get }
-    var viewController: SubMandaratPageViewControllable { get }
-    var transitionDelegate: UINavigationControllerDelegate { get }
-}
+import SharedPresentationExt
+
+public typealias SubMandaratPageRoutable = Router<SubMandaratPageViewModelable, SubMandaratPageViewControllable>
