@@ -33,9 +33,7 @@ public class DefaultMandaratUseCase: MandaratUseCase {
             .requestSaveMainMandarat(mainMandarat: mainMandarat)
             .subscribe(onFailure: { error in
                 
-                // 부가적인 에러처리
-                
-                print(error.localizedDescription)
+                debugPrint("메인만다라트 저장실패 \(error.localizedDescription)")
                 
             })
             .disposed(by: disposeBag)
@@ -45,12 +43,25 @@ public class DefaultMandaratUseCase: MandaratUseCase {
     // MARK: Sub mandarat
     public func requestSubMandarats(mainMandarat: DomainMandaratInterface.MainMandaratVO) -> RxSwift.Single<[DomainMandaratInterface.SubMandaratVO]> {
         
-        mandaratRepository.requestSubMandarat(root: mainMandarat)
+        let identifier = mainMandarat.id
+        
+        return mandaratRepository.requestSubMandarat(identifier: identifier)
     }
     
     public func saveSubMandarat(mainMandarat: MainMandaratVO, subMandarat: SubMandaratVO) {
         
-        // Not implemented
+        let identifier = mainMandarat.id
         
+        mandaratRepository
+            .requestSaveSubMandarat(
+                identifier: identifier,
+                subMandarat: subMandarat
+            )
+            .subscribe(onFailure: { error in
+                
+                debugPrint("서브 만다라트 저장 실패 \(error.localizedDescription)")
+                
+            })
+            .disposed(by: disposeBag)
     }
 }

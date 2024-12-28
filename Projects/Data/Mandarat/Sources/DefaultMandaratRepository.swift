@@ -169,6 +169,8 @@ public class DefaultMandaratRepository: MandaratRepository {
         let updatePreviousResult = updatePreviousDataStream
             .flatMap { [coreDataService, subMandarat] entity in
                 
+                debugPrint("기존에 존재하던 서브 만다라트 업데이트")
+                
                 return coreDataService.save { context, completion in
                     
                     entity.title = subMandarat.title
@@ -186,46 +188,44 @@ public class DefaultMandaratRepository: MandaratRepository {
         
         // createNewDataStream
         let createNewDataResult = createNewDataStream
-            .flatMap { [coreDataService, mainMandaratId] _ in
+            .flatMap { [coreDataService, mainMandaratId, subMandarat] _ in
                 
-                let predicate: NSPredicate = .init(format: "id == %@", mainMandaratId)
+                debugPrint("새로운 서브 만다라트 생성")
                 
-                let fetchedMainMandarat: Observable<[MainMandaratEntity]> = coreDataService
-                    .fetch(predicate: predicate)
-                    .asObservable()
-                
-                return fetchedMainMandarat
-            }
-            .flatMap { [coreDataService] mainMandarats in
-                
-                if mainMandarats.isEmpty {
-                    fatalError("서브만다라트 저장 실패, 일치하는 메인만다라트 엔티티를 찾을 수 없음")
-                }
-                
-                let mainMandarat = mainMandarats.first!
-                
-                return coreDataService.save { [mainMandarat] context, completion in
+                return coreDataService.save { context, completion in
                     
-                    let subMandaratEntity = SubMandaratEntity(context: context)
-                    let positionEntity = MandaratPositionEntity(context: context)
+                    let predicate: NSPredicate = .init(format: "id == %@", mainMandaratId)
                     
-                    let mandaratPos = subMandarat.position.matrixCoordinate
-                    positionEntity.xpos = mandaratPos.0
-                    positionEntity.ypos = mandaratPos.1
-                    
-                    subMandaratEntity.id = subMandarat.id
-                    subMandaratEntity.position = positionEntity
-                    subMandaratEntity.achievementRate = Float(subMandarat.acheivementRate)
-                    
-                    if let prevSet = mainMandarat.subMandarats {
-                            
-                        mainMandarat.subMandarats = prevSet.adding(subMandaratEntity) as NSSet
-                    } else {
-                        
-                        mainMandarat.subMandarats = NSSet(object: subMandaratEntity)
-                    }
+                    let fetchRequest = MainMandaratEntity.fetchRequest()
                     
                     do {
+                        
+                        let mainMandarats = try context.fetch(fetchRequest)
+                        if mainMandarats.isEmpty {
+                            fatalError("서브만다라트 저장 실패, 일치하는 메인만다라트 엔티티를 찾을 수 없음")
+                        }
+                        let mainMandarat = mainMandarats.first!
+                        
+                        let subMandaratEntity = SubMandaratEntity(context: context)
+                        let positionEntity = MandaratPositionEntity(context: context)
+                        
+                        let mandaratPos = subMandarat.position.matrixCoordinate
+                        positionEntity.xpos = mandaratPos.0
+                        positionEntity.ypos = mandaratPos.1
+                        
+                        subMandaratEntity.id = subMandarat.id
+                        subMandaratEntity.position = positionEntity
+                        subMandaratEntity.title = subMandarat.title
+                        subMandaratEntity.achievementRate = Float(subMandarat.acheivementRate)
+                        
+                        if let prevSet = mainMandarat.subMandarats {
+                                
+                            mainMandarat.subMandarats = prevSet.adding(subMandaratEntity) as NSSet
+                        } else {
+                            
+                            mainMandarat.subMandarats = NSSet(object: subMandaratEntity)
+                        }
+                        
                         try context.save()
                         completion(.success(()))
                     } catch {
