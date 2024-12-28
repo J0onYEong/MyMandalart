@@ -45,27 +45,7 @@ class EditMainMandaratViewModel: NSObject, Reactor, UIColorPickerViewControllerD
             router.dismissEditMainMandaratPage()
             
             return .empty()
-            
-        case .saveButtonClicked:
-            
-            return state
-                .map(\.titleText)
-                .withUnretained(self)
-                .map { viewModel, titleText in
-                    
-                    if viewModel.validateTitle(titleText) {
-                        
-                        // 유효한 타이틀
-                        return .saveMainMandarat
-                    }
-                    
-                    return .alert(.init(
-                        title: "만다라트 저장 실패",
-                        description: "만다라트의 제목은 1자 이상이어야 합니다!",
-                        alertColor: .color("#FB4141")
-                    ))
-                }
-            
+
         default:
             return .just(action)
         }
@@ -108,31 +88,38 @@ class EditMainMandaratViewModel: NSObject, Reactor, UIColorPickerViewControllerD
             
             return newState
             
-        case .saveMainMandarat:
+        case .saveButtonClicked:
             
-            let mandaratVO: MainMandaratVO = createMandaratVO(state: state)
-            
-            delegate.editFinishedWithSavingRequest(edited: mandaratVO)
-            
-            router.dismissEditMainMandaratPage()
-            
-            return state
+            if validateTitle(state.titleText) {
+                
+                // 만다라트 저장 및 수정화면 종료
+                let mandaratVO: MainMandaratVO = createMandaratVO(state: state)
+                delegate.editFinishedWithSavingRequest(edited: mandaratVO)
+                router.dismissEditMainMandaratPage()
+                
+                return state
+                
+            } else {
+                
+                // 인풋 벨리데이션 통과 실패
+                return reduce(state: state, mutation: .alert(.init(
+                    title: "만다라트 저장 실패",
+                    description: "만다라트의 제목은 1자 이상이어야 합니다!",
+                    alertColor: .color("#FB4141")
+                )))
+            }
             
         case .alert(let alertData):
             
             var newState = state
-            
             newState.alertData = alertData
-            newState.presentAlert = true
             
             return newState
             
         case .alertFinished:
             
             var newState = state
-            
             newState.alertData = nil
-            newState.presentAlert = false
             
             return newState
             
@@ -160,7 +147,6 @@ extension EditMainMandaratViewModel {
         // Event
         case editRequestFromOutside(mainMandarat: MainMandaratVO?)
         case colorPickerClosed
-        case saveMainMandarat
         case alert(AlertData)
         case alertFinished
         
@@ -184,7 +170,6 @@ extension EditMainMandaratViewModel {
         var exitPageTrigger: Bool = false
         
         // alert
-        var presentAlert: Bool = false
         var alertData: AlertData? = nil
     }
     
