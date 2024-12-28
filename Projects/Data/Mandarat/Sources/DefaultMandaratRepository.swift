@@ -51,9 +51,39 @@ public class DefaultMandaratRepository: MandaratRepository {
             }
     }
     
-    public func requestSubMandarat(root: any Identifiable) -> RxSwift.Single<[DomainMandaratInterface.SubMandaratVO]> {
+    
+    public func requestSubMandarat(identifier: String) -> Single<[SubMandaratVO]> {
         
-        return .just([])
+        let predicate: NSPredicate = .init(format: "id == %@", identifier)
+        
+        let fetchedMandarat: Observable<[MainMandaratEntity]> = coreDataService
+            .fetch(predicate: predicate)
+            .asObservable()
+        
+        return fetchedMandarat
+            .map { mainMandarats in
+                
+                if mainMandarats.isEmpty {
+                    
+                    debugPrint("메인 만다라트를 찾을 수 없음")
+                    return []
+                    
+                }
+                
+                let subMandaratEntities = mainMandarats.first!.subMandarats as! Set<SubMandaratEntity>
+                
+                return subMandaratEntities.map { coreDataEntity in
+                    
+                    let mandaratPos: MandaratPositionEntity! = coreDataEntity.position
+                    
+                    return SubMandaratVO(
+                        title: coreDataEntity.title!,
+                        acheivementRate: Double(coreDataEntity.achievementRate),
+                        position: .init(x: mandaratPos.xpos, y: mandaratPos.ypos)!
+                    )
+                }
+            }
+            .asSingle()
     }
     
     

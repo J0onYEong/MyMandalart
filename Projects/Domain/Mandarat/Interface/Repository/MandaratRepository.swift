@@ -13,7 +13,7 @@ public protocol MandaratRepository {
     
     func requestMainMandarat() -> Single<[MainMandaratVO]>
     
-    func requestSubMandarat(root: any Identifiable) -> Single<[SubMandaratVO]>
+    func requestSubMandarat(identifier: String) -> Single<[SubMandaratVO]>
     
     // MARK: Saving
     

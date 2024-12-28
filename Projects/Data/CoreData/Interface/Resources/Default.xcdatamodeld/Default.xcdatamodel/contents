@@ -7,6 +7,7 @@
         <attribute name="story" optional="YES" attributeType="String"/>
         <attribute name="title" optional="YES" attributeType="String"/>
         <relationship name="position" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MandaratPositionEntity"/>
+        <relationship name="subMandarats" optional="YES" toMany="YES" maxCount="8" deletionRule="Nullify" destinationEntity="SubMandaratEntity"/>
         <uniquenessConstraints>
             <uniquenessConstraint>
                 <constraint value="id"/>
@@ -16,5 +17,10 @@
     <entity name="MandaratPositionEntity" representedClassName="MandaratPositionEntity" syncable="YES" codeGenerationType="class">
         <attribute name="xpos" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="ypos" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+    </entity>
+    <entity name="SubMandaratEntity" representedClassName="SubMandaratEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="achievementRate" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="title" optional="YES" attributeType="String"/>
+        <relationship name="position" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MandaratPositionEntity"/>
     </entity>
 </model>
