@@ -5,7 +5,7 @@
 //  Created by choijunios on 12/20/24.
 //
 
-import Foundation
+import UIKit
 
 import DomainMandaratInterface
 
@@ -67,13 +67,32 @@ class EditSubMandartViewModel: Reactor {
             
         case .saveButtonClicked:
             
-            let subMandaratVO: SubMandaratVO = createSubmandarat(state)
-            listener.editFinishedWithSavingRequest(edited: subMandaratVO)
+            let titleText: String = state.titleText
             
-            router.dismissEditSubMandaratPage()
-                        
-            return state
-            
+            if validateInput(titleText: titleText) {
+                
+                // 인풋 검증 통과
+                
+                let subMandaratVO: SubMandaratVO = createSubmandarat(state)
+                listener.editFinishedWithSavingRequest(edited: subMandaratVO)
+                
+                router.dismissEditSubMandaratPage()
+                
+                return state
+                
+            } else {
+                
+                // 인풋 검증 불통
+                
+                var newState = state
+                newState.alertData = .init(
+                    title: "저장 실패",
+                    description: "제목은 1자 이상이어야 합니다!",
+                    alertColor: .color("#FB4141")
+                )
+                
+                return newState
+            }
         default:
             return state
         }
@@ -101,17 +120,39 @@ private extension EditSubMandartViewModel {
 // MARK: Reactor
 extension EditSubMandartViewModel {
     
-    struct State {
-        
-        var titleText: String
-        var acheiveRate: Double
-    }
-    
     enum Action {
            
         case acheivePercentChanged(percent: Double)
         case titleChanged(text: String)
         case saveButtonClicked
         case exitButtonClicked
+    }
+    
+    
+    struct State {
+        
+        var titleText: String
+        var acheiveRate: Double
+        
+        // alert
+        var alertData: AlertData? = nil
+    }
+    
+    
+    struct AlertData: Equatable {
+        let id = UUID()
+        let title: String
+        let description: String?
+        let alertColor: UIColor?
+    }
+}
+
+
+// MARK: Content validation
+private extension EditSubMandartViewModel {
+    
+    func validateInput(titleText: String) -> Bool {
+        
+        return !titleText.isEmpty
     }
 }

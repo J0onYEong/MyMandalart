@@ -284,6 +284,7 @@ class EditMainMandaratViewController: UIViewController, View, UIColorPickerViewC
         // MARK: Bind, alert
         reactor.state
             .compactMap(\.alertData)
+            .distinctUntilChanged()
             .subscribe(onNext: { [weak self] alertData in
                 
                 guard let self else { return }
@@ -314,13 +315,11 @@ class EditMainMandaratViewController: UIViewController, View, UIColorPickerViewC
                     
                     UIView.animate(withDuration: 0.1, delay: 1) {
                         
-                        alertView.transform = alertView.transform.translatedBy(x: 0, y: height)
                         alertView.alpha = 0
                         
                     } completion: { _ in
                         
-                        // alert의 종료를 알림
-                        self.reactor?.action.onNext(.alertFinished)
+                        alertView.removeFromSuperview()
                     }
                 }
             })

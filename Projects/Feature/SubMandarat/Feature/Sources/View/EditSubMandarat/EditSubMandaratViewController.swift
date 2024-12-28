@@ -19,7 +19,7 @@ class EditSubMandaratViewController: UIViewController, View {
     private let backgroundView: TappableView = .init()
     private let titleInputView: FocusTextField = .init()
     private let acheivementRateView: AdjustAcheivementRateView = .init()
-    private let inputContainerBackView: UIView = .init()
+    private let inputSheetView: UIView = .init()
     
     // - Tool button
     private let exitButton: ImageButton = .init(imageName: "xmark")
@@ -108,9 +108,9 @@ class EditSubMandaratViewController: UIViewController, View {
         
         
         // MARK: inputContainerBackView
-        view.addSubview(inputContainerBackView)
+        view.addSubview(inputSheetView)
         
-        inputContainerBackView.snp.makeConstraints { make in
+        inputSheetView.snp.makeConstraints { make in
             make.leading.equalTo(view.safeAreaLayoutGuide.snp.leading)
             make.trailing.equalTo(view.safeAreaLayoutGuide.snp.trailing)
             make.bottom.equalToSuperview()
@@ -126,7 +126,7 @@ class EditSubMandaratViewController: UIViewController, View {
         toolButtonStack.distribution = .fill
         toolButtonStack.alignment = .fill
         
-        inputContainerBackView.addSubview(toolButtonStack)
+        inputSheetView.addSubview(toolButtonStack)
         
         toolButtonStack.snp.makeConstraints { make in
             
@@ -145,7 +145,7 @@ class EditSubMandaratViewController: UIViewController, View {
         inputStackView.alignment = .fill
         inputStackView.distribution = .fill
         
-        inputContainerBackView.addSubview(inputStackView)
+        inputSheetView.addSubview(inputStackView)
         
         inputStackView.snp.makeConstraints { make in
             make.top.equalTo(toolButtonStack.snp.bottom).offset(10)
@@ -202,7 +202,52 @@ extension EditSubMandaratViewController {
         saveButton.rx.tap
             .map({ Reactor.Action.saveButtonClicked })
             .bind(to: reactor.action)
-            .disposed(by: disposeBag)       
+            .disposed(by: disposeBag)
+        
+        
+        // Bind, alert
+        reactor.state
+            .compactMap(\.alertData)
+            .distinctUntilChanged()
+            .subscribe(onNext: { [weak self] alertData in
+                
+                guard let self else { return }
+                
+                let alertView = createAlertView()
+                
+                // set ui
+                alertView.update(
+                    title: alertData.title,
+                    description: alertData.description,
+                    backgroundColor: alertData.alertColor
+                )
+                
+                
+                // present anim
+                alertView.layoutIfNeeded()
+                let height = alertView.bounds.height
+                
+                alertView.transform = alertView.transform.translatedBy(x: 0, y: height)
+                alertView.alpha = 0
+                
+                UIView.animate(withDuration: 0.35) {
+                    
+                    alertView.alpha = 1
+                    alertView.transform = .identity
+                    
+                } completion: { _ in
+                    
+                    UIView.animate(withDuration: 0.1, delay: 1) {
+                        
+                        alertView.alpha = 0
+                        
+                    } completion: { _ in
+                        
+                        alertView.removeFromSuperview()
+                    }
+                }
+            })
+            .disposed(by: disposeBag)
     }
 }
 
@@ -212,10 +257,10 @@ private extension EditSubMandaratViewController {
     
     func setInputContainerViewShape() {
         
-        inputContainerBackView.backgroundColor = .white
+        inputSheetView.backgroundColor = .white
         
         let shapeLayer: CAShapeLayer = .init()
-        shapeLayer.frame = inputContainerBackView.bounds
+        shapeLayer.frame = inputSheetView.bounds
         
         let rect = shapeLayer.bounds
         let minRadius: CGFloat = 30
@@ -247,7 +292,7 @@ private extension EditSubMandaratViewController {
         shapeLayer.strokeEnd = 1
         shapeLayer.fillColor = UIColor.white.cgColor
         
-        inputContainerBackView.layer.mask = shapeLayer
+        inputSheetView.layer.mask = shapeLayer
     }
     
 }
@@ -263,15 +308,15 @@ private extension EditSubMandaratViewController {
         
         // MARK: Animation
         view.layoutIfNeeded()
-        let height = self.inputContainerBackView.layer.bounds.height
-        inputContainerBackView.transform = .init(translationX: 0, y: height)
+        let height = self.inputSheetView.layer.bounds.height
+        inputSheetView.transform = .init(translationX: 0, y: height)
         backgroundView.alpha = 0
         
         UIView.animate(withDuration: duration) {
             
             self.backgroundView.alpha = 1
             
-            self.inputContainerBackView.transform = .identity
+            self.inputSheetView.transform = .identity
             
         } completion: { completed in
             
@@ -285,8 +330,8 @@ private extension EditSubMandaratViewController {
             
             self.backgroundView.alpha = 0
             
-            let height = self.inputContainerBackView.layer.bounds.height
-            self.inputContainerBackView.transform = .init(translationX: 0, y: height)
+            let height = self.inputSheetView.layer.bounds.height
+            self.inputSheetView.transform = .init(translationX: 0, y: height)
             
         } completion: { [weak self] completed in
             
@@ -355,7 +400,7 @@ private extension EditSubMandaratViewController {
                 
                 UIView.animate(withDuration: keyboardDisplayDuration) {
                     
-                    vc.inputContainerBackView.snp.updateConstraints { make in
+                    vc.inputSheetView.snp.updateConstraints { make in
                         
                         make.bottom.equalToSuperview().inset(CGFloat(keyboardFrame.height))
                     }
@@ -376,7 +421,7 @@ private extension EditSubMandaratViewController {
                 
                 UIView.animate(withDuration: keyboardDisplayDuration) {
                     
-                    vc.inputContainerBackView.snp.updateConstraints { make in
+                    vc.inputSheetView.snp.updateConstraints { make in
                         
                         make.bottom.equalToSuperview()
                     }
@@ -385,5 +430,28 @@ private extension EditSubMandaratViewController {
                 }
             })
             .disposed(by: disposeBag)
+    }
+}
+
+
+
+// MARK: Alert
+extension EditSubMandaratViewController {
+    
+    func createAlertView() -> ToastView {
+        
+        let toastView: ToastView = .init()
+        
+        inputSheetView.addSubview(toastView)
+        
+        toastView.snp.makeConstraints { make in
+            
+            make.bottom.equalToSuperview().inset(10).priority(.low)
+            make.bottom.lessThanOrEqualTo(view.safeAreaLayoutGuide.snp.bottom).priority(.high)
+            make.leading.equalToSuperview().inset(20)
+            make.trailing.equalToSuperview().inset(20)
+        }
+        
+        return toastView
     }
 }

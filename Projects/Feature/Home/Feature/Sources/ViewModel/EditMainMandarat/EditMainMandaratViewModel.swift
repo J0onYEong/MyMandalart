@@ -93,6 +93,7 @@ class EditMainMandaratViewModel: NSObject, Reactor, UIColorPickerViewControllerD
             if validateTitle(state.titleText) {
                 
                 // 만다라트 저장 및 수정화면 종료
+                
                 let mandaratVO: MainMandaratVO = createMandaratVO(state: state)
                 delegate.editFinishedWithSavingRequest(edited: mandaratVO)
                 router.dismissEditMainMandaratPage()
@@ -102,26 +103,16 @@ class EditMainMandaratViewModel: NSObject, Reactor, UIColorPickerViewControllerD
             } else {
                 
                 // 인풋 벨리데이션 통과 실패
-                return reduce(state: state, mutation: .alert(.init(
+                
+                var newState = state
+                newState.alertData = .init(
                     title: "만다라트 저장 실패",
                     description: "만다라트의 제목은 1자 이상이어야 합니다!",
                     alertColor: .color("#FB4141")
-                )))
+                )
+                
+                return newState
             }
-            
-        case .alert(let alertData):
-            
-            var newState = state
-            newState.alertData = alertData
-            
-            return newState
-            
-        case .alertFinished:
-            
-            var newState = state
-            newState.alertData = nil
-            
-            return newState
             
         default:
             return state
@@ -147,8 +138,6 @@ extension EditMainMandaratViewModel {
         // Event
         case editRequestFromOutside(mainMandarat: MainMandaratVO?)
         case colorPickerClosed
-        case alert(AlertData)
-        case alertFinished
         
         // - editing
         case editTitleText(text: String)
@@ -160,6 +149,7 @@ extension EditMainMandaratViewModel {
         case exitButtonClicked
         case saveButtonClicked
     }
+    
     
     struct State {
         
@@ -173,7 +163,9 @@ extension EditMainMandaratViewModel {
         var alertData: AlertData? = nil
     }
     
-    struct AlertData {
+    
+    struct AlertData: Equatable {
+        let id = UUID()
         let title: String
         let description: String?
         let alertColor: UIColor?

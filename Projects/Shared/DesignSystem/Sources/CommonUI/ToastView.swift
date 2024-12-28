@@ -24,6 +24,11 @@ public class ToastView: UIView {
     }
     public required init?(coder: NSCoder) { nil }
     
+    deinit {
+        
+        debugPrint("denit ToastView")
+    }
+    
     public override func layoutSubviews() {
         super.layoutSubviews()
     }
