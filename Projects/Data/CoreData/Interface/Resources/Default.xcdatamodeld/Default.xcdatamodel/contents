@@ -20,7 +20,13 @@
     </entity>
     <entity name="SubMandaratEntity" representedClassName="SubMandaratEntity" syncable="YES" codeGenerationType="class">
         <attribute name="achievementRate" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="id" optional="YES" attributeType="String"/>
         <attribute name="title" optional="YES" attributeType="String"/>
         <relationship name="position" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MandaratPositionEntity"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="id"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
     </entity>
 </model>

@@ -18,4 +18,6 @@ public protocol MandaratRepository {
     // MARK: Saving
     
     func requestSaveMainMandarat(mainMandarat: MainMandaratVO) -> Single<Void>
+    
+    func requestSaveSubMandarat(identifier: String, subMandarat: SubMandaratVO) -> Single<Void>
 }

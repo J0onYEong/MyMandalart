@@ -77,6 +77,7 @@ public class DefaultMandaratRepository: MandaratRepository {
                     let mandaratPos: MandaratPositionEntity! = coreDataEntity.position
                     
                     return SubMandaratVO(
+                        id: coreDataEntity.id!,
                         title: coreDataEntity.title!,
                         acheivementRate: Double(coreDataEntity.achievementRate),
                         position: .init(x: mandaratPos.xpos, y: mandaratPos.ypos)!
@@ -144,6 +145,101 @@ public class DefaultMandaratRepository: MandaratRepository {
             }
             .asSingle()
     }
+    
+    
+    public func requestSaveSubMandarat(identifier mainMandaratId: String, subMandarat: SubMandaratVO) -> Single<Void> {
+        
+        // 서브만다라트 존재여부 확인
+        let subMandaratId = subMandarat.id
+        let predicate: NSPredicate = .init(format: "id == %@", subMandaratId)
+        
+        let fetchedSubMandarats: Observable<[SubMandaratEntity]> = coreDataService
+            .fetch(predicate: predicate)
+            .asObservable()
+        
+        let resultSwitch = fetchedSubMandarats
+            .map { $0.first }
+            .share()
+        
+        let updatePreviousDataStream = resultSwitch.compactMap({ $0 })
+        let createNewDataStream = resultSwitch.filter({ $0 == nil })
+        
+        
+        // updatePreviousDataStream
+        let updatePreviousResult = updatePreviousDataStream
+            .flatMap { [coreDataService, subMandarat] entity in
+                
+                return coreDataService.save { context, completion in
+                    
+                    entity.title = subMandarat.title
+                    entity.achievementRate = Float(subMandarat.acheivementRate)
+                    
+                    do {
+                        try context.save()
+                        completion(.success(()))
+                    } catch {
+                        completion(.failure(error))
+                    }
+                }
+            }
+            
+        
+        // createNewDataStream
+        let createNewDataResult = createNewDataStream
+            .flatMap { [coreDataService, mainMandaratId] _ in
+                
+                let predicate: NSPredicate = .init(format: "id == %@", mainMandaratId)
+                
+                let fetchedMainMandarat: Observable<[MainMandaratEntity]> = coreDataService
+                    .fetch(predicate: predicate)
+                    .asObservable()
+                
+                return fetchedMainMandarat
+            }
+            .flatMap { [coreDataService] mainMandarats in
+                
+                if mainMandarats.isEmpty {
+                    fatalError("서브만다라트 저장 실패, 일치하는 메인만다라트 엔티티를 찾을 수 없음")
+                }
+                
+                let mainMandarat = mainMandarats.first!
+                
+                return coreDataService.save { [mainMandarat] context, completion in
+                    
+                    let subMandaratEntity = SubMandaratEntity(context: context)
+                    let positionEntity = MandaratPositionEntity(context: context)
+                    
+                    let mandaratPos = subMandarat.position.matrixCoordinate
+                    positionEntity.xpos = mandaratPos.0
+                    positionEntity.ypos = mandaratPos.1
+                    
+                    subMandaratEntity.id = subMandarat.id
+                    subMandaratEntity.position = positionEntity
+                    subMandaratEntity.achievementRate = Float(subMandarat.acheivementRate)
+                    
+                    if let prevSet = mainMandarat.subMandarats {
+                            
+                        mainMandarat.subMandarats = prevSet.adding(subMandaratEntity) as NSSet
+                    } else {
+                        
+                        mainMandarat.subMandarats = NSSet(object: subMandaratEntity)
+                    }
+                    
+                    do {
+                        try context.save()
+                        completion(.success(()))
+                    } catch {
+                        completion(.failure(error))
+                    }
+                }
+            }
+        
+
+        return Observable
+            .merge(updatePreviousResult, createNewDataResult)
+            .asSingle()
+    }
+    
     
     private func saveMandarat(mainMandarat: MainMandaratVO) -> Single<Void> {
         

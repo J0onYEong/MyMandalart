@@ -9,7 +9,7 @@ import CoreData
 
 import RxSwift
 
-public protocol CoreDataService {
+public protocol CoreDataService: AnyObject {
     
     func fetch<Entity: NSManagedObject>(predicate: NSPredicate?) -> Single<[Entity]>
     
