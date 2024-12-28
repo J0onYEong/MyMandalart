@@ -17,11 +17,30 @@ public class ToastView: UIView {
     
     public init() {
         super.init(frame: .zero)
+        
+        setUI()
+        setLayout()
     }
     public required init?(coder: NSCoder) { nil }
     
     public override func layoutSubviews() {
         super.layoutSubviews()
+    }
+    
+    
+    public func update(title: String, description: String?) {
+        
+        titleLabel.text = title
+        
+        if let description, !description.isEmpty {
+            
+            descriptionLabel.isHidden = false
+            descriptionLabel.text = description
+            
+        } else {
+            
+            descriptionLabel.isHidden = true
+        }
     }
     
     
@@ -63,4 +82,28 @@ public class ToastView: UIView {
             make.horizontalEdges.equalToSuperview().inset(10)
         }
     }
+}
+
+#Preview {
+    
+    let view = ToastView()
+    
+    view.update(
+        title: "이것은 타이틀입니다.",
+        description: "이것은 디스크립션"
+    )
+    
+    return view
+}
+
+#Preview {
+    
+    let view = ToastView()
+    
+    view.update(
+        title: "이것은 타이틀입니다.",
+        description: nil
+    )
+    
+    return view
 }
