@@ -7,6 +7,7 @@
 
 import UIKit
 
+import SharedPresentationExt
 import SnapKit
 
 public class ToastView: UIView {
@@ -28,8 +29,9 @@ public class ToastView: UIView {
     }
     
     
-    public func update(title: String, description: String?) {
+    public func update(title: String, description: String?, backgroundColor: UIColor? = nil) {
         
+        // text
         titleLabel.text = title
         
         if let description, !description.isEmpty {
@@ -40,6 +42,12 @@ public class ToastView: UIView {
         } else {
             
             descriptionLabel.isHidden = true
+        }
+        
+        
+        // backgroundColor
+        if let backgroundColor {
+            self.backgroundColor = backgroundColor
         }
     }
     
@@ -53,7 +61,7 @@ public class ToastView: UIView {
         
         // titleLabel
         titleLabel.textAlignment = .left
-        titleLabel.font = .preferredFont(forTextStyle: .caption1)
+        titleLabel.font = .systemFont(ofSize: 13, weight: .bold)
         titleLabel.textColor = .white
         titleLabel.adjustsFontSizeToFitWidth = true
         

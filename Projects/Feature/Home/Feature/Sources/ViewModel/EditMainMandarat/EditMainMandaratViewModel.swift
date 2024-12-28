@@ -7,6 +7,7 @@
 
 import UIKit
 
+import SharedPresentationExt
 import DomainMandaratInterface
 import SharedCore
 
@@ -44,6 +45,26 @@ class EditMainMandaratViewModel: NSObject, Reactor, UIColorPickerViewControllerD
             router.dismissEditMainMandaratPage()
             
             return .empty()
+            
+        case .saveButtonClicked:
+            
+            return state
+                .map(\.titleText)
+                .withUnretained(self)
+                .map { viewModel, titleText in
+                    
+                    if viewModel.validateTitle(titleText) {
+                        
+                        // 유효한 타이틀
+                        return .saveMainMandarat
+                    }
+                    
+                    return .alert(.init(
+                        title: "만다라트 저장 실패",
+                        description: "만다라트의 제목은 1자 이상이어야 합니다!",
+                        alertColor: .color("#FB4141")
+                    ))
+                }
             
         default:
             return .just(action)
@@ -87,7 +108,7 @@ class EditMainMandaratViewModel: NSObject, Reactor, UIColorPickerViewControllerD
             
             return newState
             
-        case .saveButtonClicked:
+        case .saveMainMandarat:
             
             let mandaratVO: MainMandaratVO = createMandaratVO(state: state)
             
@@ -97,11 +118,40 @@ class EditMainMandaratViewModel: NSObject, Reactor, UIColorPickerViewControllerD
             
             return state
             
+        case .alert(let alertData):
+            
+            var newState = state
+            
+            newState.alertData = alertData
+            newState.presentAlert = true
+            
+            return newState
+            
+        case .alertFinished:
+            
+            var newState = state
+            
+            newState.alertData = nil
+            newState.presentAlert = false
+            
+            return newState
+            
         default:
             return state
         }
     }
 }
+
+
+// MARK: Input validation
+extension EditMainMandaratViewModel {
+    
+    func validateTitle(_ text: String) -> Bool {
+        
+        return !text.isEmpty
+    }
+}
+
 
 extension EditMainMandaratViewModel {
     
@@ -110,6 +160,9 @@ extension EditMainMandaratViewModel {
         // Event
         case editRequestFromOutside(mainMandarat: MainMandaratVO?)
         case colorPickerClosed
+        case saveMainMandarat
+        case alert(AlertData)
+        case alertFinished
         
         // - editing
         case editTitleText(text: String)
@@ -129,8 +182,19 @@ extension EditMainMandaratViewModel {
         var mandaratTitleColor: UIColor
         var presentColorPicker: Bool = false
         var exitPageTrigger: Bool = false
+        
+        // alert
+        var presentAlert: Bool = false
+        var alertData: AlertData? = nil
+    }
+    
+    struct AlertData {
+        let title: String
+        let description: String?
+        let alertColor: UIColor?
     }
 }
+
 
 private extension EditMainMandaratViewModel {
     
