@@ -173,7 +173,7 @@ private extension SubMandaratPageViewController {
                 make.top.equalTo(view.safeAreaLayoutGuide.snp.top).inset(10).priority(.high).constraint.layoutConstraints.first!,
                 make.left.equalTo(view.safeAreaLayoutGuide.snp.left).priority(.high).constraint.layoutConstraints.first!,
                 make.right.lessThanOrEqualTo(subMandaratContainerView.snp.left).priority(.high).constraint.layoutConstraints.first!,
-                make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).priority(.high).constraint.layoutConstraints.first!,
+                make.bottom.lessThanOrEqualTo(view.safeAreaLayoutGuide.snp.bottom).priority(.high).constraint.layoutConstraints.first!,
                 
             ])
         }
@@ -408,5 +408,7 @@ private extension SubMandaratPageViewController {
             landscapeConstraints.forEach({ $0.isActive = true })
             
         }
+        
+        view.layoutIfNeeded()
     }
 }

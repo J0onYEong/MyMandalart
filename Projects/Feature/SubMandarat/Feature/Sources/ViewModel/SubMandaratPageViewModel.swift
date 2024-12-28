@@ -130,7 +130,15 @@ extension SubMandaratPageViewModel {
         }
         
         var pageDescription: String {
-            centerMandarat.description ?? "이건 어떤 만다라트 인가요~?😆"
+            
+            let emptyText = "이건 어떤 만다라트 인가요? 🤔"
+            
+            if let description = centerMandarat.description, !description.isEmpty {
+                
+                return description
+            }
+            
+            return emptyText
         }
     }
 }

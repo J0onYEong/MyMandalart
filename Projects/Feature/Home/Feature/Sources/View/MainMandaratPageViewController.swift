@@ -322,5 +322,7 @@ private extension MainMandaratPageViewController {
             landscapeConstraints.forEach({ $0.isActive = true })
             
         }
+        
+        view.layoutIfNeeded()
     }
 }
