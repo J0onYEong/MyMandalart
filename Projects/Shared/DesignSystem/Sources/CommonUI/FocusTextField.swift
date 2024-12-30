@@ -95,6 +95,8 @@ public class FocusTextField: UIView {
     private func setTextField() {
         
         textField.placeholder = placeholderText
+        textField.autocapitalizationType = .none
+        textField.autocorrectionType = .no
         
     }
     

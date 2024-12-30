@@ -116,11 +116,16 @@ public class FocusTextView: UIView, UITextViewDelegate {
         textView.font = .preferredFont(forTextStyle: .body)
         textView.textContainerInset = .zero
         textView.textContainer.lineFragmentPadding = .zero
+        textView.autocapitalizationType = .none
+        textView.autocorrectionType = .no
         
         placeHolderLabel.text = self.placeholderText
         placeHolderLabel.font = .preferredFont(forTextStyle: .body)
         placeHolderLabel.backgroundColor = .clear
         placeHolderLabel.textColor = UIColor.gray.withAlphaComponent(0.5)
+        
+        // keyboard toolbar
+        setKeyboardToolBar()
     }
     
     
@@ -370,5 +375,27 @@ private extension FocusTextView {
         animation.fillMode = .forwards
         
         focusLineLayer.add(animation, forKey: "focus-line-animation1")
+    }
+}
+
+
+// MARK: keyboard tool bar
+private extension FocusTextView {
+    
+    func setKeyboardToolBar() {
+        
+        let toolbar = UIToolbar(frame:CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 50))
+        toolbar.barStyle = .default
+        toolbar.items = [
+        UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
+        UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(doneWithNumberPad))]
+        toolbar.sizeToFit()
+        
+        textView.inputAccessoryView = toolbar
+    }
+    
+    @objc func doneWithNumberPad() {
+        
+        textView.resignFirstResponder()
     }
 }
