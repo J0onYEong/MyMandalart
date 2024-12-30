@@ -10,6 +10,7 @@ import UIKit
 import FeatureSubMandarat
 import SharedPresentationExt
 import DomainMandaratInterface
+import DataUserStateInterface
 
 class MainMandaratComponent: Componentable<MainMandaratDependency>, SubMandaratPageDependency {
     

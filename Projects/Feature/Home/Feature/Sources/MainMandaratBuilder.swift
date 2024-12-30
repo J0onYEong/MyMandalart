@@ -16,7 +16,8 @@ public class MainMandaratBuilder: Buildable<MainMandaratDependency>, MainMandara
         
         
         let viewModel = MainMandaratPageViewModel(
-            mandaratUseCase: component.mandaratUseCase
+            mandaratUseCase: component.mandaratUseCase,
+            userStateRepository: component.dependency.userStateRepository
         )
         
         

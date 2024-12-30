@@ -65,7 +65,10 @@ private extension DefaultUserStateRepository {
                 
             } else {
                 
-                memoryStorage = [:]
+                UserStateKey.allCases.forEach { key in
+                    
+                    memoryStorage[key.rawValue] = key.initialValue
+                }
             }
         }
     }

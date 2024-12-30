@@ -54,9 +54,17 @@ let project = Project(
             resources: ["Feature/Resources/**"],
             dependencies: [
                 
+                // Feature
                 .feature(implements: .SubMandarat),
                 
+                
+                // Domain
                 .domain(interface: .Mandarat),
+                
+                
+                // Data
+                .data(interface: .UserState),
+                
                 
                 .shared(implements: .PresentationExt),
                 .shared(implements: .DesignSystem),

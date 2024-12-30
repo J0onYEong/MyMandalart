@@ -10,6 +10,7 @@ import FeatureHome
 import FeatureHomeTesting
 
 import DomainMandaratInterface
+import DataUserStateInterface
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
@@ -22,13 +23,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = scene as? UIWindowScene else { return }
         
         let navigationController = UINavigationController()
+        navigationController.setNavigationBarHidden(true, animated: false)
         
         window = UIWindow(windowScene: windowScene)
         
     
         let component: RootComponent = .init(
             mandaratUseCase: MockMandaratUseCase(),
-            navigationController: navigationController
+            navigationController: navigationController,
+            userStateRepository: MockUserStateRepository()
         )
         
         let router = MainMandaratBuilder(dependency: component).build()
@@ -46,6 +49,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         var mandaratUseCase: MandaratUseCase
         var navigationController: UINavigationController
+        var userStateRepository: UserStateRepository
     }
 }
 

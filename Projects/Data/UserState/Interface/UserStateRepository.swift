@@ -7,7 +7,7 @@
 
 import Foundation
 
-public protocol UserStateRepository {
+public protocol UserStateRepository: AnyObject {
     
     subscript (_ key: UserStateKey) -> Bool { get set }
 }

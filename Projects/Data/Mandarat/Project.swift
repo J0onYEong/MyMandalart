@@ -65,6 +65,7 @@ let project = Project(
                 .domain(interface: .Mandarat),
                 
                 .data(interface: .CoreData),
+                .data(interface: .UserState),
                 
                 .thirdParty(library: .RxSwift),
             ]
