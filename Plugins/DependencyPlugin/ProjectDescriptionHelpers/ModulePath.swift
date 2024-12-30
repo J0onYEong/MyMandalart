@@ -68,6 +68,7 @@ public extension ModulePath {
         
         // Repository
         case Mandarat
+        case UserState
         
         
         // DataSource
