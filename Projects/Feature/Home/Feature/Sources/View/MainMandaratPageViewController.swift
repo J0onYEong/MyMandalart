@@ -8,6 +8,7 @@
 import UIKit
 
 import DomainMandaratInterface
+import SharedDesignSystem
 import SharedPresentationExt
 
 import ReactorKit
@@ -324,5 +325,27 @@ private extension MainMandaratPageViewController {
         }
         
         view.layoutIfNeeded()
+    }
+}
+
+
+
+// MARK: Alert
+extension MainMandaratPageViewController {
+    
+    func createAlertView() -> ToastView {
+        
+        let toastView: ToastView = .init()
+        
+        view.addSubview(toastView)
+        
+        toastView.snp.makeConstraints { make in
+            
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(20)
+            make.left.equalTo(view.safeAreaLayoutGuide.snp.left).inset(20)
+            make.right.equalTo(view.safeAreaLayoutGuide.snp.right).inset(20)
+        }
+        
+        return toastView
     }
 }

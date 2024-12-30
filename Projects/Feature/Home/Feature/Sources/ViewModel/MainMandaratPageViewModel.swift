@@ -144,6 +144,15 @@ extension MainMandaratPageViewModel {
         
         var viewAction: ViewAction?
         var positionToMoveCenter: MandaratPosition?
+        var cancellableAlertData: CancellableAlertData?
+    }
+    
+    struct CancellableAlertData: Equatable {
+        
+        let id: String = UUID().uuidString
+        let title: String
+        let description: String
+        let backgroudColor: UIColor
     }
 }
 
