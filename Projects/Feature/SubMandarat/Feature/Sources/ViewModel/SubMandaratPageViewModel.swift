@@ -8,7 +8,7 @@
 import UIKit
 
 import DomainMandaratInterface
-import DataUserStateInterface
+import DomainUserStateInterface
 import SharedCore
 
 import ReactorKit
@@ -18,7 +18,7 @@ class SubMandaratPageViewModel: Reactor,  SubMandaratViewModelListener, EditSubM
     
     // DI
     private let mandaratUseCase: MandaratUseCase
-    private let userStateRepository: UserStateRepository
+    private let userStateUseCase: UserStateUseCase
     
     
     // Listener
@@ -49,10 +49,10 @@ class SubMandaratPageViewModel: Reactor,  SubMandaratViewModelListener, EditSubM
     private let disposeBag: DisposeBag = .init()
     
     
-    init(mandaratUseCase: MandaratUseCase, userStateRepository: UserStateRepository, mainMandarat: MainMandaratVO) {
+    init(mandaratUseCase: MandaratUseCase, userStateUseCase: UserStateUseCase, mainMandarat: MainMandaratVO) {
 
         self.mandaratUseCase = mandaratUseCase
-        self.userStateRepository = userStateRepository
+        self.userStateUseCase = userStateUseCase
         self.mainMandaratVO = mainMandarat
         
         self.initialState = .init(
@@ -251,7 +251,7 @@ private extension SubMandaratPageViewModel {
     
     func checkAndPublishOnboardingData() -> Observable<Action> {
         
-        if userStateRepository[.onboarding_exit_submandarat_page] == false {
+        if userStateUseCase.checkState(.onboarding_exit_submandarat_page) == false {
             
             let toastData: CancellableToastData = .init(
                 title: "서브 만다라트화면에서 나가는법!",
@@ -259,7 +259,7 @@ private extension SubMandaratPageViewModel {
                 backgroudColor: .lightGray
             )
             
-            userStateRepository[.onboarding_exit_submandarat_page] = true
+            userStateUseCase.toggleState(.onboarding_exit_submandarat_page)
             
             return .just(.presentCacellableToast(toastData))
         }

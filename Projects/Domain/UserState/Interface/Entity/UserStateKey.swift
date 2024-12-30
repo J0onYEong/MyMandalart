@@ -5,7 +5,12 @@
 //  Created by choijunios on 12/30/24.
 //
 
-public enum UserStateKey: String, CaseIterable {
+public protocol UserStateKey: RawRepresentable<String>, CaseIterable {
+    
+    var initialValue: Any { get }
+}
+
+public enum BooleanUserStateKey: String, UserStateKey {
     
     case onboarding_edit_saved_mandarat
     case onboarding_exit_submandarat_page

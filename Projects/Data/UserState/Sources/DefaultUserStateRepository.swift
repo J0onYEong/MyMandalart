@@ -7,7 +7,7 @@
 
 import Foundation
 
-import DataUserStateInterface
+import DomainUserStateInterface
 
 public class DefaultUserStateRepository: UserStateRepository {
     
@@ -16,6 +16,10 @@ public class DefaultUserStateRepository: UserStateRepository {
     
     private let serialQueue: DispatchQueue = .init(label: "com.DefaultUserStateRepository")
     
+    private let userStatKeys: [any UserStateKey] = [
+        BooleanUserStateKey.allCases
+    ].flatMap({ $0 })
+    
     private let dictKey = "UserState"
     
     public init() {
@@ -23,18 +27,17 @@ public class DefaultUserStateRepository: UserStateRepository {
         fetchUserState()
     }
     
-    public subscript(key: UserStateKey) -> Bool {
-        get {
-            serialQueue.sync {
-                memoryStorage[key.rawValue] as! Bool
-            }
+    public func set(key: String, value: Any) {
+        serialQueue.async { [weak self] in
+            guard let self else { return }
+            memoryStorage[key] = value
+            saveCurrentDict()
         }
-        set {
-            serialQueue.async { [weak self] in
-                guard let self else { return }
-                memoryStorage[key.rawValue] = newValue
-                saveCurrentDict()
-            }
+    }
+    
+    public func get<Value>(key: String) -> Value {
+        serialQueue.sync {
+            memoryStorage[key] as! Value
         }
     }
 }
@@ -56,6 +59,11 @@ private extension DefaultUserStateRepository {
         
         serialQueue.sync {
             
+            userStatKeys.forEach { key in
+                
+                memoryStorage[key.rawValue] = key.initialValue
+            }
+            
             if let dict = localStorage.dictionary(forKey: dictKey) {
                 
                 dict.forEach({ key, value in
@@ -63,12 +71,6 @@ private extension DefaultUserStateRepository {
                     memoryStorage[key] = value
                 })
                 
-            } else {
-                
-                UserStateKey.allCases.forEach { key in
-                    
-                    memoryStorage[key.rawValue] = key.initialValue
-                }
             }
         }
     }

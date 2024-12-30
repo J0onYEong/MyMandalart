@@ -66,7 +66,7 @@ let project = Project(
             dependencies: [
                 
                 .domain(interface: .Mandarat),
-                .data(interface: .UserState),
+                .domain(interface: .UserState),
                 
                 .shared(implements: .PresentationExt),
                 .shared(implements: .DesignSystem),

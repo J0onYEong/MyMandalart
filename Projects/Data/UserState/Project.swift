@@ -25,6 +25,20 @@ let project = Project(
             ]
         ),
 
+        
+        // Testing
+        .target(
+            name: "DataUserStateTesting",
+            destinations: .iOS,
+            product: .staticLibrary,
+            bundleId: "\(Project.Environment.bundlePrefix).data.UserState.testing",
+            deploymentTargets: Project.Environment.deploymentTarget,
+            sources: ["Testing/**"],
+            dependencies: [
+                .data(implements: .UserState),
+            ]
+        ),
+        
 
         // Data
         .target(
@@ -35,35 +49,8 @@ let project = Project(
             deploymentTargets: Project.Environment.deploymentTarget,
             sources: ["Sources/**"],
             dependencies: [
-                .data(interface: .UserState),
-            ]
-        ),
-
-
-        // Testing
-        .target(
-            name: "DataUserStateTesting",
-            destinations: .iOS,
-            product: .staticLibrary,
-            bundleId: "\(Project.Environment.bundlePrefix).data.UserState.testing",
-            deploymentTargets: Project.Environment.deploymentTarget,
-            sources: ["Testing/**"],
-            dependencies: [
-                .data(interface: .UserState),
-            ]
-        ),
-
-
-        // Interface
-        .target(
-            name: "DataUserStateInterface",
-            destinations: .iOS,
-            product: .framework,
-            bundleId: "\(Project.Environment.bundlePrefix).data.UserState.interface",
-            deploymentTargets: Project.Environment.deploymentTarget,
-            sources: ["Interface/**"],
-            dependencies: [
                 
+                .domain(interface: .UserState),
             ]
         ),
     ]

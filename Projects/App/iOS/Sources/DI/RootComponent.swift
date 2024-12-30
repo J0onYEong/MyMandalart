@@ -12,7 +12,9 @@ import FeatureHome
 import DomainMandaratInterface
 import DomainMandarat
 
-import DataUserStateInterface
+import DomainUserStateInterface
+import DomainUserState
+
 import DataUserState
 
 import DataMandarat
@@ -22,6 +24,8 @@ import DataCoreDataInterface
 
 class RootComponent: MainMandaratDependency {
     
+    
+    
     // MARK: Presentation
     let navigationController: UINavigationController
     
@@ -29,6 +33,9 @@ class RootComponent: MainMandaratDependency {
     // MARK: Domain
     lazy var mandaratUseCase: MandaratUseCase = DefaultMandaratUseCase(
         mandaratRepository: mandaratRepository
+    )
+    lazy var userStateUseCase: UserStateUseCase = DefaultUserStateUseCase(
+        userStateRepository: userStateRepository
     )
     
     
@@ -38,9 +45,7 @@ class RootComponent: MainMandaratDependency {
     )
     let userStateRepository: UserStateRepository = DefaultUserStateRepository()
     
-    
     let coreDataService: CoreDataService = DefaultCoreDataService()
-    
     
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController

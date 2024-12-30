@@ -53,6 +53,7 @@ public extension ModulePath {
     enum Domain: String, CaseIterable {
         
         case Mandarat
+        case UserState
         
         public static let categoryName: String = "Domain"
         

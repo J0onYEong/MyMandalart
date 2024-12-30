@@ -1,13 +1,13 @@
 //
 //  UserStateRepository.swift
-//  UserStateInterface
+//  UserState
 //
 //  Created by choijunios on 12/30/24.
 //
 
-import Foundation
-
 public protocol UserStateRepository: AnyObject {
     
-    subscript (_ key: UserStateKey) -> Bool { get set }
+    func set(key: String, value: Any)
+    
+    func get<Value>(key: String) -> Value
 }

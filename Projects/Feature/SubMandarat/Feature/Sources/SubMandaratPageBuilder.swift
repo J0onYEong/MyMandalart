@@ -18,7 +18,7 @@ public class SubMandaratPageBuilder: Buildable<SubMandaratPageDependency>, SubMa
         
         let viewModel = SubMandaratPageViewModel(
             mandaratUseCase: component.dependency.mandaratUseCase,
-            userStateRepository: component.dependency.userStateRepository,
+            userStateUseCase: component.dependency.userStateUseCase,
             mainMandarat: mainMandaratVO
         )
         

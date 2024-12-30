@@ -20,8 +20,13 @@ let project = Project(
                 .feature(implements: .Home),
                 .feature(implements: .SubMandarat),
                 
+                
                 .domain(interface: .Mandarat),
                 .domain(implements: .Mandarat),
+                
+                .domain(interface: .UserState),
+                .domain(implements: .UserState),
+                
                 
                 .data(interface: .Mandarat),
                 .data(implements: .Mandarat),
@@ -29,7 +34,6 @@ let project = Project(
                 .data(interface: .CoreData),
                 .data(implements: .CoreData),
                 
-                .data(interface: .UserState),
                 .data(implements: .UserState),
             ]
         )

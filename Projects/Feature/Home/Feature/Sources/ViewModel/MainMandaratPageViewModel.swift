@@ -10,7 +10,7 @@ import UIKit
 import FeatureSubMandarat
 import SharedPresentationExt
 import DomainMandaratInterface
-import DataUserStateInterface
+import DomainUserStateInterface
 
 import ReactorKit
 
@@ -20,7 +20,7 @@ class MainMandaratPageViewModel: Reactor, MainMandaratPageViewModelable, MainMan
 
     // 의존성 주입
     private let mandaratUseCase: MandaratUseCase
-    private let userStateRepository: UserStateRepository
+    private let userStateUseCase: UserStateUseCase
     
     
     // Coordinator
@@ -38,10 +38,10 @@ class MainMandaratPageViewModel: Reactor, MainMandaratPageViewModelable, MainMan
     private var mainMandaratVO: [MandaratPosition: MainMandaratVO] = [:]
     
     
-    init(mandaratUseCase: MandaratUseCase, userStateRepository: UserStateRepository) {
+    init(mandaratUseCase: MandaratUseCase, userStateUseCase: UserStateUseCase) {
         
         self.mandaratUseCase = mandaratUseCase
-        self.userStateRepository = userStateRepository
+        self.userStateUseCase = userStateUseCase
             
         createMainMandaratReactors()
     }
@@ -284,7 +284,7 @@ private extension MainMandaratPageViewModel {
     
     func presentOnboardingToastOnCondition() {
         
-        if userStateRepository[.onboarding_edit_saved_mandarat] == false {
+        if userStateUseCase.checkState(.onboarding_edit_saved_mandarat) == false {
             
             let toastData: CancellableToastData = .init(
                 title: "만다라트를 길게 눌러 수정할 수 있어요!",
@@ -294,7 +294,7 @@ private extension MainMandaratPageViewModel {
             
             self.action.onNext(.presentCancellableToast(toastData))
             
-            userStateRepository[.onboarding_edit_saved_mandarat] = true
+            userStateUseCase.toggleState(.onboarding_edit_saved_mandarat)
         }
     }
 }

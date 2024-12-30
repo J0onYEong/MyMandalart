@@ -60,10 +60,7 @@ let project = Project(
                 
                 // Domain
                 .domain(interface: .Mandarat),
-                
-                
-                // Data
-                .data(interface: .UserState),
+                .domain(interface: .UserState),
                 
                 
                 .shared(implements: .PresentationExt),

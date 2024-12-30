@@ -64,7 +64,7 @@ let project = Project(
             resources: ["Feature/Resources/**"],
             dependencies: [
                 
-                .data(interface: .UserState),
+                .domain(interface: .UserState),
                 
                 .shared(implements: .DesignSystem),
                 .shared(implements: .PresentationExt),

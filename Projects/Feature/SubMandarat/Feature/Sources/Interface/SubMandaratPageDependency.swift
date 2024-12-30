@@ -8,11 +8,11 @@
 import UIKit
 
 import DomainMandaratInterface
-import DataUserStateInterface
+import DomainUserStateInterface
 
 public protocol SubMandaratPageDependency {
     
     var mandaratUseCase: MandaratUseCase { get }
-    var userStateRepository: UserStateRepository { get }
+    var userStateUseCase: UserStateUseCase { get }
     var navigationController: UINavigationController { get }
 }

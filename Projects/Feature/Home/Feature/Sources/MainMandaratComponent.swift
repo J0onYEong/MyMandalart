@@ -10,7 +10,7 @@ import UIKit
 import FeatureSubMandarat
 import SharedPresentationExt
 import DomainMandaratInterface
-import DataUserStateInterface
+import DomainUserStateInterface
 
 class MainMandaratComponent: Componentable<MainMandaratDependency>, SubMandaratPageDependency {
     
@@ -18,8 +18,8 @@ class MainMandaratComponent: Componentable<MainMandaratDependency>, SubMandaratP
         dependency.mandaratUseCase
     }
     
-    var userStateRepository: UserStateRepository {
-        dependency.userStateRepository
+    var userStateUseCase: UserStateUseCase {
+        dependency.userStateUseCase
     }
     
     var navigationController: UINavigationController {
