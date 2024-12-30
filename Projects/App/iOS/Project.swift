@@ -28,6 +28,9 @@ let project = Project(
                 
                 .data(interface: .CoreData),
                 .data(implements: .CoreData),
+                
+                .data(interface: .UserState),
+                .data(implements: .UserState),
             ]
         )
     ]

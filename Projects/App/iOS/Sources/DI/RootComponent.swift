@@ -12,6 +12,9 @@ import FeatureHome
 import DomainMandaratInterface
 import DomainMandarat
 
+import DataUserStateInterface
+import DataUserState
+
 import DataMandarat
 import DataCoreData
 import DataCoreDataInterface
@@ -33,6 +36,7 @@ class RootComponent: MainMandaratDependency {
     lazy var mandaratRepository: MandaratRepository = DefaultMandaratRepository(
         coreDataService: coreDataService
     )
+    let userStateRepository: UserStateRepository = DefaultUserStateRepository()
     
     
     let coreDataService: CoreDataService = DefaultCoreDataService()
