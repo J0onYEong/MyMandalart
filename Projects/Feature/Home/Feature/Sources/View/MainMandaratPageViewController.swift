@@ -23,7 +23,7 @@ class MainMandaratPageViewController: UIViewController, MainMandaratPageViewCont
     private var sloganStack: UIStackView!
     private let sloganLabel1: UILabel = {
         let label: UILabel = .init()
-        label.font = .systemFont(ofSize: 20, weight: .semibold)
+        label.font = .preferredFont(forTextStyle: .title1)
         label.textColor = .black
         label.numberOfLines = 1
         label.adjustsFontSizeToFitWidth = true
@@ -32,7 +32,7 @@ class MainMandaratPageViewController: UIViewController, MainMandaratPageViewCont
     }()
     private let sloganLabel2: UILabel = {
         let label: UILabel = .init()
-        label.font = .systemFont(ofSize: 20, weight: .semibold)
+        label.font = .preferredFont(forTextStyle: .body)
         label.textColor = .black
         label.numberOfLines = 1
         label.adjustsFontSizeToFitWidth = true
@@ -206,6 +206,18 @@ class MainMandaratPageViewController: UIViewController, MainMandaratPageViewCont
                     .disposed(by: disposeBag)
                 
             })
+            .disposed(by: disposeBag)
+        
+        
+        // Bind, slogans
+        reactor.state
+            .distinctDriver(\.slogan1Text)
+            .drive(sloganLabel1.rx.text)
+            .disposed(by: disposeBag)
+        
+        reactor.state
+            .distinctDriver(\.slogan2Text)
+            .drive(sloganLabel2.rx.text)
             .disposed(by: disposeBag)
     }
     
@@ -385,28 +397,34 @@ private extension MainMandaratPageViewController {
     
     func dismissSubviews() {
         
-        view.subviews.forEach { subView in
+        UIView.animate(withDuration: 0.35) {
             
-            if subView is CancellableToastView {
+            self.sloganStack.alpha = 0
+            
+            self.view.subviews.forEach { subView in
                 
-                UIView.animate(withDuration: 0.35) {
-                    
+                if subView is CancellableToastView {
+                           
                     subView.alpha = 0
                 }
             }
         }
+        
     }
     
     
     func presentSubViews() {
         
-        view.subviews.forEach { subView in
+        UIView.animate(withDuration: 0.35) {
             
-            if subView is CancellableToastView {
+            self.sloganStack.alpha = 1
+            
+            self.view.subviews.forEach { subView in
                 
-                UIView.animate(withDuration: 0.35) {
+                if subView is CancellableToastView {
                     
                     subView.alpha = 1
+                    
                 }
             }
         }
@@ -472,7 +490,6 @@ private extension MainMandaratPageViewController {
             sloganLabel1, sloganLabel2
         ])
         stack.axis = .vertical
-        stack.spacing = 10
         stack.alignment = .fill
         
         view.addSubview(stack)
@@ -482,15 +499,15 @@ private extension MainMandaratPageViewController {
             portraitConstraints.append(contentsOf: [
                 
                 make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-                    .inset(20)
+                    .inset(10)
                     .priority(.high)
                     .constraint.layoutConstraints.first!,
                 make.leading.equalTo(view.safeAreaLayoutGuide.snp.leading)
-                    .inset(20)
+                    .inset(10)
                     .priority(.high)
                     .constraint.layoutConstraints.first!,
                 make.trailing.equalTo(view.safeAreaLayoutGuide.snp.trailing)
-                    .inset(20)
+                    .inset(-10)
                     .priority(.high)
                     .constraint.layoutConstraints.first!,
                 make.bottom.lessThanOrEqualTo(mainMandaratContainerView.snp.top)
@@ -501,16 +518,19 @@ private extension MainMandaratPageViewController {
             landscapeConstraints.append(contentsOf: [
                 
                 make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-                    .inset(20)
+                    .inset(10)
                     .priority(.high)
                     .constraint.layoutConstraints.first!,
                 make.leading.equalTo(view.safeAreaLayoutGuide.snp.leading)
                     .priority(.high)
                     .constraint.layoutConstraints.first!,
                 make.right.lessThanOrEqualTo(mainMandaratContainerView.snp.left)
+                    .inset(-10)
                     .priority(.high)
                     .constraint.layoutConstraints.first!,
             ])
         }
+        
+        self.sloganStack = stack
     }
 }

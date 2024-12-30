@@ -27,7 +27,7 @@ class MainMandaratPageViewModel: Reactor, MainMandaratPageViewModelable, MainMan
     weak var router: MainMandaratPageRouting!
     
     
-    let initialState: State = .init()
+    let initialState: State
     private let disposeBag: DisposeBag = .init()
     
     // Sub reactors
@@ -42,6 +42,11 @@ class MainMandaratPageViewModel: Reactor, MainMandaratPageViewModelable, MainMan
         
         self.mandaratUseCase = mandaratUseCase
         self.userStateUseCase = userStateUseCase
+        
+        self.initialState = .init(
+            slogan1Text: "안녕하세요!",
+            slogan2Text: "자신만의 로드맵을 채워봅시다!"
+        )
             
         createMainMandaratReactors()
     }
@@ -56,6 +61,7 @@ class MainMandaratPageViewModel: Reactor, MainMandaratPageViewModelable, MainMan
         switch action {
         case .viewDidLoad:
             
+            // 만다라트 가져오기
             mandaratUseCase
                 .requestMainMandarats()
                 .observe(on: MainScheduler.asyncInstance)
@@ -72,7 +78,11 @@ class MainMandaratPageViewModel: Reactor, MainMandaratPageViewModelable, MainMan
                 })
                 .disposed(by: disposeBag)
             
-            return .never()
+            
+            // 닉네임 가져오기
+            let userNickName = userStateUseCase.checkState(.userNickName)
+            
+            return .just(.updateSloganText(text: "안녕하세요, \(userNickName)님!"))
             
         case .moveMandaratToCenterFinished(let position):
             
@@ -123,6 +133,13 @@ class MainMandaratPageViewModel: Reactor, MainMandaratPageViewModelable, MainMan
             
             return newState
             
+        case .updateSloganText(let text):
+            
+            var newState = state
+            newState.slogan1Text = text
+            
+            return newState
+            
         default:
             return state
         }
@@ -147,6 +164,7 @@ extension MainMandaratPageViewModel {
         case moveMandaratToCenterFinished(MandaratPosition)
         case moveMandaratToCenter(MandaratPosition)
         case presentCancellableToast(CancellableToastData)
+        case updateSloganText(text: String)
     }
     
     struct State {
@@ -154,6 +172,8 @@ extension MainMandaratPageViewModel {
         var transitionAction: TransitionAction?
         var positionToMoveCenter: MandaratPosition?
         var cancellableToastData: CancellableToastData?
+        var slogan1Text: String
+        var slogan2Text: String
     }
     
     struct CancellableToastData: Equatable {

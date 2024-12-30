@@ -1,5 +1,5 @@
 //
-//  MockUserStateRepository.swift
+//  MockUserStateUseCase.swift
 //  Home
 //
 //  Created by choijunios on 12/30/24.
@@ -17,6 +17,8 @@ public class MockUserStateUseCase: UserStateUseCase {
             
             memoryDict[key.rawValue] = key.initialValue
         }
+        
+        memoryDict[StringUserStateKey.userNickName.rawValue] = "주니오스"
     }
     
     public func checkState(_ key: DomainUserStateInterface.BooleanUserStateKey) -> Bool {
@@ -32,11 +34,11 @@ public class MockUserStateUseCase: UserStateUseCase {
     
     public func checkState(_ key: StringUserStateKey) -> String {
         
-        return ""
+        return memoryDict[key.rawValue] as! String
     }
     
     public func setState(_ key: StringUserStateKey, value: String) {
         
-        
+        memoryDict[key.rawValue] = value
     }
 }
