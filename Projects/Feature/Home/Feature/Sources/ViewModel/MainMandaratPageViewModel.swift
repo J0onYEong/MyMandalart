@@ -14,7 +14,7 @@ import DomainMandaratInterface
 import ReactorKit
 
 
-class MainMandaratPageViewModel: Reactor, MainMandaratPageViewModelable, MainMandaratViewModelListener, EditMainMandaratViewModelDelegate, SubMandaratPageViewModelListener {
+class MainMandaratPageViewModel: Reactor, MainMandaratPageViewModelable, MainMandaratViewModelListener, EditMainMandaratViewModelListener, SubMandaratPageViewModelListener {
     
 
     // 의존성 주입
@@ -113,6 +113,13 @@ class MainMandaratPageViewModel: Reactor, MainMandaratPageViewModelable, MainMan
             
             return newState
             
+        case .presentCancellableToast(let toastData):
+            
+            var newState = state
+            newState.cancellableToastData = toastData
+            
+            return newState
+            
         default:
             return state
         }
@@ -136,22 +143,21 @@ extension MainMandaratPageViewModel {
         case resetMainMandaratsFinished
         case moveMandaratToCenterFinished(MandaratPosition)
         case moveMandaratToCenter(MandaratPosition)
-        
-        // Side effect
+        case presentCancellableToast(CancellableToastData)
     }
     
     struct State {
         
         var viewAction: ViewAction?
         var positionToMoveCenter: MandaratPosition?
-        var cancellableAlertData: CancellableAlertData?
+        var cancellableToastData: CancellableToastData?
     }
     
-    struct CancellableAlertData: Equatable {
+    struct CancellableToastData: Equatable {
         
         let id: String = UUID().uuidString
         let title: String
-        let description: String
+        let description: String?
         let backgroudColor: UIColor
     }
 }
@@ -212,14 +218,32 @@ private extension MainMandaratPageViewModel {
 }
 
 
-// MARK: EditMainMandaratViewModelDelegate
+// MARK: EditMainMandaratViewModelListener
 extension MainMandaratPageViewModel {
     
     func editFinishedWithSavingRequest(edited mainMandarat: MainMandaratVO) {
         
+        // Save to local storage
         mandaratUseCase.saveMainMandarat(mainMandarat: mainMandarat)
         
+        
+        // Update viewModel data
         self.updateMainMandarat(updated: mainMandarat)
+        
+        
+        // request router action
+        router.dismissEditMainMandaratPage()
+        
+        
+        // Present onboarding text
+        presentOnboardingToastOnCondition()
+    }
+    
+    
+    func editFinished() {
+        
+        // request router action
+        router.dismissEditMainMandaratPage()
     }
 }
 
@@ -248,5 +272,21 @@ extension MainMandaratPageViewModel {
     func subMandaratPageFinished() {
         
         router.dismissSubMandaratPage()
+    }
+}
+
+
+// MARK: Onboarding toast
+private extension MainMandaratPageViewModel {
+    
+    func presentOnboardingToastOnCondition() {
+        
+        let toastData: CancellableToastData = .init(
+            title: "만다라트를 길게 눌러 수정할 수 있어요!",
+            description: nil,
+            backgroudColor: .lightGray
+        )
+        
+        self.action.onNext(.presentCancellableToast(toastData))
     }
 }

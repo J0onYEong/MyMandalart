@@ -127,6 +127,60 @@ class MainMandaratPageViewController: UIViewController, MainMandaratPageViewCont
                 
             })
             .disposed(by: disposeBag)
+        
+        
+        // Bind, Cancellable toast
+        reactor.state
+            .compactMap(\.cancellableToastData)
+            .distinctUntilChanged()
+            .subscribe(onNext: { [weak self] toastData in
+                
+                guard let self else { return }
+                
+                let toastView = createCancellableToastView()
+                
+                toastView.update(
+                    title: toastData.title,
+                    description: toastData.description,
+                    backgroundColor: toastData.backgroudColor
+                )
+                
+                // present anim
+                toastView.layoutIfNeeded()
+                let height = toastView.bounds.height
+                
+                toastView.transform = toastView.transform.translatedBy(x: 0, y: height)
+                toastView.alpha = 0
+                
+                UIView.animate(withDuration: 0.35) {
+                    
+                    toastView.alpha = 1
+                    toastView.transform = .identity
+                }
+                
+                // on cancel button clicked
+                toastView.rx.cancelButtonTapped
+                    .take(1)
+                    .subscribe(onNext: { [weak toastView] _ in
+                        
+                        guard let toastView else { return }
+                        
+                        let height = toastView.bounds.height
+                        
+                        UIView.animate(withDuration: 0.35) {
+                            
+                            toastView.transform = toastView.transform.translatedBy(x: 0, y: height)
+                            toastView.alpha = 0
+                            
+                        } completion: { _ in
+                            
+                            toastView.removeFromSuperview()
+                        }
+                    })
+                    .disposed(by: disposeBag)
+                
+            })
+            .disposed(by: disposeBag)
     }
     
     private func setLayout() {
@@ -333,9 +387,9 @@ private extension MainMandaratPageViewController {
 // MARK: Alert
 extension MainMandaratPageViewController {
     
-    func createAlertView() -> ToastView {
+    func createCancellableToastView() -> CancellableToastView {
         
-        let toastView: ToastView = .init()
+        let toastView: CancellableToastView = .init()
         
         view.addSubview(toastView)
         

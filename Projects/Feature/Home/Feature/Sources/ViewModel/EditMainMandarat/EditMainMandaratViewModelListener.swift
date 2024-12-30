@@ -1,5 +1,5 @@
 //
-//  EditMainMandaratViewModelDelegate.swift
+//  EditMainMandaratViewModelListener.swift
 //  Home
 //
 //  Created by choijunios on 12/11/24.
@@ -7,7 +7,9 @@
 
 import DomainMandaratInterface
 
-protocol EditMainMandaratViewModelDelegate: AnyObject {
+protocol EditMainMandaratViewModelListener: AnyObject {
+    
+    func editFinished()
     
     func editFinishedWithSavingRequest(edited mainMandarat: MainMandaratVO)
 }

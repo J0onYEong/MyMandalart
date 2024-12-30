@@ -18,8 +18,7 @@ class EditMainMandaratViewModel: NSObject, Reactor, UIColorPickerViewControllerD
     
     let initialState: State
     
-    weak var router: MainMandaratPageRouting!
-    weak var delegate: EditMainMandaratViewModelDelegate!
+    weak var listener: EditMainMandaratViewModelListener!
     
     private let initialMandarat: MainMandaratVO
     
@@ -42,7 +41,7 @@ class EditMainMandaratViewModel: NSObject, Reactor, UIColorPickerViewControllerD
         switch action {
         case .exitButtonClicked:
             
-            router.dismissEditMainMandaratPage()
+            listener.editFinished()
             
             return .empty()
 
@@ -95,8 +94,7 @@ class EditMainMandaratViewModel: NSObject, Reactor, UIColorPickerViewControllerD
                 // 만다라트 저장 및 수정화면 종료
                 
                 let mandaratVO: MainMandaratVO = createMandaratVO(state: state)
-                delegate.editFinishedWithSavingRequest(edited: mandaratVO)
-                router.dismissEditMainMandaratPage()
+                listener.editFinishedWithSavingRequest(edited: mandaratVO)
                 
                 return state
                 

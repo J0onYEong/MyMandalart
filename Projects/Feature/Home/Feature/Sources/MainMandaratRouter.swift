@@ -89,11 +89,10 @@ extension MainMandaratRouter {
         // 메인 만다라트 화면과 결합력이 강해 빌더를 따로 만들지 않았습니다.
         
         let viewModel: EditMainMandaratViewModel = .init(mainMandarat)
-        viewModel.router = self
         
-        if let delegate = self.viewModel as? EditMainMandaratViewModelDelegate {
+        if let listener = self.viewModel as? EditMainMandaratViewModelListener {
             
-            viewModel.delegate = delegate
+            viewModel.listener = listener
         }
         
         let viewController = EditMainMandaratViewController()

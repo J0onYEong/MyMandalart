@@ -19,11 +19,17 @@ public class CancellableToastView: UIView {
     private let titleLabel: UILabel = .init()
     private let descriptionLabel: UILabel = .init()
     
+    
+    // Gesture
+    fileprivate var cancelButtonTapGesture: UIGestureRecognizer!
+    
+    
     public init() {
         super.init(frame: .zero)
         
         setUI()
         setLayout()
+        setTapGesture()
     }
     public required init?(coder: NSCoder) { nil }
     
@@ -97,7 +103,7 @@ public class CancellableToastView: UIView {
         
         
         let containerStackView: UIStackView = .init(arrangedSubviews: [
-            labelStackView, cancellButton
+            labelStackView, UIView(), cancellButton
         ])
         containerStackView.axis = .horizontal
         containerStackView.alignment = .fill
@@ -111,8 +117,7 @@ public class CancellableToastView: UIView {
             make.horizontalEdges.equalToSuperview().inset(10)
         }
     }
-    
-    fileprivate var cancelButtonTapGesture: UIGestureRecognizer!
+
     
     private func setTapGesture() {
         
