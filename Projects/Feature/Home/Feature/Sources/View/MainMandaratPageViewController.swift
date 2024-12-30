@@ -435,7 +435,6 @@ private extension MainMandaratPageViewController {
                 make.height.equalTo(mainMandaratContainerView.snp.width)
                     .priority(.high)
                 make.centerY.equalToSuperview()
-                    .priority(.high)
             }
             
         case .landscape:
@@ -459,7 +458,6 @@ private extension MainMandaratPageViewController {
                 make.width.equalTo(mainMandaratContainerView.snp.height)
                     .priority(.high)
                 make.centerX.equalToSuperview()
-                    .priority(.high)
             }
         }
         
