@@ -1,65 +1,65 @@
 //
 //  Project.swift
 //
-//  Created by {{ author }} on {{ currentDate }}
+//  Created by choijunios on 2024/12/30
 //
 
 import ProjectDescription
 import DependencyPlugin
 
 let project = Project(
-    name: "{{ name }}",
+    name: "Initialization",
     targets: [
         
         // Example
         .target(
-            name: "Feature{{ name }}Example",
+            name: "FeatureInitializationExample",
             destinations: .iOS,
             product: .app,
-            bundleId: "\(Project.Environment.bundlePrefix).feature.{{ name }}.example",
+            bundleId: "\(Project.Environment.bundlePrefix).feature.Initialization.example",
             infoPlist: .example_app,
             sources: ["Example/Sources/**"],
             resources: ["Example/Resources/**"],
             dependencies: [
-                .feature(implements: .{{ name }}),
-                .feature(testing: .{{ name }}),
+                .feature(implements: .Initialization),
+                .feature(testing: .Initialization),
             ]
         ),
 
 
         // Tests
         .target(
-            name: "Feature{{ name }}Tests",
+            name: "FeatureInitializationTests",
             destinations: .iOS,
             product: .unitTests,
-            bundleId: "\(Project.Environment.bundlePrefix).feature.{{ name }}.tests",
+            bundleId: "\(Project.Environment.bundlePrefix).feature.Initialization.tests",
             sources: ["Tests/**"],
             dependencies: [
-                .feature(implements: .{{ name }}),
-                .feature(testing: .{{ name }}),
+                .feature(implements: .Initialization),
+                .feature(testing: .Initialization),
             ]
         ),
-
-
+        
+        
         // Testing
         .target(
-            name: "Feature{{ name }}Testing",
+            name: "FeatureInitializationTesting",
             destinations: .iOS,
             product: .framework,
-            bundleId: "\(Project.Environment.bundlePrefix).feature.{{ name }}.testing",
+            bundleId: "\(Project.Environment.bundlePrefix).feature.Initialization.testing",
             sources: ["Testing/**"],
             dependencies: [
-                .feature(implements: .{{ name }}),
+                .feature(implements: .Initialization),
             ]
         ),
 
 
         // Feature
         .target(
-            name: "Feature{{ name }}",
+            name: "FeatureInitialization",
             destinations: .iOS,
             product: .staticFramework,
-            bundleId: "\(Project.Environment.bundlePrefix).feature.{{ name }}",
+            bundleId: "\(Project.Environment.bundlePrefix).feature.Initialization",
             sources: ["Feature/Sources/**"],
             resources: ["Feature/Resources/**"],
             dependencies: [

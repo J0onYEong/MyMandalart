@@ -37,6 +37,7 @@ public extension ModulePath {
         
         case Home
         case SubMandarat
+        case Initialization
         
         public static let categoryName: String = "Feature"
 
