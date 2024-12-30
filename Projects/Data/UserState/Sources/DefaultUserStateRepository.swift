@@ -45,23 +45,28 @@ private extension DefaultUserStateRepository {
     
     /// 큐밖에서 실행됨 주의
     func saveCurrentDict() {
-        
-        localStorage.set(memoryStorage, forKey: dictKey)
+        serialQueue.async { [weak self] in
+            guard let self else { return }
+            localStorage.set(self.memoryStorage, forKey: dictKey)
+        }
     }
     
     
     func fetchUserState() {
         
-        if let dict = localStorage.dictionary(forKey: dictKey) {
+        serialQueue.sync {
             
-            dict.forEach({ key, value in
+            if let dict = localStorage.dictionary(forKey: dictKey) {
                 
-                memoryStorage[key] = value
-            })
-            
-        } else {
-            
-            memoryStorage = [:]
+                dict.forEach({ key, value in
+                    
+                    memoryStorage[key] = value
+                })
+                
+            } else {
+                
+                memoryStorage = [:]
+            }
         }
     }
 }
