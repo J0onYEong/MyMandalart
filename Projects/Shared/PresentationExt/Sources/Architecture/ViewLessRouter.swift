@@ -5,13 +5,13 @@
 //  Created by choijunios on 12/30/24.
 //
 
-open class ViewLessRouter<ViewModel>: Routable {
+open class ViewLessRouter<Interactor>: Routable {
     
-    public let viewModel: ViewModel
+    public let interactor: Interactor
     
     public var children: [any Routable] = []
     
-    public init(viewModel: ViewModel) {
-        self.viewModel = viewModel
+    public init(interactor: Interactor) {
+        self.interactor = interactor
     }
 }

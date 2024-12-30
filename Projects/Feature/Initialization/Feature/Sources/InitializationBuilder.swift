@@ -10,6 +10,18 @@ import SharedPresentationExt
 public class InitializationBuilder: Buildable<InitializationDependency>, InitializationBuildable {
     
     public func build() -> InitializationRoutable {
-        <#code#>
+        
+        let component = InitializationComponent(dependency: dependency)
+        
+        let interactor = InitializationInteractor(
+            userStateUseCase: component.dependency.userStateUseCase
+        )
+        
+        let router = InitializationRouter(
+            navigationController: component.dependency.navigationController,
+            interactor: interactor
+        )
+        
+        return router
     }
 }

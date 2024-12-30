@@ -7,4 +7,4 @@
 
 import SharedPresentationExt
 
-public typealias InitializationRoutable = ViewLessRouter<InitializationViewModelable>
+public typealias InitializationRoutable = ViewLessRouter<InitializationInteractable>
