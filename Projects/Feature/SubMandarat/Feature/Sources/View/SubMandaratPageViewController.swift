@@ -17,13 +17,13 @@ class SubMandaratPageViewController: UIViewController, SubMandaratPageViewContro
     
     // Sub view
     private let mainMandaratDescriptionView: MainMandaratDescriptionView = .init()
-    
     fileprivate var subMandaratViews: [MandaratPosition: SubMandaratView] = [:]
     fileprivate var subMandaratViewsExceptForCenter: [MandaratPosition: SubMandaratView] {
         subMandaratViews.filter { key, _ in key != .TWO_TWO }
     }
     fileprivate let centerMandaratView: CenterMandaratView = .init()
     fileprivate var subMandaratContainerView: UIStackView!
+    private let returnButton: ReturnButton = .init()
     
     private var portraitConstraints: [NSLayoutConstraint] = []
     private var landscapeConstraints: [NSLayoutConstraint] = []
@@ -85,17 +85,17 @@ class SubMandaratPageViewController: UIViewController, SubMandaratPageViewContro
     
     private func setLayout() {
         
-        // #1.
+        // Middle
         setSubMandaratViewLayout()
-        
-        
-        // #2.
         setMainMandaratViewLayout()
         
         
-        // #3.
+        // Top
         setMainMandaratDescriptionViewLayout()
         
+        
+        // Bottom
+        setReturnButtonLayout()
         
         // 최초 설정 : Portrait
         fitLayoutTo(mode: .portrait)
@@ -144,6 +144,13 @@ class SubMandaratPageViewController: UIViewController, SubMandaratPageViewContro
         
         centerMandaratView.rx.tap
             .map({ _ in Reactor.Action.centerMandaratClicked })
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        
+        // Bind, return button
+        returnButton.tap
+            .map({ _ in Reactor.Action.returnButtonClicked })
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
     }
@@ -412,3 +419,47 @@ private extension SubMandaratPageViewController {
         view.layoutIfNeeded()
     }
 }
+
+
+
+// MARK: Return button
+private extension SubMandaratPageViewController {
+    
+    func setReturnButtonLayout() {
+        
+        view.addSubview(returnButton)
+        
+        returnButton.snp.makeConstraints { make in
+            
+            portraitConstraints.append(contentsOf: [
+                
+                make.right.equalTo(view.safeAreaLayoutGuide.snp.right)
+                    .inset(10)
+                    .priority(.high)
+                    .constraint.layoutConstraints.first!,
+                make.top.equalTo(subMandaratContainerView.snp.bottom)
+                    .inset(-10)
+                    .priority(.high)
+                    .constraint.layoutConstraints.first!,
+            ])
+            
+            
+            landscapeConstraints.append(contentsOf: [
+                
+                make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+                    .priority(.high)
+                    .constraint.layoutConstraints.first!,
+                
+                make.left.equalTo(subMandaratContainerView.snp.right)
+                    .inset(-10)
+                    .priority(.high)
+                    .constraint.layoutConstraints.first!,
+                
+                make.right.lessThanOrEqualTo(view.safeAreaLayoutGuide.snp.right)
+                    .priority(.high)
+                    .constraint.layoutConstraints.first!,
+            ])
+        }
+    }
+}
+

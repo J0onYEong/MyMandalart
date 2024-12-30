@@ -37,7 +37,7 @@ class ReturnButton: TappableView {
     private func setUI() {
         
         titleLabel.text = "돌아기기"
-        titleLabel.font = .preferredFont(forTextStyle: .body)
+        titleLabel.font = .systemFont(ofSize: 17, weight: .semibold)
         titleLabel.textColor = .gray
         
         imageView.contentMode = .scaleAspectFit

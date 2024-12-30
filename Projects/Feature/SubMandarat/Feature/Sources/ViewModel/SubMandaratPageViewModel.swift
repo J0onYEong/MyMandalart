@@ -94,7 +94,7 @@ class SubMandaratPageViewModel: Reactor,  SubMandaratViewModelListener, EditSubM
             
             return .never()
             
-        case .centerMandaratClicked:
+        case .centerMandaratClicked, .returnButtonClicked:
             
             listener?.subMandaratPageFinished()
             
@@ -120,6 +120,7 @@ extension SubMandaratPageViewModel {
         case viewDidLoad
         case requestEditSubMandarat(MandaratPosition)
         case centerMandaratClicked
+        case returnButtonClicked
     }
     
     struct State {
