@@ -16,13 +16,19 @@ public class DefaultUserStateRepository: UserStateRepository {
     
     private let serialQueue: DispatchQueue = .init(label: "com.DefaultUserStateRepository")
     
-    private let userStatKeys: [any UserStateKey] = [
-        BooleanUserStateKey.allCases
-    ].flatMap({ $0 })
-    
     private let dictKey = "UserState"
     
-    public init() {
+    public init() { }
+    
+    public func initializeBeforeFetch(keys: [any UserStateKey]) {
+        
+        serialQueue.sync {
+            
+            keys.forEach { key in
+                
+                memoryStorage[key.rawValue] = key.initialValue
+            }
+        }
         
         fetchUserState()
     }
@@ -58,11 +64,6 @@ private extension DefaultUserStateRepository {
     func fetchUserState() {
         
         serialQueue.sync {
-            
-            userStatKeys.forEach { key in
-                
-                memoryStorage[key.rawValue] = key.initialValue
-            }
             
             if let dict = localStorage.dictionary(forKey: dictKey) {
                 

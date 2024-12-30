@@ -7,11 +7,11 @@
 
 import UIKit
 
-import DomainMandaratInterface
-import DataUserStateInterface
+import DomainUserStateInterface
+
 
 public protocol InitializationDependency {
     
-    var userStateRepository: UserStateRepository { get }
+    var userStateUseCase: UserStateUseCase { get }
     var navigationController: UINavigationController { get }
 }

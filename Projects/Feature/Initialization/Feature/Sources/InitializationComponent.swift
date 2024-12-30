@@ -9,5 +9,6 @@ import SharedPresentationExt
 
 class InitializationComponent: Componentable<InitializationDependency> {
     
-    
+
 }
+

@@ -10,6 +10,7 @@ import FeatureSubMandarat
 import FeatureSubMandaratTesting
 
 import DomainMandaratInterface
+import DomainUserStateInterface
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
@@ -26,6 +27,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let component = RootComponent(
             mandaratUseCase: MockMandaratUseCase(),
+            userStateUseCase: MockUserStateUseCase(),
             navigationController: navigationController
         )
         
@@ -40,6 +42,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     struct RootComponent: SubMandaratPageDependency {
         var mandaratUseCase: MandaratUseCase
+        var userStateUseCase: UserStateUseCase
         var navigationController: UINavigationController
     }
 }
