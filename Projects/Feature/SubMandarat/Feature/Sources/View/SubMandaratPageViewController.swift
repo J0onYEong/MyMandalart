@@ -234,7 +234,7 @@ private extension SubMandaratPageViewController {
                 make.left.equalTo(view.safeAreaLayoutGuide.snp.left).inset(10).priority(.high).constraint.layoutConstraints.first!,
                 make.right.equalTo(view.safeAreaLayoutGuide.snp.right).priority(.high).constraint.layoutConstraints.first!,
                 make.bottom.lessThanOrEqualTo(subMandaratContainerView.snp.top).priority(.high).constraint.layoutConstraints.first!,
-                
+                  
             ])
             
             landscapeConstraints.append(contentsOf: [

@@ -20,30 +20,10 @@ class MainMandaratPageViewController: UIViewController, MainMandaratPageViewCont
     private var mainMandaratViews: [MandaratPosition: MainMandaratView] = [:]
     fileprivate var mainMandaratContainerView: UIStackView!
     
-    private var sloganStack: UIStackView!
-    private let sloganLabel1: UILabel = {
-        let label: UILabel = .init()
-        label.font = .preferredFont(forTextStyle: .title1)
-        label.textColor = .black
-        label.numberOfLines = 1
-        label.adjustsFontSizeToFitWidth = true
-        label.textAlignment = .left
-        return label
-    }()
-    private let sloganLabel2: UILabel = {
-        let label: UILabel = .init()
-        label.font = .preferredFont(forTextStyle: .body)
-        label.textColor = .black
-        label.numberOfLines = 1
-        label.adjustsFontSizeToFitWidth = true
-        label.textAlignment = .left
-        return label
-    }()
-    
-    private var portraitConstraints: [NSLayoutConstraint] = []
-    private var landscapeConstraints: [NSLayoutConstraint] = []
-    
-    
+    private var sloganContainer: UIView!
+    private let sloganLabel1: UILabel = .init()
+    private let sloganLabel2: UILabel = .init()
+
     // Color picker
     private let selectedColor: PublishSubject<UIColor> = .init()
     private var editingColor: UIColor?
@@ -63,8 +43,7 @@ class MainMandaratPageViewController: UIViewController, MainMandaratPageViewCont
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .white
-        
+        setUI()
         setLayout()
         
         reactor?.sendEvent(.viewDidLoad)
@@ -95,6 +74,31 @@ class MainMandaratPageViewController: UIViewController, MainMandaratPageViewCont
         default:
             return
         }
+    }
+    
+    
+    private func setUI() {
+        
+        // view
+        view.backgroundColor = .white
+        
+        
+        // sloganLabel1
+        sloganLabel1.font = .preferredFont(forTextStyle: .title1)
+        sloganLabel1.textAlignment = .left
+        sloganLabel1.textColor = .black
+        sloganLabel1.numberOfLines = 1
+        sloganLabel1.adjustsFontSizeToFitWidth = true
+        sloganLabel1.minimumScaleFactor = 0.5
+        
+        
+        // sloganLabel2
+        sloganLabel2.font = .preferredFont(forTextStyle: .body)
+        sloganLabel2.textAlignment = .left
+        sloganLabel2.textColor = .black
+        sloganLabel2.numberOfLines = 0
+        sloganLabel2.adjustsFontForContentSizeCategory = true
+        sloganLabel2.minimumScaleFactor = 0.5
     }
     
     
@@ -226,6 +230,9 @@ class MainMandaratPageViewController: UIViewController, MainMandaratPageViewCont
         setMainMandaratViewLayout()
         
         setSloganLabelLayout()
+        
+        // 최초 설정 : Portrait
+        fitLayoutTo(mode: .portrait)
     }
 }
 
@@ -268,42 +275,6 @@ private extension MainMandaratPageViewController {
         
         
         view.addSubview(mainMandaratContainerStackView)
-        
-        mainMandaratContainerStackView.snp.makeConstraints { make in
-            
-            portraitConstraints = [
-                make.leading.equalTo(view.safeAreaLayoutGuide.snp.leading)
-                    .constraint.layoutConstraints.first!,
-                
-                make.trailing.equalTo(view.safeAreaLayoutGuide.snp.trailing)
-                    .constraint.layoutConstraints.first!,
-                
-                make.height.equalTo(mainMandaratContainerStackView.snp.width)
-                    .constraint.layoutConstraints.first!,
-                
-                make.centerY.equalToSuperview()
-                    .constraint.layoutConstraints.first!,
-            ]
-            
-            landscapeConstraints = [
-                make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-                    .constraint.layoutConstraints.first!,
-                
-                make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
-                    .constraint.layoutConstraints.first!,
-                
-                make.width.equalTo(mainMandaratContainerStackView.snp.height)
-                    .constraint.layoutConstraints.first!,
-                
-                make.centerX.equalToSuperview()
-                    .constraint.layoutConstraints.first!,
-            ]
-        }
-        
-        
-        // 최초 설정 : Portrait
-        fitLayoutTo(mode: .portrait)
-        
         
         self.mainMandaratContainerView = mainMandaratContainerStackView
     }
@@ -399,7 +370,7 @@ private extension MainMandaratPageViewController {
         
         UIView.animate(withDuration: 0.35) {
             
-            self.sloganStack.alpha = 0
+            self.sloganContainer.alpha = 0
             
             self.view.subviews.forEach { subView in
                 
@@ -417,7 +388,7 @@ private extension MainMandaratPageViewController {
         
         UIView.animate(withDuration: 0.35) {
             
-            self.sloganStack.alpha = 1
+            self.sloganContainer.alpha = 1
             
             self.view.subviews.forEach { subView in
                 
@@ -443,15 +414,57 @@ private extension MainMandaratPageViewController {
         
         switch mode {
         case .portrait:
+
+            sloganContainer.snp.remakeConstraints { make in
+                
+                make.top.equalTo(view.safeAreaLayoutGuide.snp.top).inset(10)
+                    
+                make.left.equalTo(view.safeAreaLayoutGuide.snp.left).inset(10)
+                    
+                make.right.lessThanOrEqualTo(view.safeAreaLayoutGuide.snp.right).inset(10)
+                    
+            }
             
-            landscapeConstraints.forEach({ $0.isActive = false })
-            portraitConstraints.forEach({ $0.isActive = true })
+            
+            mainMandaratContainerView.snp.remakeConstraints { make in
+                
+                make.leading.equalTo(view.safeAreaLayoutGuide.snp.leading)
+                    .priority(.high)
+                
+                make.trailing.equalTo(view.safeAreaLayoutGuide.snp.trailing)
+                    .priority(.high)
+                
+                make.height.equalTo(mainMandaratContainerView.snp.width)
+                    .priority(.high)
+                
+                make.centerY.equalToSuperview()
+            }
             
         case .landscape:
             
-            portraitConstraints.forEach({ $0.isActive = false })
-            landscapeConstraints.forEach({ $0.isActive = true })
+            sloganContainer.snp.remakeConstraints { make in
+                
+                make.top.equalTo(view.safeAreaLayoutGuide.snp.top).inset(10)
+                    
+                make.left.equalTo(view.safeAreaLayoutGuide.snp.left)
+                    
+                make.right.lessThanOrEqualTo(mainMandaratContainerView.snp.left)
+                    
+            }
             
+            mainMandaratContainerView.snp.remakeConstraints { make in
+                
+                make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+                    .priority(.high)
+                
+                make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+                    .priority(.high)
+                
+                make.width.equalTo(mainMandaratContainerView.snp.height)
+                    .priority(.high)
+                
+                make.centerX.equalToSuperview()
+            }
         }
         
         view.layoutIfNeeded()
@@ -491,46 +504,11 @@ private extension MainMandaratPageViewController {
         ])
         stack.axis = .vertical
         stack.alignment = .fill
+        stack.distribution = .fill
         
         view.addSubview(stack)
         
-        stack.snp.makeConstraints { make in
-            
-            portraitConstraints.append(contentsOf: [
-                
-                make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-                    .inset(10)
-                    .priority(.high)
-                    .constraint.layoutConstraints.first!,
-                make.leading.equalTo(view.safeAreaLayoutGuide.snp.leading)
-                    .inset(10)
-                    .priority(.high)
-                    .constraint.layoutConstraints.first!,
-                make.trailing.equalTo(view.safeAreaLayoutGuide.snp.trailing)
-                    .inset(-10)
-                    .priority(.high)
-                    .constraint.layoutConstraints.first!,
-                make.bottom.lessThanOrEqualTo(mainMandaratContainerView.snp.top)
-                    .priority(.high)
-                    .constraint.layoutConstraints.first!,
-            ])
-            
-            landscapeConstraints.append(contentsOf: [
-                
-                make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-                    .inset(10)
-                    .priority(.high)
-                    .constraint.layoutConstraints.first!,
-                make.leading.equalTo(view.safeAreaLayoutGuide.snp.leading)
-                    .priority(.high)
-                    .constraint.layoutConstraints.first!,
-                make.right.lessThanOrEqualTo(mainMandaratContainerView.snp.left)
-                    .inset(-10)
-                    .priority(.high)
-                    .constraint.layoutConstraints.first!,
-            ])
-        }
         
-        self.sloganStack = stack
+        self.sloganContainer = stack
     }
 }
