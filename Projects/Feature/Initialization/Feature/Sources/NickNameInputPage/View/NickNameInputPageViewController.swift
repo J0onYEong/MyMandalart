@@ -14,7 +14,7 @@ import ReactorKit
 import RxCocoa
 import RxSwift
 
-class NickNameInputPageViewController: UIViewController {
+class NickNameInputPageViewController: UIViewController, View {
     
     // Sub view
     private let titleLabel: UILabel = .init()
@@ -24,10 +24,12 @@ class NickNameInputPageViewController: UIViewController {
     private let nickNameInputField: FocusTextField = .init()
     private let confirmButton: ConfirmButton = .init()
     
-    private let disposeBag: DisposeBag = .init()
+    var disposeBag: DisposeBag = .init()
     
-    init() {
+    init(reactor: NickNameInputPageViewModel) {
         super.init(nibName: nil, bundle: nil)
+        
+        self.reactor = reactor
     }
     required init?(coder: NSCoder) { nil }
     
@@ -109,6 +111,23 @@ class NickNameInputPageViewController: UIViewController {
         
         self.inputContainer = inputStack
     }
+    
+    
+    func bind(reactor: NickNameInputPageViewModel) {
+        
+        self.reactor = reactor
+        
+        // Bind, confirmButton
+        reactor.state
+            .distinctDriver(\.completeButtonEnabled)
+            .drive(confirmButton.rx.isEnabled)
+            .disposed(by: disposeBag)
+        
+        confirmButton.rx.tap
+            .map { _ in Reactor.Action.completeButtonClicked }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+    }
 }
 
 
@@ -158,9 +177,4 @@ private extension NickNameInputPageViewController {
             })
             .disposed(by: disposeBag)
     }
-}
-
-
-#Preview {
-    NickNameInputPageViewController()
 }
