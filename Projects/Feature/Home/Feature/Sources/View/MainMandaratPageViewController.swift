@@ -20,6 +20,26 @@ class MainMandaratPageViewController: UIViewController, MainMandaratPageViewCont
     private var mainMandaratViews: [MandaratPosition: MainMandaratView] = [:]
     fileprivate var mainMandaratContainerView: UIStackView!
     
+    private var sloganStack: UIStackView!
+    private let sloganLabel1: UILabel = {
+        let label: UILabel = .init()
+        label.font = .systemFont(ofSize: 20, weight: .semibold)
+        label.textColor = .black
+        label.numberOfLines = 1
+        label.adjustsFontSizeToFitWidth = true
+        label.textAlignment = .left
+        return label
+    }()
+    private let sloganLabel2: UILabel = {
+        let label: UILabel = .init()
+        label.font = .systemFont(ofSize: 20, weight: .semibold)
+        label.textColor = .black
+        label.numberOfLines = 1
+        label.adjustsFontSizeToFitWidth = true
+        label.textAlignment = .left
+        return label
+    }()
+    
     private var portraitConstraints: [NSLayoutConstraint] = []
     private var landscapeConstraints: [NSLayoutConstraint] = []
     
@@ -192,6 +212,8 @@ class MainMandaratPageViewController: UIViewController, MainMandaratPageViewCont
     private func setLayout() {
         
         setMainMandaratViewLayout()
+        
+        setSloganLabelLayout()
     }
 }
 
@@ -437,5 +459,58 @@ extension MainMandaratPageViewController {
         }
         
         return toastView
+    }
+}
+
+
+// MARK: Slogan labels
+private extension MainMandaratPageViewController {
+    
+    func setSloganLabelLayout() {
+        
+        let stack: UIStackView = .init(arrangedSubviews: [
+            sloganLabel1, sloganLabel2
+        ])
+        stack.axis = .vertical
+        stack.spacing = 10
+        stack.alignment = .fill
+        
+        view.addSubview(stack)
+        
+        stack.snp.makeConstraints { make in
+            
+            portraitConstraints.append(contentsOf: [
+                
+                make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+                    .inset(20)
+                    .priority(.high)
+                    .constraint.layoutConstraints.first!,
+                make.leading.equalTo(view.safeAreaLayoutGuide.snp.leading)
+                    .inset(20)
+                    .priority(.high)
+                    .constraint.layoutConstraints.first!,
+                make.trailing.equalTo(view.safeAreaLayoutGuide.snp.trailing)
+                    .inset(20)
+                    .priority(.high)
+                    .constraint.layoutConstraints.first!,
+                make.bottom.lessThanOrEqualTo(mainMandaratContainerView.snp.top)
+                    .priority(.high)
+                    .constraint.layoutConstraints.first!,
+            ])
+            
+            landscapeConstraints.append(contentsOf: [
+                
+                make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+                    .inset(20)
+                    .priority(.high)
+                    .constraint.layoutConstraints.first!,
+                make.leading.equalTo(view.safeAreaLayoutGuide.snp.leading)
+                    .priority(.high)
+                    .constraint.layoutConstraints.first!,
+                make.right.lessThanOrEqualTo(mainMandaratContainerView.snp.left)
+                    .priority(.high)
+                    .constraint.layoutConstraints.first!,
+            ])
+        }
     }
 }
