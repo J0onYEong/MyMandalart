@@ -64,6 +64,15 @@ let project = Project(
             resources: ["Feature/Resources/**"],
             dependencies: [
                 
+                .data(interface: .UserState),
+                
+                .shared(implements: .DesignSystem),
+                .shared(implements: .PresentationExt),
+                
+                .thirdParty(library: .RxCocoa),
+                .thirdParty(library: .RxSwift),
+                .thirdParty(library: .SnapKit),
+                .thirdParty(library: .ReactorKit),
             ]
         ),
     ]
