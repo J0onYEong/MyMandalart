@@ -48,7 +48,7 @@ class AcheivementRateView: UIView {
             height: heightOfView-2*padding
         )
         
-        self.rateStick.frame = .init(origin: stickOrigin, size: .init(width: 0, height: stickSize.height))
+        self.rateStick.frame = .init(origin: stickOrigin, size: .init(width: rateStick.bounds.width, height: stickSize.height))
         
         UIView.animate(
             withDuration: 0.5,
