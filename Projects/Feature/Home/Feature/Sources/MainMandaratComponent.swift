@@ -18,6 +18,10 @@ class MainMandaratComponent: Componentable<MainMandaratDependency>, SubMandaratP
         dependency.mandaratUseCase
     }
     
+    var userStateRepository: UserStateRepository {
+        dependency.userStateRepository
+    }
+    
     var navigationController: UINavigationController {
         dependency.navigationController
     }

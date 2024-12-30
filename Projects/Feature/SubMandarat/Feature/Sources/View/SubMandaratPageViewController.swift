@@ -8,6 +8,7 @@
 import UIKit
 
 import DomainMandaratInterface
+import SharedDesignSystem
 
 import ReactorKit
 import RxSwift
@@ -72,6 +73,13 @@ class SubMandaratPageViewController: UIViewController, SubMandaratPageViewContro
         default:
             return
         }
+    }
+    
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        reactor?.action.onNext(.viewDidAppear)
     }
     
     
@@ -152,6 +160,60 @@ class SubMandaratPageViewController: UIViewController, SubMandaratPageViewContro
         returnButton.tap
             .map({ _ in Reactor.Action.returnButtonClicked })
             .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        
+        // Bind, Cancellable toast
+        reactor.state
+            .compactMap(\.cancellableToastData)
+            .distinctUntilChanged()
+            .subscribe(onNext: { [weak self] toastData in
+                
+                guard let self else { return }
+                
+                let toastView = createCancellableToastView()
+                
+                toastView.update(
+                    title: toastData.title,
+                    description: toastData.description,
+                    backgroundColor: toastData.backgroudColor
+                )
+                
+                // present anim
+                toastView.layoutIfNeeded()
+                let height = toastView.bounds.height
+                
+                toastView.transform = toastView.transform.translatedBy(x: 0, y: height)
+                toastView.alpha = 0
+                
+                UIView.animate(withDuration: 0.35) {
+                    
+                    toastView.alpha = 1
+                    toastView.transform = .identity
+                }
+                
+                // on cancel button clicked
+                toastView.rx.cancelButtonTapped
+                    .take(1)
+                    .subscribe(onNext: { [weak toastView] _ in
+                        
+                        guard let toastView else { return }
+                        
+                        let height = toastView.bounds.height
+                        
+                        UIView.animate(withDuration: 0.35) {
+                            
+                            toastView.transform = toastView.transform.translatedBy(x: 0, y: height)
+                            toastView.alpha = 0
+                            
+                        } completion: { _ in
+                            
+                            toastView.removeFromSuperview()
+                        }
+                    })
+                    .disposed(by: disposeBag)
+                
+            })
             .disposed(by: disposeBag)
     }
 }
@@ -463,3 +525,23 @@ private extension SubMandaratPageViewController {
     }
 }
 
+
+// MARK: Toast view
+extension SubMandaratPageViewController {
+    
+    func createCancellableToastView() -> CancellableToastView {
+        
+        let toastView: CancellableToastView = .init()
+        
+        view.addSubview(toastView)
+        
+        toastView.snp.makeConstraints { make in
+            
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(20)
+            make.left.equalTo(view.safeAreaLayoutGuide.snp.left).inset(20)
+            make.right.equalTo(view.safeAreaLayoutGuide.snp.right).inset(20)
+        }
+        
+        return toastView
+    }
+}

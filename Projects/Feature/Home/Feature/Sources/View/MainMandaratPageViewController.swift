@@ -420,7 +420,7 @@ private extension MainMandaratPageViewController {
 
 
 
-// MARK: Alert
+// MARK: Toast view
 extension MainMandaratPageViewController {
     
     func createCancellableToastView() -> CancellableToastView {

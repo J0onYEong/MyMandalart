@@ -17,7 +17,8 @@ public class SubMandaratPageBuilder: Buildable<SubMandaratPageDependency>, SubMa
         let component = SubMandaratPageComponent(dependency: dependency)
         
         let viewModel = SubMandaratPageViewModel(
-            mandaratUseCase: component.mandaratUseCase,
+            mandaratUseCase: component.dependency.mandaratUseCase,
+            userStateRepository: component.dependency.userStateRepository,
             mainMandarat: mainMandaratVO
         )
         
@@ -25,7 +26,7 @@ public class SubMandaratPageBuilder: Buildable<SubMandaratPageDependency>, SubMa
         viewController.bind(reactor: viewModel)
         
         let router = SubMandaratPageRouter(
-            navigationController: component.navigationController,
+            navigationController: component.dependency.navigationController,
             viewModel: viewModel,
             viewController: viewController
         )

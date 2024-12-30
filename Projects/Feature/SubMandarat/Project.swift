@@ -39,6 +39,19 @@ let project = Project(
                 .feature(testing: .SubMandarat),
             ]
         ),
+        
+        
+        // Testing
+        .target(
+            name: "FeatureSubMandaratTesting",
+            destinations: .iOS,
+            product: .framework,
+            bundleId: "\(Project.Environment.bundlePrefix).feature.SubMandarat.testing",
+            sources: ["Testing/**"],
+            dependencies: [
+                .feature(implements: .SubMandarat),
+            ]
+        ),
 
 
         // Feature
@@ -53,6 +66,7 @@ let project = Project(
             dependencies: [
                 
                 .domain(interface: .Mandarat),
+                .data(interface: .UserState),
                 
                 .shared(implements: .PresentationExt),
                 .shared(implements: .DesignSystem),
@@ -60,19 +74,6 @@ let project = Project(
                 .thirdParty(library: .RxCocoa),
                 .thirdParty(library: .ReactorKit),
                 .thirdParty(library: .SnapKit),
-            ]
-        ),
-
-
-        // Testing
-        .target(
-            name: "FeatureSubMandaratTesting",
-            destinations: .iOS,
-            product: .framework,
-            bundleId: "\(Project.Environment.bundlePrefix).feature.SubMandarat.testing",
-            sources: ["Testing/**"],
-            dependencies: [
-                .feature(implements: .SubMandarat),
             ]
         ),
     ]

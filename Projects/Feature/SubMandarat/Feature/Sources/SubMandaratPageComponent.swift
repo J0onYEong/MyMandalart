@@ -12,11 +12,4 @@ import SharedPresentationExt
 
 class SubMandaratPageComponent: Componentable<SubMandaratPageDependency> {
     
-    var navigationController: UINavigationController {
-        dependency.navigationController
-    }
-    
-    var mandaratUseCase: MandaratUseCase {
-        dependency.mandaratUseCase
-    }
 }

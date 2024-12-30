@@ -8,6 +8,7 @@
 import UIKit
 
 import DomainMandaratInterface
+import DataUserStateInterface
 import SharedCore
 
 import ReactorKit
@@ -17,6 +18,7 @@ class SubMandaratPageViewModel: Reactor,  SubMandaratViewModelListener, EditSubM
     
     // DI
     private let mandaratUseCase: MandaratUseCase
+    private let userStateRepository: UserStateRepository
     
     
     // Listener
@@ -47,9 +49,10 @@ class SubMandaratPageViewModel: Reactor,  SubMandaratViewModelListener, EditSubM
     private let disposeBag: DisposeBag = .init()
     
     
-    init(mandaratUseCase: MandaratUseCase, mainMandarat: MainMandaratVO) {
+    init(mandaratUseCase: MandaratUseCase, userStateRepository: UserStateRepository, mainMandarat: MainMandaratVO) {
 
         self.mandaratUseCase = mandaratUseCase
+        self.userStateRepository = userStateRepository
         self.mainMandaratVO = mainMandarat
         
         self.initialState = .init(
@@ -87,6 +90,10 @@ class SubMandaratPageViewModel: Reactor,  SubMandaratViewModelListener, EditSubM
             
             return .never()
             
+        case .viewDidAppear:
+            
+            return checkAndPublishOnboardingData()
+            
         case .requestEditSubMandarat(let position):
             
             let subMandaratVO = subMandarats[position] ?? .createEmpty(with: position)
@@ -107,6 +114,13 @@ class SubMandaratPageViewModel: Reactor,  SubMandaratViewModelListener, EditSubM
     
     func reduce(state: State, mutation: Action) -> State {
         switch mutation {
+        case .presentCacellableToast(let toastData):
+            
+            var newState = state
+            newState.cancellableToastData = toastData
+            
+            return newState
+            
         default:
             return state
         }
@@ -118,13 +132,16 @@ extension SubMandaratPageViewModel {
     
     enum Action {
         case viewDidLoad
+        case viewDidAppear
         case requestEditSubMandarat(MandaratPosition)
         case centerMandaratClicked
         case returnButtonClicked
+        case presentCacellableToast(CancellableToastData)
     }
     
     struct State {
         let centerMandarat: MainMandaratVO
+        var cancellableToastData: CancellableToastData?
         
         var pageTitle: String {
             centerMandarat.title
@@ -141,6 +158,14 @@ extension SubMandaratPageViewModel {
             
             return emptyText
         }
+    }
+    
+    struct CancellableToastData: Equatable {
+        
+        let id: String = UUID().uuidString
+        let title: String
+        let description: String?
+        let backgroudColor: UIColor
     }
 }
 
@@ -217,5 +242,28 @@ private extension SubMandaratPageViewModel {
         subMandaratViewModels[position]?.render(
             object: .create(vo: subMandarat, primaryColor: primaryColor)
         )
+    }
+}
+
+
+// MARK: Oboarding toast
+private extension SubMandaratPageViewModel {
+    
+    func checkAndPublishOnboardingData() -> Observable<Action> {
+        
+        if userStateRepository[.onboarding_exit_submandarat_page] == false {
+            
+            let toastData: CancellableToastData = .init(
+                title: "서브 만다라트화면에서 나가는법!",
+                description: "돌아가기 버튼 혹은 중앙의 메인 주제 버튼을 눌러주세요.",
+                backgroudColor: .lightGray
+            )
+            
+            userStateRepository[.onboarding_exit_submandarat_page] = true
+            
+            return .just(.presentCacellableToast(toastData))
+        }
+        
+        return .never()
     }
 }
