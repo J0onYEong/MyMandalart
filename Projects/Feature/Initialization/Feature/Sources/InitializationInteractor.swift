@@ -28,5 +28,22 @@ class InitializationInteractor: InitializationInteractable {
         self.userStateUseCase = userStateUseCase
     }
     
+}
+
+// MARK: InitializationInteractable
+extension InitializationInteractor {
     
+    func checkRequiredInput() {
+        
+        let userNickName = userStateUseCase.checkState(.userNickName)
+        
+        if userNickName.isEmpty {
+            
+            router?.presentNickNameInputPage()
+            
+        } else {
+            
+            router?.presentMainMandaratPage()
+        }
+    }
 }

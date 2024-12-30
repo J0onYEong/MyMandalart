@@ -7,12 +7,20 @@
 
 import UIKit
 
+import FeatureHome
+
 class InitializationRouter: InitializationRoutable, InitializationRouting {
+    
+    private let mainMandaratPageBuilder: MainMandaratBuilder
     
     private let navigationController: UINavigationController
     
-    init(navigationController: UINavigationController, interactor: InitializationInteractor) {
+    init(
+        mainMandaratPageBuilder: MainMandaratBuilder,
+        navigationController: UINavigationController,
+        interactor: InitializationInteractor) {
         
+        self.mainMandaratPageBuilder = mainMandaratPageBuilder
         self.navigationController = navigationController
         
         super.init(interactor: interactor)
@@ -27,11 +35,15 @@ extension InitializationRouter {
     
     func presentMainMandaratPage() {
         
+        let router = mainMandaratPageBuilder.build()
+        
+        let viewController = router.viewController
+        
+        navigationController.pushViewController(viewController, animated: true)
     }
     
     
     func presentNickNameInputPage() {
-        
         
     }
 }

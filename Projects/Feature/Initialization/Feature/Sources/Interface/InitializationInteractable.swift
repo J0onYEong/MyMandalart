@@ -5,4 +5,7 @@
 //  Created by choijunios on 12/30/24.
 //
 
-public protocol InitializationInteractable { }
+public protocol InitializationInteractable {
+    
+    func checkRequiredInput()
+}

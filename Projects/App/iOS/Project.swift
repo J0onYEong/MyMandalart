@@ -17,8 +17,7 @@ let project = Project(
             resources: ["Resources/**"],
             dependencies: [
                 
-                .feature(implements: .Home),
-                .feature(implements: .SubMandarat),
+                .feature(implements: .Initialization),
                 
                 
                 .domain(interface: .Mandarat),
