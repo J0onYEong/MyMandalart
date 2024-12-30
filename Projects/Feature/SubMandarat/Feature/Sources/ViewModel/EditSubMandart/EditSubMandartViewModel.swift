@@ -109,6 +109,7 @@ private extension EditSubMandartViewModel {
         let position: MandaratPosition = self.initialSubMandartVO.position
         
         return .init(
+            id: initialSubMandartVO.id,
             title: state.titleText,
             acheivementRate: state.acheiveRate,
             position: position

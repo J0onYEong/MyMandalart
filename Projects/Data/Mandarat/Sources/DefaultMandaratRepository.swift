@@ -76,12 +76,14 @@ public class DefaultMandaratRepository: MandaratRepository {
                     
                     let mandaratPos: MandaratPositionEntity! = coreDataEntity.position
                     
-                    return SubMandaratVO(
+                    let subMandarat = SubMandaratVO(
                         id: coreDataEntity.id!,
                         title: coreDataEntity.title!,
                         acheivementRate: Double(coreDataEntity.achievementRate),
                         position: .init(x: mandaratPos.xpos, y: mandaratPos.ypos)!
                     )
+                    
+                    return subMandarat
                 }
             }
             .asSingle()
@@ -161,22 +163,29 @@ public class DefaultMandaratRepository: MandaratRepository {
             .map { $0.first }
             .share()
         
-        let updatePreviousDataStream = resultSwitch.compactMap({ $0 })
+        let updatePreviousDataStream = resultSwitch.filter({ $0 != nil })
         let createNewDataStream = resultSwitch.filter({ $0 == nil })
         
         
         // updatePreviousDataStream
         let updatePreviousResult = updatePreviousDataStream
-            .flatMap { [coreDataService, subMandarat] entity in
+            .flatMap { [coreDataService, subMandarat] _ in
                 
                 debugPrint("기존에 존재하던 서브 만다라트 업데이트")
                 
                 return coreDataService.save { context, completion in
                     
-                    entity.title = subMandarat.title
-                    entity.achievementRate = Float(subMandarat.acheivementRate)
-                    
                     do {
+                        let predicate: NSPredicate = .init(format: "id == %@", subMandaratId)
+                        
+                        let fetchRequest = SubMandaratEntity.fetchRequest()
+                        fetchRequest.predicate = predicate
+                        
+                        let subMandaratEntity = try context.fetch(fetchRequest).first!
+                        
+                        subMandaratEntity.title = subMandarat.title
+                        subMandaratEntity.achievementRate = Float(subMandarat.acheivementRate)
+                        
                         try context.save()
                         completion(.success(()))
                     } catch {
@@ -197,6 +206,7 @@ public class DefaultMandaratRepository: MandaratRepository {
                     let predicate: NSPredicate = .init(format: "id == %@", mainMandaratId)
                     
                     let fetchRequest = MainMandaratEntity.fetchRequest()
+                    fetchRequest.predicate = predicate
                     
                     do {
                         

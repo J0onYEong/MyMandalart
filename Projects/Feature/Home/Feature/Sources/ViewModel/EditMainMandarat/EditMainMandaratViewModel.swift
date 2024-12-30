@@ -176,6 +176,7 @@ private extension EditMainMandaratViewModel {
     func createMandaratVO(state: State) -> MainMandaratVO {
         
         let newMandarat: MainMandaratVO = .init(
+            id: initialMandarat.id,
             title: state.titleText,
             position: initialMandarat.position,
             hexColor: state.mandaratTitleColor.toHexString() ?? "#FFFFFF",
