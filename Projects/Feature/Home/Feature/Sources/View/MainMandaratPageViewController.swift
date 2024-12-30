@@ -430,14 +430,12 @@ private extension MainMandaratPageViewController {
                 
                 make.leading.equalTo(view.safeAreaLayoutGuide.snp.leading)
                     .priority(.high)
-                
                 make.trailing.equalTo(view.safeAreaLayoutGuide.snp.trailing)
                     .priority(.high)
-                
                 make.height.equalTo(mainMandaratContainerView.snp.width)
                     .priority(.high)
-                
                 make.centerY.equalToSuperview()
+                    .priority(.high)
             }
             
         case .landscape:
@@ -456,14 +454,12 @@ private extension MainMandaratPageViewController {
                 
                 make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
                     .priority(.high)
-                
                 make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
                     .priority(.high)
-                
                 make.width.equalTo(mainMandaratContainerView.snp.height)
                     .priority(.high)
-                
                 make.centerX.equalToSuperview()
+                    .priority(.high)
             }
         }
         

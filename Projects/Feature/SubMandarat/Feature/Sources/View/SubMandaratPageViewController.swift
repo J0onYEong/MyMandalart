@@ -99,11 +99,12 @@ class SubMandaratPageViewController: UIViewController, SubMandaratPageViewContro
         
         
         // Top
-        setMainMandaratDescriptionViewLayout()
+        view.addSubview(mainMandaratDescriptionView)
         
         
         // Bottom
-        setReturnButtonLayout()
+        view.addSubview(returnButton)
+        
         
         // 최초 설정 : Portrait
         fitLayoutTo(mode: .portrait)
@@ -219,37 +220,6 @@ class SubMandaratPageViewController: UIViewController, SubMandaratPageViewContro
 }
 
 
-// MARK: mainMandaratDescriptionView
-private extension SubMandaratPageViewController {
-    
-    func setMainMandaratDescriptionViewLayout() {
-        
-        view.addSubview(mainMandaratDescriptionView)
-        
-        mainMandaratDescriptionView.snp.makeConstraints { make in
-            
-            portraitConstraints.append(contentsOf: [
-                
-                make.top.equalTo(view.safeAreaLayoutGuide.snp.top).inset(10).priority(.high).constraint.layoutConstraints.first!,
-                make.left.equalTo(view.safeAreaLayoutGuide.snp.left).inset(10).priority(.high).constraint.layoutConstraints.first!,
-                make.right.equalTo(view.safeAreaLayoutGuide.snp.right).priority(.high).constraint.layoutConstraints.first!,
-                make.bottom.lessThanOrEqualTo(subMandaratContainerView.snp.top).priority(.high).constraint.layoutConstraints.first!,
-                  
-            ])
-            
-            landscapeConstraints.append(contentsOf: [
-                
-                make.top.equalTo(view.safeAreaLayoutGuide.snp.top).inset(10).priority(.high).constraint.layoutConstraints.first!,
-                make.left.equalTo(view.safeAreaLayoutGuide.snp.left).priority(.high).constraint.layoutConstraints.first!,
-                make.right.lessThanOrEqualTo(subMandaratContainerView.snp.left).priority(.high).constraint.layoutConstraints.first!,
-                make.bottom.lessThanOrEqualTo(view.safeAreaLayoutGuide.snp.bottom).priority(.high).constraint.layoutConstraints.first!,
-                
-            ])
-        }
-    }
-}
-
-
 // MARK: Sub mandarat views
 private extension SubMandaratPageViewController {
     
@@ -299,39 +269,7 @@ private extension SubMandaratPageViewController {
         mainMandaratContainerStackView.distribution = .fillEqually
         mainMandaratContainerStackView.alignment = .fill
         
-        
         view.addSubview(mainMandaratContainerStackView)
-        
-        mainMandaratContainerStackView.snp.makeConstraints { make in
-            
-            portraitConstraints.append(contentsOf: [
-                make.leading.equalTo(view.safeAreaLayoutGuide.snp.leading)
-                    .constraint.layoutConstraints.first!,
-                
-                make.trailing.equalTo(view.safeAreaLayoutGuide.snp.trailing)
-                    .constraint.layoutConstraints.first!,
-                
-                make.height.equalTo(mainMandaratContainerStackView.snp.width)
-                    .constraint.layoutConstraints.first!,
-                
-                make.centerY.equalToSuperview()
-                    .constraint.layoutConstraints.first!,
-            ])
-            
-            landscapeConstraints.append(contentsOf: [
-                make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-                    .constraint.layoutConstraints.first!,
-                
-                make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
-                    .constraint.layoutConstraints.first!,
-                
-                make.width.equalTo(mainMandaratContainerStackView.snp.height)
-                    .constraint.layoutConstraints.first!,
-                
-                make.centerX.equalToSuperview()
-                    .constraint.layoutConstraints.first!,
-            ])
-        }
         
         self.subMandaratContainerView = mainMandaratContainerStackView
     }
@@ -490,57 +428,66 @@ private extension SubMandaratPageViewController {
             landscapeConstraints.forEach({ $0.isActive = false })
             portraitConstraints.forEach({ $0.isActive = true })
             
+            // returnButton
+            returnButton.snp.remakeConstraints { make in
+                
+                make.right.equalTo(view.safeAreaLayoutGuide.snp.right).inset(10)
+                make.top.equalTo(subMandaratContainerView.snp.bottom).inset(-10)
+            }
+            
+            
+            // subMandaratContainerView
+            subMandaratContainerView.snp.remakeConstraints { make in
+                
+                make.leading.equalTo(view.safeAreaLayoutGuide.snp.leading).priority(.high)
+                make.trailing.equalTo(view.safeAreaLayoutGuide.snp.trailing).priority(.high)
+                make.height.equalTo(subMandaratContainerView.snp.width).priority(.high)
+                make.centerY.equalToSuperview().priority(.high)
+            }
+            
+            
+            // mainMandaratDescriptionView
+            mainMandaratDescriptionView.snp.remakeConstraints { make in
+                make.top.equalTo(view.safeAreaLayoutGuide.snp.top).inset(10)
+                make.left.equalTo(view.safeAreaLayoutGuide.snp.left).inset(10)
+                make.right.equalTo(view.safeAreaLayoutGuide.snp.right)
+                make.bottom.lessThanOrEqualTo(subMandaratContainerView.snp.top)
+            }
+            
         case .landscape:
             
             portraitConstraints.forEach({ $0.isActive = false })
             landscapeConstraints.forEach({ $0.isActive = true })
             
+            // returnButton
+            returnButton.snp.remakeConstraints { make in
+                
+                make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+                make.left.equalTo(subMandaratContainerView.snp.right).inset(-10)
+                make.right.lessThanOrEqualTo(view.safeAreaLayoutGuide.snp.right)
+            }
+            
+            
+            // subMandaratContainerView
+            subMandaratContainerView.snp.remakeConstraints { make in
+                
+                make.top.equalTo(view.safeAreaLayoutGuide.snp.top).priority(.high)
+                make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).priority(.high)
+                make.width.equalTo(subMandaratContainerView.snp.height).priority(.high)
+                make.centerX.equalToSuperview().priority(.high)
+            }
+            
+            
+            // mainMandaratDescriptionView
+            mainMandaratDescriptionView.snp.remakeConstraints { make in
+                make.top.equalTo(view.safeAreaLayoutGuide.snp.top).inset(10)
+                make.left.equalTo(view.safeAreaLayoutGuide.snp.left)
+                make.right.lessThanOrEqualTo(subMandaratContainerView.snp.left)
+                make.bottom.lessThanOrEqualTo(view.safeAreaLayoutGuide.snp.bottom)
+            }
         }
         
         view.layoutIfNeeded()
-    }
-}
-
-
-
-// MARK: Return button
-private extension SubMandaratPageViewController {
-    
-    func setReturnButtonLayout() {
-        
-        view.addSubview(returnButton)
-        
-        returnButton.snp.makeConstraints { make in
-            
-            portraitConstraints.append(contentsOf: [
-                
-                make.right.equalTo(view.safeAreaLayoutGuide.snp.right)
-                    .inset(10)
-                    .priority(.high)
-                    .constraint.layoutConstraints.first!,
-                make.top.equalTo(subMandaratContainerView.snp.bottom)
-                    .inset(-10)
-                    .priority(.high)
-                    .constraint.layoutConstraints.first!,
-            ])
-            
-            
-            landscapeConstraints.append(contentsOf: [
-                
-                make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
-                    .priority(.high)
-                    .constraint.layoutConstraints.first!,
-                
-                make.left.equalTo(subMandaratContainerView.snp.right)
-                    .inset(-10)
-                    .priority(.high)
-                    .constraint.layoutConstraints.first!,
-                
-                make.right.lessThanOrEqualTo(view.safeAreaLayoutGuide.snp.right)
-                    .priority(.high)
-                    .constraint.layoutConstraints.first!,
-            ])
-        }
     }
 }
 
