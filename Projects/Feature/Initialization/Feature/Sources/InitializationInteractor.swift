@@ -7,9 +7,14 @@
 
 import DomainUserStateInterface
 
+enum TransitionStyle {
+    case `default`
+    case opacity
+}
+
 protocol InitializationRouting: AnyObject {
     
-    func presentMainMandaratPage()
+    func presentMainMandaratPage(style: TransitionStyle)
     
     func presentNickNameInputPage()
 }
@@ -43,7 +48,7 @@ extension InitializationInteractor {
             
         } else {
             
-            router?.presentMainMandaratPage()
+            router?.presentMainMandaratPage(style: .opacity)
         }
     }
 }
@@ -56,6 +61,6 @@ extension InitializationInteractor {
         
         userStateUseCase.setState(.userNickName, value: nickName)
         
-        router?.presentMainMandaratPage()
+        router?.presentMainMandaratPage(style: .default)
     }
 }

@@ -8,12 +8,14 @@
 import UIKit
 
 import FeatureHome
+import SharedDesignSystem
 
 class InitializationRouter: InitializationRoutable, InitializationRouting {
     
     private let mainMandaratPageBuilder: MainMandaratBuilder
     
     private let navigationController: UINavigationController
+    private let opacityTransitionDelegate: OpacityTransitionDelegate = .init()
     
     init(
         mainMandaratPageBuilder: MainMandaratBuilder,
@@ -33,14 +35,20 @@ class InitializationRouter: InitializationRoutable, InitializationRouting {
 // MARK: InitializationRouting
 extension InitializationRouter {
     
-    func presentMainMandaratPage() {
+    func presentMainMandaratPage(style: TransitionStyle = .default) {
         
         let router = mainMandaratPageBuilder.build()
         
         let viewController = router.viewController
         
-        navigationController.delegate 
-        navigationController.pushViewController(viewController, animated: true)
+        switch style {
+        case .default:
+            navigationController.pushViewController(viewController, animated: true)
+        case .opacity:
+            navigationController.delegate = opacityTransitionDelegate
+            navigationController.pushViewController(viewController, animated: true)
+            navigationController.delegate = nil
+        }
         
         attach(router)
     }
