@@ -93,36 +93,42 @@ class MainMandaratPageViewController: UIViewController, MainMandaratPageViewCont
         // Transition animation
         reactor.state
             .compactMap(\.positionToMoveCenter)
-            .withUnretained(self)
-            .subscribe(onNext: { vc, position in
+            .subscribe(onNext: { [weak self] position in
                 
-                vc.focusingMainMandaratCell(selected: position) { completed in
+                guard let self else { return }
+                
+                focusingMainMandaratCell(selected: position) { completed in
                     
                     if completed {
-                        vc.reactor?.action.onNext(.moveMandaratToCenterFinished(position))
+                        reactor.action.onNext(.moveMandaratToCenterFinished(position))
                     }
                     
                 }
+                
+                dismissSubviews()
             })
             .disposed(by: disposeBag)
         
         reactor.state
-            .map(\.viewAction)
+            .map(\.transitionAction)
             .distinctUntilChanged()
             .compactMap({ $0 })
-            .withUnretained(self)
-            .subscribe(onNext: { vc, viewAction in
+            .subscribe(onNext: { [weak self] transitionAction in
                 
-                switch viewAction {
-                case .replaceMainMandarats(let position):
+                guard let self else { return }
+                
+                switch transitionAction {
+                case .resetMainMandaratPage(let selectedPosition):
                     
-                    vc.resetMainMandaratPositions(selected: position) { completed in
+                    resetMainMandaratPositions(selected: selectedPosition) { completed in
                         
                         if completed {
                             
-                            vc.reactor?.sendEvent(.resetMainMandaratsFinished)
+                            reactor.sendEvent(.resetMainMandaratPageFinished)
                         }
                     }
+                    
+                    presentSubViews()
                 }
                 
             })
@@ -302,7 +308,7 @@ private extension MainMandaratPageViewController {
 }
 
 
-// MARK: Animation
+// MARK: Transiton animations
 private extension MainMandaratPageViewController {
     
     func resetMainMandaratPositions(selected position: MandaratPosition, completion: @escaping (Bool) -> ()) {
@@ -352,6 +358,36 @@ private extension MainMandaratPageViewController {
                 }
             
         }, completion: completion)
+    }
+    
+    
+    func dismissSubviews() {
+        
+        view.subviews.forEach { subView in
+            
+            if subView is CancellableToastView {
+                
+                UIView.animate(withDuration: 0.35) {
+                    
+                    subView.alpha = 0
+                }
+            }
+        }
+    }
+    
+    
+    func presentSubViews() {
+        
+        view.subviews.forEach { subView in
+            
+            if subView is CancellableToastView {
+                
+                UIView.animate(withDuration: 0.35) {
+                    
+                    subView.alpha = 1
+                }
+            }
+        }
     }
 }
 

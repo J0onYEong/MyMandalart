@@ -101,18 +101,18 @@ class MainMandaratPageViewModel: Reactor, MainMandaratPageViewModelable, MainMan
             
             var newState = state
             
-            if let selectedPosition = state.positionToMoveCenter {
+            if let selectedPosition = newState.positionToMoveCenter {
                 
-                newState.viewAction = .replaceMainMandarats(selectedPosition: selectedPosition)
+                newState.transitionAction = .resetMainMandaratPage(selectedPosition: selectedPosition)
                 newState.positionToMoveCenter = nil
             }
             
             return newState
             
-        case .resetMainMandaratsFinished:
+        case .resetMainMandaratPageFinished:
             
             var newState = state
-            newState.viewAction = nil
+            newState.transitionAction = nil
             
             return newState
             
@@ -132,9 +132,9 @@ class MainMandaratPageViewModel: Reactor, MainMandaratPageViewModelable, MainMan
 
 extension MainMandaratPageViewModel {
     
-    enum ViewAction: Equatable {
+    enum TransitionAction: Equatable {
         
-        case replaceMainMandarats(selectedPosition: MandaratPosition)
+        case resetMainMandaratPage(selectedPosition: MandaratPosition)
     }
     
     
@@ -143,7 +143,7 @@ extension MainMandaratPageViewModel {
         // Event
         case viewDidLoad
         case viewDidAppear
-        case resetMainMandaratsFinished
+        case resetMainMandaratPageFinished
         case moveMandaratToCenterFinished(MandaratPosition)
         case moveMandaratToCenter(MandaratPosition)
         case presentCancellableToast(CancellableToastData)
@@ -151,7 +151,7 @@ extension MainMandaratPageViewModel {
     
     struct State {
         
-        var viewAction: ViewAction?
+        var transitionAction: TransitionAction?
         var positionToMoveCenter: MandaratPosition?
         var cancellableToastData: CancellableToastData?
     }
