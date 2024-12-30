@@ -86,7 +86,7 @@ private extension DefaultCoreDataService {
         let model = NSManagedObjectModel(contentsOf: modelURL)!
         let container = NSPersistentContainer(name: "DefaultStorage", managedObjectModel: model)
         let storeURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-        let dataBasePath = storeURL.appendingPathExtension("DefaultStorage.sqlite")
+        let dataBasePath = storeURL.appending(path: "DefaultStorage.sqlite")
         container.persistentStoreDescriptions = [NSPersistentStoreDescription(url: dataBasePath)]
         container.loadPersistentStores { description, error in
             if let error = error as NSError? {
