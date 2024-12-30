@@ -25,6 +25,10 @@ class SubMandaratDisplayView: UIView {
     fileprivate var longPressGesture: UILongPressGestureRecognizer!
     
     
+    // Feed back for edit
+    private let mainMandaratSelectionFeedback = UISelectionFeedbackGenerator()
+    
+    
     // Reactive
     fileprivate let renderObject: PublishRelay<SubMandaratRO> = .init()
     private let disposeBag: DisposeBag = .init()
@@ -170,7 +174,14 @@ private extension SubMandaratDisplayView {
     }
     
     @objc
-    func onLongPress(_ gesture: UILongPressGestureRecognizer) { }
+    func onLongPress(_ gesture: UILongPressGestureRecognizer) {
+        
+        if gesture.state == .began {
+            
+            mainMandaratSelectionFeedback
+                .selectionChanged(at: gesture.location(in: self))
+        }
+    }
 }
 
 

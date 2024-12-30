@@ -23,6 +23,10 @@ class MainMandaratDisplayView: TappableView {
     fileprivate var longPressGesture: UILongPressGestureRecognizer!
     
     
+    // Feed back for edit
+    private let mainMandaratSelectionFeedback = UISelectionFeedbackGenerator()
+    
+    
     // Reactive
     fileprivate let renderObject: PublishSubject<MainMandaratRO> = .init()
     private let disposeBag: DisposeBag = .init()
@@ -140,7 +144,15 @@ private extension MainMandaratDisplayView {
     }
     
     @objc
-    func onLongPress(_ gesture: UILongPressGestureRecognizer) { }
+    func onLongPress(_ gesture: UILongPressGestureRecognizer) {
+        
+        if gesture.state == .began {
+            
+            mainMandaratSelectionFeedback.selectionChanged(
+                at: gesture.location(in: self)
+            )
+        }
+    }
 }
 
 

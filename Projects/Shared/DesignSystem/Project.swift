@@ -20,8 +20,11 @@ let project = Project(
             deploymentTargets: Project.Environment.deploymentTarget,
             sources: ["Sources/**"],
             dependencies: [
+                
                 .thirdParty(library: .RxCocoa),
                 .thirdParty(library: .SnapKit),
+                
+                .shared(implements: .PresentationExt)
             ]
         ),
     ]
