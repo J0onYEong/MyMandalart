@@ -14,7 +14,7 @@ protocol InitializationRouting: AnyObject {
     func presentNickNameInputPage()
 }
 
-class InitializationInteractor: InitializationInteractable {
+class InitializationInteractor: InitializationInteractable, NickNameInputPageViewModelListener {
     
     // DI
     private let userStateUseCase: UserStateUseCase
@@ -45,5 +45,17 @@ extension InitializationInteractor {
             
             router?.presentMainMandaratPage()
         }
+    }
+}
+
+
+// MARK: NickNameInputPageViewModelListener
+extension InitializationInteractor {
+    
+    func nickInputPageFinish(nickName: String) {
+        
+        userStateUseCase.setState(.userNickName, value: nickName)
+        
+        router?.presentMainMandaratPage()
     }
 }

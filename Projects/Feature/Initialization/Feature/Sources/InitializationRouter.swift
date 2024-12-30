@@ -39,11 +39,24 @@ extension InitializationRouter {
         
         let viewController = router.viewController
         
+        navigationController.delegate 
         navigationController.pushViewController(viewController, animated: true)
+        
+        attach(router)
     }
     
     
     func presentNickNameInputPage() {
         
+        let viewModel = NickNameInputPageViewModel()
+        
+        if let listener = interactor as? NickNameInputPageViewModelListener {
+            
+            viewModel.listener = listener
+        }
+        
+        let viewController = NickNameInputPageViewController(reactor: viewModel)
+        
+        navigationController.pushViewController(viewController, animated: false)
     }
 }
