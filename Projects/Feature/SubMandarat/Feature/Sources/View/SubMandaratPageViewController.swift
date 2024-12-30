@@ -373,8 +373,11 @@ extension SubMandaratPageViewController {
             subMandaratView.moveOneInch(direction: .random)
         }
         
-        centerMandaratView.alpha = 0
+        // 중앙 메인 만다라트 뷰
+        self.centerMandaratView.alpha = 0
         
+        // 돌아가기 버튼
+        self.returnButton.alpha = 0
         
         // 동시에 모든 셀을 사방으로 보낸다. + Animation
         UIView.animate(withDuration: duration) {
@@ -389,7 +392,13 @@ extension SubMandaratPageViewController {
             
             self.view.backgroundColor = .white
             self.centerMandaratView.alpha = 1
+            
             context.completeTransition(completed)
+            
+            UIView.animate(withDuration: 0.35) {
+                
+                self.returnButton.alpha = 1
+            }
         }
     }
     
@@ -406,6 +415,16 @@ extension SubMandaratPageViewController {
         UIView.animate(withDuration: duration) {
             
             self.mainMandaratDescriptionView.alpha = 0
+            
+            self.returnButton.alpha = 0
+            
+            self.view.subviews.forEach { subView in
+            
+                if subView is CancellableToastView {
+                    
+                    subView.alpha = 0
+                }
+            }
             
             self.subMandaratViewsExceptForCenter.forEach { (key, subMandaratView) in
                 
