@@ -2,13 +2,13 @@
 
 import UIKit
 
-import FeatureHome
+import FeatureInitialization
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
     
-    var rootRouter: MainMandaratRoutable!
+    var rootRouter: InitializationRoutable!
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
@@ -20,9 +20,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let rootComponent: RootComponent = .init(navigationController: navigationController)
         
-        self.rootRouter = MainMandaratBuilder(dependency: rootComponent).build()
+        self.rootRouter = InitializationBuilder(dependency: rootComponent).build()
+        rootRouter.interactor.startInitialFlow()
         
-        navigationController.viewControllers = [rootRouter.viewController]
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
     }

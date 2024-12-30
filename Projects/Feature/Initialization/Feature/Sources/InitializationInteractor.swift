@@ -38,7 +38,7 @@ class InitializationInteractor: InitializationInteractable, NickNameInputPageVie
 // MARK: InitializationInteractable
 extension InitializationInteractor {
     
-    func checkRequiredInput() {
+    func startInitialFlow() {
         
         let userNickName = userStateUseCase.checkState(.userNickName)
         

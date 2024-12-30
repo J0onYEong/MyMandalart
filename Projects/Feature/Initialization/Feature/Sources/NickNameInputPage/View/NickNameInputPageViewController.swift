@@ -115,7 +115,13 @@ class NickNameInputPageViewController: UIViewController, View {
     
     func bind(reactor: NickNameInputPageViewModel) {
         
-        self.reactor = reactor
+        // Bind, Text field
+        nickNameInputField.rx.text
+            .compactMap({ $0 })
+            .map { Reactor.Action.editNickName(text: $0) }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
         
         // Bind, confirmButton
         reactor.state
@@ -149,9 +155,9 @@ private extension NickNameInputPageViewController {
                 let viewMaxY = inputContainer.frame.maxY
                 let keyboardY = keyboardFrame.minY
                 
-                if viewMaxY < keyboardY {
+                if viewMaxY > keyboardY {
                     
-                    let gap = keyboardY - viewMaxY
+                    let gap = viewMaxY - keyboardY
                     
                     UIView.animate(withDuration: keyboardDisplayDuration) {
                         

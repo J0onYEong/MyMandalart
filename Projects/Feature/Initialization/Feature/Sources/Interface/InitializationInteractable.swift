@@ -7,5 +7,5 @@
 
 public protocol InitializationInteractable {
     
-    func checkRequiredInput()
+    func startInitialFlow()
 }

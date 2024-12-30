@@ -7,7 +7,7 @@
 
 import UIKit
 
-import FeatureHome
+import FeatureInitialization
 
 import DomainMandaratInterface
 import DomainMandarat
@@ -22,7 +22,7 @@ import DataCoreData
 import DataCoreDataInterface
 
 
-class RootComponent: MainMandaratDependency {
+class RootComponent: InitializationDependency {
     
     
     
