@@ -13,6 +13,9 @@ import RxCocoa
 
 class SettingPageViewController: UIViewController, View, SettingPageViewControllable {
     
+    // Sub view
+    
+    
     var disposeBag: DisposeBag = .init()
  
     init(reactor: SettingPageViewModel) {
