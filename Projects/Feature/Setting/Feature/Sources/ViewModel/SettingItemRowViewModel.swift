@@ -5,6 +5,8 @@
 //  Created by choijunios on 12/31/24.
 //
 
+import Foundation
+
 import ReactorKit
 
 enum SettingItemRowType: Int, CaseIterable {
@@ -36,6 +38,8 @@ enum SettingItemRowType: Int, CaseIterable {
 protocol SettingItemRowViewModelListener: AnyObject {
     
     func presentNickNameEditPage()
+    
+    func openWebPage(url: URL)
 }
 
 
@@ -103,7 +107,9 @@ extension SettingItemRowViewModel {
     
     func handlePeronalDataPolicyRequest() {
         
+        let url = URL(string: "https://flying-alyssum-be6.notion.site/16dc418a0d0d803da086e0d60d25a595?pvs=4")!
         
+        listener?.openWebPage(url: url)
     }
 }
 
@@ -124,6 +130,8 @@ extension SettingItemRowViewModel {
     
     func handleContactToDevRequest() {
         
+        let url = URL(string: "https://open.kakao.com/o/gYu9Y27g")!
         
+        listener?.openWebPage(url: url)
     }
 }

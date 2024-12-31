@@ -58,5 +58,6 @@ extension SettingPageRouter {
     
     func openWebPage(url: URL) {
         
+        UIApplication.shared.open(url)
     }
 }

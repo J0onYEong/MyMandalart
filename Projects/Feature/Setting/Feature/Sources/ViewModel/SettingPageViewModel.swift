@@ -125,4 +125,10 @@ extension SettingPageViewModel {
         
         router?.popEditNickNamePage()
     }
+    
+    
+    func openWebPage(url: URL) {
+        
+        router?.openWebPage(url: url)
+    }
 }
