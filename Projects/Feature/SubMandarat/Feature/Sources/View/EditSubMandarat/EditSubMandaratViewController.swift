@@ -237,7 +237,7 @@ extension EditSubMandaratViewController {
                     
                 } completion: { _ in
                     
-                    UIView.animate(withDuration: 0.1, delay: 1) {
+                    UIView.animate(withDuration: 0.35, delay: 1.5) {
                         
                         alertView.alpha = 0
                         
