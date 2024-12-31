@@ -17,7 +17,7 @@ public protocol SettingPageViewModelListener: AnyObject {
     
 }
 
-class SettingPageViewModel: Reactor, SettingPageViewModelable {
+class SettingPageViewModel: Reactor, SettingPageViewModelable, SettingItemRowViewModelListener {
     
     // Router
     weak var router: SettingPageRouting?
@@ -27,11 +27,24 @@ class SettingPageViewModel: Reactor, SettingPageViewModelable {
     weak var listener: SettingPageViewModelListener?
     
     
-    var initialState: State
+    var initialState: State = .init(rowItemViewModel: [])
     
     
     init() {
-        initialState = .init()
+        
+    }
+    
+    func reduce(state: State, mutation: Action) -> State {
+        
+        var newState = state
+        
+        switch mutation {
+        case .viewDidLoad:
+            
+            newState.rowItemViewModel = createSettingRowItemViewModel()
+        }
+        
+        return newState
     }
     
 }
@@ -41,10 +54,35 @@ class SettingPageViewModel: Reactor, SettingPageViewModelable {
 extension SettingPageViewModel {
     
     enum Action {
-        
+        case viewDidLoad
     }
     
     struct State {
+        var rowItemViewModel: [SettingItemRowViewModel]
+    }
+}
+
+
+// MARK: Create setting row item view model
+extension SettingPageViewModel {
+    
+    func createSettingRowItemViewModel() -> [SettingItemRowViewModel] {
+        
+        SettingItemRowType.rowOrder.map { itemType in
+            
+            let viewModel = SettingItemRowViewModel(type: itemType)
+            viewModel.listener = self
+            
+            return viewModel
+        }
+    }
+}
+
+
+// MARK: SettingItemRowViewModelListener
+extension SettingPageViewModel {
+    
+    func presentNickNameEditPage() {
         
         
     }

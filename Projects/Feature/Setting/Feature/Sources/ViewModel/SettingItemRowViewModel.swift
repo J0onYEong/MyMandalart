@@ -24,7 +24,7 @@ enum SettingItemRowType: Int, CaseIterable {
         }
     }
     
-    public var rowOrder: [Self] {
+    public static var rowOrder: [Self] {
         
         Self.allCases.sorted {
             $0.rawValue < $1.rawValue
