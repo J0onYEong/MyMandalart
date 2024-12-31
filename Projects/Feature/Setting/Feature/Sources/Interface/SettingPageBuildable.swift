@@ -9,5 +9,5 @@ import SharedPresentationExt
 
 public protocol SettingPageBuildable: Buildable<SettingPageDependency> {
     
-    func build() -> SettingPageRoutable
+    func build(interactorListener: SettingPageViewModelListener) -> SettingPageRoutable
 }
