@@ -38,6 +38,7 @@ public class MainMandaratBuilder: Buildable<MainMandaratDependency>, MainMandara
         
         let router = MainMandaratRouter(
             subMandaratBuilder: subMandaratBuilder,
+            settingPageBuilder: settingPageBuilder,
             navigationController: component.navigationController,
             viewModel: viewModel,
             viewController: viewController

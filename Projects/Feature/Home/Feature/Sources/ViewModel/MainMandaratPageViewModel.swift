@@ -37,7 +37,7 @@ class MainMandaratPageViewModel: Reactor, MainMandaratPageViewModelable, MainMan
     private let userStateUseCase: UserStateUseCase
     
     
-    // Coordinator
+    // Router
     weak var router: MainMandaratPageRouting!
     
     
@@ -113,17 +113,14 @@ class MainMandaratPageViewModel: Reactor, MainMandaratPageViewModelable, MainMan
     
     func reduce(state: State, mutation: Action) -> State {
         
+        var newState = state
+        
         switch mutation {
         case .moveMandaratToCenter(let position):
             
-            var newState = state
             newState.positionToMoveCenter = position
             
-            return newState
-            
         case .viewDidAppear:
-            
-            var newState = state
             
             if let selectedPosition = newState.positionToMoveCenter {
                 
@@ -131,32 +128,27 @@ class MainMandaratPageViewModel: Reactor, MainMandaratPageViewModelable, MainMan
                 newState.positionToMoveCenter = nil
             }
             
-            return newState
-            
         case .resetMainMandaratPageFinished:
             
-            var newState = state
             newState.transitionAction = nil
-            
-            return newState
             
         case .presentCancellableToast(let toastData):
             
-            var newState = state
             newState.cancellableToastData = toastData
-            
-            return newState
             
         case .userNickNameLoaded(let nickName):
             
-            var newState = state
             newState.slogan1Text = "안녕하세요, \(nickName)님!"
             
-            return newState
+        case .settingPageButtonClicked:
+            
+            router?.pushSettingPage()
             
         default:
             return state
         }
+        
+        return newState
     }
 }
 
@@ -179,6 +171,7 @@ extension MainMandaratPageViewModel {
         case moveMandaratToCenter(MandaratPosition)
         case presentCancellableToast(CancellableToastData)
         case userNickNameLoaded(nickName: String)
+        case settingPageButtonClicked
     }
     
     struct State {

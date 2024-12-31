@@ -37,6 +37,13 @@ public class ImageButton: TappableView {
         self.layer.cornerRadius = layer.bounds.width/2
     }
     
+    
+    public func setImageColor(_ color: UIColor) {
+        
+        imageView.tintColor = color
+    }
+    
+    
     private func setAppearance() {
         
         imageView.image = UIImage(systemName: imageName)

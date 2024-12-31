@@ -23,6 +23,8 @@ class MainMandaratPageViewController: UIViewController, MainMandaratPageViewCont
     private var sloganContainer: UIView!
     private let sloganLabel1: UILabel = .init()
     private let sloganLabel2: UILabel = .init()
+    
+    private let settingButton: ImageButton = .init(imageName: "gearshape.fill")
 
     // Color picker
     private let selectedColor: PublishSubject<UIColor> = .init()
@@ -45,17 +47,13 @@ class MainMandaratPageViewController: UIViewController, MainMandaratPageViewCont
         
         setUI()
         setLayout()
-        
-        reactor?.sendEvent(.viewDidLoad)
     }
     
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-        reactor?.sendEvent(.viewDidAppear)
     }
-
+    
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -99,11 +97,27 @@ class MainMandaratPageViewController: UIViewController, MainMandaratPageViewCont
         sloganLabel2.numberOfLines = 0
         sloganLabel2.adjustsFontForContentSizeCategory = true
         sloganLabel2.minimumScaleFactor = 0.5
+        
+        
+        // settingButton
+        settingButton.setImageColor(.lightGray)
     }
     
     
     
     func bind(reactor: MainMandaratPageViewModel) {
+        
+        // Bind, self
+        self.rx.viewDidLoad
+            .map({ _ in Reactor.Action.viewDidLoad })
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        self.rx.viewDidAppear
+            .map({ _ in Reactor.Action.viewDidAppear })
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
         
         // Bind reactors to MainMandaratViews
         MandaratPosition.allCases.forEach { position in
@@ -223,6 +237,13 @@ class MainMandaratPageViewController: UIViewController, MainMandaratPageViewCont
             .distinctDriver(\.slogan2Text)
             .drive(sloganLabel2.rx.text)
             .disposed(by: disposeBag)
+        
+        
+        // Bind, settingButton
+        settingButton.rx.tap
+            .map({ Reactor.Action.settingPageButtonClicked })
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
     }
     
     private func setLayout() {
@@ -230,6 +251,18 @@ class MainMandaratPageViewController: UIViewController, MainMandaratPageViewCont
         setMainMandaratViewLayout()
         
         setSloganLabelLayout()
+        
+        
+        // settingButton
+        view.addSubview(settingButton)
+        
+        settingButton.snp.makeConstraints { make in
+            make.width.height.equalTo(45)
+            
+            make.right.equalTo(view.safeAreaLayoutGuide.snp.right).inset(20)
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(20)
+        }
+        
         
         // 최초 설정 : Portrait
         fitLayoutTo(mode: .portrait)

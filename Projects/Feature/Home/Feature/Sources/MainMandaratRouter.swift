@@ -126,7 +126,7 @@ extension MainMandaratRouter {
     
     func popSettingPage() {
         
-        guard let router = children.first(where: { $0 is SettingPageRoutable }) as? SubMandaratPageRoutable else { return }
+        guard let router = children.first(where: { $0 is SettingPageRoutable }) as? SettingPageRoutable else { return }
         
         dettach(router)
         
