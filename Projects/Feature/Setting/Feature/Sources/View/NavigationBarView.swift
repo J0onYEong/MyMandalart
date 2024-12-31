@@ -9,12 +9,13 @@ import UIKit
 
 import SharedDesignSystem
 
+import RxCocoa
 import RxSwift
 
 class NavigationBarView: UIView {
     
     // Sub view
-    private let backButton: UIButton = .init()
+    fileprivate let backButton: UIButton = .init()
     private let titleLabel: UILabel = .init()
     
     init() {
@@ -54,13 +55,16 @@ class NavigationBarView: UIView {
     private func setLayout() {
         
         let stack: UIStackView = .init(arrangedSubviews: [
-            backButton, titleLabel
+            backButton, titleLabel, UIView()
         ])
         stack.axis = .horizontal
         stack.spacing = 10
         stack.distribution = .fill
         stack.alignment = .fill
         
+        backButton.snp.makeConstraints { make in
+            make.width.equalTo(backButton.snp.height)
+        }
         
         let spacerView: UIView = .init()
         spacerView.backgroundColor = .lightGray.withAlphaComponent(0.5)
@@ -82,6 +86,14 @@ class NavigationBarView: UIView {
             make.horizontalEdges.equalToSuperview()
             make.bottom.equalToSuperview()
         }
+    }
+}
+
+
+extension Reactive where Base == NavigationBarView {
+    
+    var tap: ControlEvent<Void> {
+        base.backButton.rx.tap
     }
 }
 

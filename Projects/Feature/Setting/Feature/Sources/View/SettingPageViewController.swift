@@ -16,6 +16,7 @@ import RxCocoa
 class SettingPageViewController: UIViewController, View, SettingPageViewControllable {
     
     // Sub view
+    private let navigationBarView: NavigationBarView = .init()
     private let settingRowScrollView: UIScrollView = .init()
     
     
@@ -44,6 +45,11 @@ class SettingPageViewController: UIViewController, View, SettingPageViewControll
         view.backgroundColor = .white
         
         
+        // navigationBarView
+        navigationBarView
+            .update("설정 화면")
+        
+        
         // settingRowScrollView
         settingRowScrollView.backgroundColor = .clear
     }
@@ -51,22 +57,38 @@ class SettingPageViewController: UIViewController, View, SettingPageViewControll
     
     private func setLayout() {
         
+        // navigationBarView
+        view.addSubview(navigationBarView)
+        
+        navigationBarView.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+            make.horizontalEdges.equalTo(view.safeAreaLayoutGuide.snp.horizontalEdges)
+        }
+        
+        
         // settingRowScrollView
         view.addSubview(settingRowScrollView)
         
         settingRowScrollView.snp.makeConstraints { make in
             make.horizontalEdges.equalTo(view.safeAreaLayoutGuide.snp.horizontalEdges)
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).inset(20)
+            make.top.equalTo(navigationBarView.snp.bottom).inset(-20)
         }
     }
     
     
     func bind(reactor: SettingPageViewModel) {
         
-        // Bind, ViewController
+        // Bind, self
         self.rx.viewDidLoad
             .map({ _ in Reactor.Action.viewDidLoad  })
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        
+        // Bind, NavigationBar
+        navigationBarView.rx.tap
+            .map({ _ in Reactor.Action.backButtonClicked  })
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
@@ -80,6 +102,7 @@ class SettingPageViewController: UIViewController, View, SettingPageViewControll
                 self?.createSettingItemRowView(viewModels: viewModels)
             })
             .disposed(by: disposeBag)
+        
     }
 }
 

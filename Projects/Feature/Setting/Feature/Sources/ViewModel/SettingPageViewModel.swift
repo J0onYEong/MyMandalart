@@ -14,7 +14,7 @@ protocol SettingPageRouting: AnyObject {
 
 public protocol SettingPageViewModelListener: AnyObject {
     
-    
+    func settingPageFinished()
 }
 
 class SettingPageViewModel: Reactor, SettingPageViewModelable, SettingItemRowViewModelListener {
@@ -42,6 +42,10 @@ class SettingPageViewModel: Reactor, SettingPageViewModelable, SettingItemRowVie
         case .viewDidLoad:
             
             newState.rowItemViewModel = createSettingRowItemViewModel()
+            
+        case .backButtonClicked:
+            
+            listener?.settingPageFinished()
         }
         
         return newState
@@ -55,6 +59,7 @@ extension SettingPageViewModel {
     
     enum Action {
         case viewDidLoad
+        case backButtonClicked
     }
     
     struct State {
@@ -83,7 +88,6 @@ extension SettingPageViewModel {
 extension SettingPageViewModel {
     
     func presentNickNameEditPage() {
-        
         
     }
 }
