@@ -6,6 +6,8 @@
 //
 
 import FeatureSubMandarat
+import FeatureSetting
+
 import SharedPresentationExt
 
 public class MainMandaratBuilder: Buildable<MainMandaratDependency>, MainMandaratBuildable {
@@ -28,6 +30,10 @@ public class MainMandaratBuilder: Buildable<MainMandaratDependency>, MainMandara
         
         // SubMandaratPageBuilder
         let subMandaratBuilder = SubMandaratPageBuilder(dependency: component)
+        
+        
+        // SettingPageBuilder
+        let settingPageBuilder = SettingPageBuilder(dependency: component)
         
         
         let router = MainMandaratRouter(

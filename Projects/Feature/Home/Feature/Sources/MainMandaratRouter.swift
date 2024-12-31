@@ -8,33 +8,29 @@
 import UIKit
 
 import FeatureSubMandarat
+import FeatureSetting
+
 import DomainMandaratInterface
 import SharedPresentationExt
-
-protocol MainMandaratPageRouting: AnyObject {
-    
-    func presentEditMainMandaratPage(mainMandarat: MainMandaratVO)
-    
-    func dismissEditMainMandaratPage()
-
-    func presentSubMandaratPage(mainMandarat: MainMandaratVO)
-    
-    func dismissSubMandaratPage()
-}
 
 class MainMandaratRouter: MainMandaratRoutable, MainMandaratPageRouting {
     
     private let navigationController: UINavigationController
+    
     private let subMandaratBuilder: SubMandaratPageBuildable
+    private let settingPageBuilder: SettingPageBuildable
     
     
     init(
         subMandaratBuilder: SubMandaratPageBuildable,
+        settingPageBuilder: SettingPageBuildable,
         navigationController: UINavigationController,
         viewModel: MainMandaratPageViewModel,
         viewController: MainMandaratPageViewController)
     {
         self.subMandaratBuilder = subMandaratBuilder
+        self.settingPageBuilder = settingPageBuilder
+        
         self.navigationController = navigationController
         
         super.init(viewModel: viewModel, viewController: viewController)
@@ -71,6 +67,8 @@ extension MainMandaratRouter {
         
         guard let router = children.first(where: { $0 is SubMandaratPageRoutable }) as? SubMandaratPageRoutable else { return }
         
+        dettach(router)
+        
         let viewController = router.viewController
         
         if navigationController.topViewController === viewController {
@@ -78,8 +76,6 @@ extension MainMandaratRouter {
             navigationController.delegate = viewController.transitionDelegate
             navigationController.popViewController(animated: true)
             navigationController.delegate = nil
-            
-            dettach(router)
         }
     }
     
@@ -112,6 +108,31 @@ extension MainMandaratRouter {
         if navigationController.presentedViewController is EditMainMandaratViewController {
             
             navigationController.dismiss(animated: true)
+        }
+    }
+    
+    
+    func pushSettingPage() {
+        
+        let router = settingPageBuilder.build(interactorListener: viewModel)
+        
+        let viewController = router.viewController
+        
+        navigationController.pushViewController(viewController, animated: true)
+        
+        attach(router)
+    }
+    
+    
+    func popSettingPage() {
+        
+        guard let router = children.first(where: { $0 is SettingPageRoutable }) as? SubMandaratPageRoutable else { return }
+        
+        dettach(router)
+        
+        if navigationController.topViewController === router.viewController {
+            
+            navigationController.popViewController(animated: true)
         }
     }
 }

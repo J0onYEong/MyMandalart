@@ -5,4 +5,6 @@
 //  Created by choijunios on 12/26/24.
 //
 
-public protocol MainMandaratPageViewModelable { }
+import FeatureSetting
+
+public protocol MainMandaratPageViewModelable: SettingPageViewModelListener { }

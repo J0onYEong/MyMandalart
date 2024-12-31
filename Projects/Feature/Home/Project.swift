@@ -56,6 +56,7 @@ let project = Project(
                 
                 // Feature
                 .feature(implements: .SubMandarat),
+                .feature(implements: .Setting),
                 
                 
                 // Domain

@@ -14,9 +14,23 @@ import DomainUserStateInterface
 
 import ReactorKit
 
+protocol MainMandaratPageRouting: AnyObject {
+    
+    func presentEditMainMandaratPage(mainMandarat: MainMandaratVO)
+    
+    func dismissEditMainMandaratPage()
+
+    func presentSubMandaratPage(mainMandarat: MainMandaratVO)
+    
+    func dismissSubMandaratPage()
+    
+    func pushSettingPage()
+    
+    func popSettingPage()
+}
 
 class MainMandaratPageViewModel: Reactor, MainMandaratPageViewModelable, MainMandaratViewModelListener, EditMainMandaratViewModelListener, SubMandaratPageViewModelListener {
-    
+
 
     // 의존성 주입
     private let mandaratUseCase: MandaratUseCase
@@ -82,7 +96,7 @@ class MainMandaratPageViewModel: Reactor, MainMandaratPageViewModelable, MainMan
             // 닉네임 가져오기
             let userNickName = userStateUseCase.checkState(.userNickName)
             
-            return .just(.updateSloganText(text: "안녕하세요, \(userNickName)님!"))
+            return .just(.userNickNameLoaded(nickName: userNickName))
             
         case .moveMandaratToCenterFinished(let position):
             
@@ -133,10 +147,10 @@ class MainMandaratPageViewModel: Reactor, MainMandaratPageViewModelable, MainMan
             
             return newState
             
-        case .updateSloganText(let text):
+        case .userNickNameLoaded(let nickName):
             
             var newState = state
-            newState.slogan1Text = text
+            newState.slogan1Text = "안녕하세요, \(nickName)님!"
             
             return newState
             
@@ -164,7 +178,7 @@ extension MainMandaratPageViewModel {
         case moveMandaratToCenterFinished(MandaratPosition)
         case moveMandaratToCenter(MandaratPosition)
         case presentCancellableToast(CancellableToastData)
-        case updateSloganText(text: String)
+        case userNickNameLoaded(nickName: String)
     }
     
     struct State {
@@ -318,3 +332,19 @@ private extension MainMandaratPageViewModel {
         }
     }
 }
+
+
+// MARK: MainMandaratPageViewModelable
+extension MainMandaratPageViewModel {
+    
+    func settingPageFinished() {
+        
+        router.popSettingPage()
+    }
+    
+    func nickNameUpdated(_ nickName: String) {
+        
+        self.action.onNext(.userNickNameLoaded(nickName: nickName))
+    }
+}
+
