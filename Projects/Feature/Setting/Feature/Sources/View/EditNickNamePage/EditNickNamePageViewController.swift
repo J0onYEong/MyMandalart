@@ -17,6 +17,7 @@ import RxSwift
 class EditNickNamePageViewController: UIViewController, View {
     
     // Sub view
+    private let navigationBarView: NavigationBarView = .init()
     private let titleLabel: UILabel = .init()
     private let nickNameConditionLabel: UILabel = .init()
 
@@ -54,6 +55,10 @@ class EditNickNamePageViewController: UIViewController, View {
         view.backgroundColor = .white
         
         
+        // navigationBarView
+        navigationBarView.update("닉네임 재설정 화면")
+        
+        
         // titleLabel
         titleLabel.font = .preferredFont(forTextStyle: .title1)
         titleLabel.text = "변경할 닉네임을 알려주세요"
@@ -80,6 +85,16 @@ class EditNickNamePageViewController: UIViewController, View {
     
     private func setLayout() {
         
+        // navigationBarView
+        view.addSubview(navigationBarView)
+        
+        navigationBarView.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+            make.horizontalEdges.equalTo(view.safeAreaLayoutGuide.snp.horizontalEdges)
+        }
+        
+        
+        // labels
         let labelStack: UIStackView = .init(arrangedSubviews: [
             titleLabel, nickNameConditionLabel
         ])
@@ -88,12 +103,12 @@ class EditNickNamePageViewController: UIViewController, View {
         view.addSubview(labelStack)
         
         labelStack.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).inset(10)
-            make.left.equalTo(view.safeAreaLayoutGuide.snp.left).inset(10)
-            make.right.equalTo(view.safeAreaLayoutGuide.snp.right).inset(10)
+            make.top.equalTo(navigationBarView.snp.bottom).inset(-10)
+            make.horizontalEdges.equalTo(view.safeAreaLayoutGuide.snp.horizontalEdges).inset(10)
         }
         
         
+        // input and button
         let inputStack: UIStackView = .init(arrangedSubviews: [
             nickNameInputField, confirmButton
         ])
@@ -114,6 +129,13 @@ class EditNickNamePageViewController: UIViewController, View {
     
     
     func bind(reactor: EditNickNamePageViewModel) {
+        
+        // Bind, navigationBarView
+        navigationBarView.rx.tap
+            .map { Reactor.Action.exitPageButtonClicked }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
         
         // Bind, Text field
         nickNameInputField.rx.text

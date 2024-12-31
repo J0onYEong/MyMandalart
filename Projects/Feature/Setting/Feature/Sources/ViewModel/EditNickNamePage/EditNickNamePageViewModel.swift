@@ -9,7 +9,7 @@ import ReactorKit
 
 protocol EditNickNamePageViewModelListener: AnyObject {
     
-    func nickInputPageFinish(nickName: String)
+    func nickInputPageFinish(nickName: String?)
 }
 
 
@@ -26,26 +26,26 @@ class EditNickNamePageViewModel: Reactor {
     
     
     func reduce(state: State, mutation: Action) -> State {
+        
+        var newState = state
+        
         switch mutation {
-        case .editNickName(let text):
+        case .exitPageButtonClicked:
             
-            var newState = state
+            listener?.nickInputPageFinish(nickName: nil)
+            
+        case .editNickName(let text):
             
             let isValid = nickNameValidation(text)
             newState.setNickName(text)
             newState.completeButtonEnabled = isValid
             
-            return newState
-            
         case .completeButtonClicked:
             
             listener?.nickInputPageFinish(nickName: state.getNickName())
-            
-            return state
-            
-        default:
-            return state
         }
+        
+        return newState
     }
 }
 
@@ -66,6 +66,7 @@ extension EditNickNamePageViewModel {
     
     enum Action {
         
+        case exitPageButtonClicked
         case editNickName(text: String)
         case completeButtonClicked
     }

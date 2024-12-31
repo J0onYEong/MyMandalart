@@ -13,11 +13,15 @@ public class SettingPageBuilder: Buildable<SettingPageDependency>, SettingPageBu
         
         let component = SettingPageComponent(dependency: dependency)
         
-        let viewModel = SettingPageViewModel()
+        let viewModel = SettingPageViewModel(
+            listener: interactorListener,
+            userStateUseCase: component.dependency.userStateUseCase
+        )
         
         let viewController = SettingPageViewController(reactor: viewModel)
         
         let router = SettingPageRouter(
+            navigationController: component.dependency.navigationController,
             viewModel: viewModel,
             viewController: viewController
         )

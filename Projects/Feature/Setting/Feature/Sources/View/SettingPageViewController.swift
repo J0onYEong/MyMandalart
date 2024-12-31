@@ -135,11 +135,3 @@ private extension SettingPageViewController {
         }
     }
 }
-
-#Preview {
-    
-    let viewModel = SettingPageViewModel()
-    let viewController = SettingPageViewController(reactor: viewModel)
-    
-    return viewController
-}
