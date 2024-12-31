@@ -1,19 +1,18 @@
 //
 //  ConfirmButton.swift
-//  Initialization
+//  SharedDesignSystem
 //
-//  Created by choijunios on 12/30/24.
+//  Created by choijunios on 12/31/24.
 //
 
 import UIKit
 
-import SharedDesignSystem
 import SharedPresentationExt
 
 import RxSwift
 import RxCocoa
 
-class ConfirmButton: TappableView {
+public class ConfirmButton: TappableView {
     
     // Sub view
     private let titleLabel: UILabel = {
@@ -32,7 +31,7 @@ class ConfirmButton: TappableView {
     
     private let disposeBag: DisposeBag = .init()
     
-    init() {
+    public init() {
         super.init(frame: .zero)
         
         setLayout()
@@ -46,7 +45,7 @@ class ConfirmButton: TappableView {
     }
     
     
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
         
         let heigt = layer.bounds.height
@@ -104,7 +103,7 @@ class ConfirmButton: TappableView {
 }
 
 
-extension Reactive where Base == ConfirmButton {
+public extension Reactive where Base == ConfirmButton {
     
     var isEnabled: BehaviorRelay<Bool> {
         base.isEnabled
