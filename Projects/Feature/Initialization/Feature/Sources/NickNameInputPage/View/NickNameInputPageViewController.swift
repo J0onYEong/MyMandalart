@@ -100,6 +100,7 @@ class NickNameInputPageViewController: UIViewController, View {
         inputStack.axis = .vertical
         inputStack.spacing = 20
         inputStack.alignment = .fill
+        inputStack.backgroundColor = .white
         view.addSubview(inputStack)
         
         inputStack.snp.makeConstraints { make in
