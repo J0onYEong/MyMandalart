@@ -1,4 +1,4 @@
-# MyMandarat
+# MyMandalart
 
 만다라트 작성을 도와주는 iOS어플리케이션 입니다.
 
