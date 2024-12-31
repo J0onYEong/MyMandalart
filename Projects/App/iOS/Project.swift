@@ -3,13 +3,13 @@ import DependencyPlugin
 
 
 let project = Project(
-    name: "MyMandarat",
+    name: "MyMandalart",
     targets: [
         .target(
-            name: "MyMandarat-iOS",
+            name: "MyMandalart-iOS",
             destinations: .iOS,
             product: .app,
-            productName: "MyMandarat",
+            productName: Project.Environment.appName,
             bundleId: "\(Project.Environment.bundlePrefix).app",
             deploymentTargets: Project.Environment.deploymentTarget,
             infoPlist: InfoPlist.app,
