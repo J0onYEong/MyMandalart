@@ -11,8 +11,9 @@ import SharedDesignSystem
 
 import RxSwift
 import SnapKit
+import ReactorKit
 
-class SettingItemRowView: TappableView {
+class SettingItemRowView: TappableView, View {
     
     // Sub view
     private let rowLabel: UILabel = .init()
@@ -20,12 +21,13 @@ class SettingItemRowView: TappableView {
         image: .init(systemName: "chevron.right")
     )
     
+    var disposeBag: DisposeBag = .init()
     
-    private let disposeBag: DisposeBag = .init()
-    
-    
-    init() {
+    init(reactor: SettingItemRowViewModel) {
+        
         super.init(frame: .zero)
+        
+        self.reactor = reactor
         
         setUI()
         setLayout()
@@ -90,22 +92,19 @@ class SettingItemRowView: TappableView {
             })
             .disposed(by: disposeBag)
     }
-}
-
-
-extension Reactive where Base == SettingItemRowView {
     
-    var tap: Observable<Void> {
-        base.tap
+    
+    func bind(reactor: SettingItemRowViewModel) {
+        
+        // Bind, rowLabel
+        reactor.state
+            .distinctDriver(\.title)
+            .drive(rowLabel.rx.text)
+            .disposed(by: disposeBag)
+        
+        tap
+            .map({ _ in Reactor.Action.tapSettingRow })
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
     }
-}
-
-
-#Preview {
-    
-    let view = SettingItemRowView()
-    
-    view.update("Hello world")
-    
-    return view
 }
