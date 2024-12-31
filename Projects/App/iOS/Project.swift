@@ -34,7 +34,33 @@ let project = Project(
                 .data(implements: .CoreData),
                 
                 .data(implements: .UserState),
-            ]
+            ],
+            settings: .settings(configurations: [
+                .debug(name: "Debug"),
+                .release(name: "Release")
+            ])
         )
+    ],
+    schemes: [
+        
+        // MARK: Debug scheme
+        .scheme(
+            name: "MyMandalart_Debug",
+            buildAction: .buildAction(
+                targets: [ .target("MyMandalart-iOS") ]
+            ),
+            runAction: .runAction(configuration: "Debug"),
+            archiveAction: .archiveAction(configuration: "Debug")
+        ),
+        
+        // MARK: Release scheme
+        .scheme(
+            name: "MyMandalart_Release",
+            buildAction: .buildAction(
+                targets: [ .target("MyMandalart-iOS") ]
+            ),
+            runAction: .runAction(configuration: "Release"),
+            archiveAction: .archiveAction(configuration: "Release")
+        ),
     ]
 )
