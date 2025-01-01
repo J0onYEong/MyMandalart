@@ -70,8 +70,8 @@ class SubMandaratView: UIView, View {
             .drive(onNext: { [weak self] palette in
                 
                 self?.addSubMandaratView.update(
-                    backgroundColor: palette.backgroundColor.primaryColor,
-                    imageColor: palette.backgroundColor.secondColor
+                    backgroundColor: palette.colors.backgroundColor.primaryColor,
+                    imageColor: palette.colors.backgroundColor.secondColor
                 )
             })
             .disposed(by: disposeBag)

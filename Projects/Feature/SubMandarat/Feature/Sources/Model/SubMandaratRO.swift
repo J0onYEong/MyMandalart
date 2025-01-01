@@ -35,12 +35,12 @@ struct SubMandaratRO {
         return .init(
             title: vo.title,
             percent: vo.acheivementRate,
-            backgroundColor: palette.backgroundColor.primaryColor,
-            backgroundSubColor: palette.backgroundColor.secondColor,
-            titleTextColor: palette.textColor.primaryColor,
-            subTextColor: palette.textColor.secondColor,
-            gageColor: palette.gageColor.primaryColor,
-            gageBackgroundColor: palette.gageColor.secondColor
+            backgroundColor: palette.colors.backgroundColor.primaryColor,
+            backgroundSubColor: palette.colors.backgroundColor.secondColor,
+            titleTextColor: palette.colors.textColor.primaryColor,
+            subTextColor: palette.colors.textColor.secondColor,
+            gageColor: palette.colors.gageColor.primaryColor,
+            gageBackgroundColor: palette.colors.gageColor.secondColor
         )
     }
 }

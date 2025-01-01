@@ -20,12 +20,12 @@ struct MainMandaratRO: Equatable {
     
     static func create(from: MainMandaratVO) -> Self {
         
-        let palette = MandalartPaletteBundle(identifier: from.colorSetId)
+        let palette = MandalartPalette(identifier: from.colorSetId)
         
         return .init(
             title: from.title,
             description: from.description ?? "",
-            titleColor: palette.palette.backgroundColor.primaryColor
+            titleColor: palette.colors.backgroundColor.primaryColor
         )
     }
 }

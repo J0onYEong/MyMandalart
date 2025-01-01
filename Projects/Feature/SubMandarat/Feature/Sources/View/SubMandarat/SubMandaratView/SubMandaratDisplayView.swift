@@ -47,24 +47,24 @@ class SubMandaratDisplayView: UIView {
     public func update(title: String, percent: Double, palette: MandalartPalette) {
         
         // self
-        self.backgroundColor = palette.backgroundColor.primaryColor
+        self.backgroundColor = palette.colors.backgroundColor.primaryColor
         
         
         // titleLabel
         titleLabel.text = title
-        titleLabel.textColor = palette.textColor.primaryColor
+        titleLabel.textColor = palette.colors.textColor.primaryColor
 
         
         // acheivementRate
         acheivementRate.rx.percent.accept(percent)
         acheivementRate.update(
-            stickColor: palette.gageColor.primaryColor,
-            backgroundColor: palette.gageColor.secondColor
+            stickColor: palette.colors.gageColor.primaryColor,
+            backgroundColor: palette.colors.gageColor.secondColor
         )
         
         
         // acheivementLabel
-        acheivementLabel.textColor = palette.textColor.secondColor
+        acheivementLabel.textColor = palette.colors.textColor.secondColor
         let rounded = (percent * 100).rounded()
         acheivementLabel.text = "목표 달성율: \(rounded)%"
     

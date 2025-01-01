@@ -178,11 +178,11 @@ private extension SubMandaratPageViewModel {
         MandaratPosition.allCases.filter({ $0 != .TWO_TWO })
             .forEach { position in
                 
-                let bundle = MandalartPaletteBundle(rawValue: mainMandaratVO.colorSetId)!
+                let palette = MandalartPalette(identifier: mainMandaratVO.colorSetId)
                 
                 let viewModel: SubMandaratViewModel = .init(
                     position: position,
-                    palette: bundle.palette
+                    palette: palette
                 )
                 viewModel.listener = self
                 

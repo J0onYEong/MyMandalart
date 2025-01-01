@@ -18,10 +18,10 @@ class SelectPaletteView: UIView {
     // Sub views
     private let titleLabel: UILabel = .init()
     private let scrollView: UIScrollView = .init()
-    private var cellViews: [MandalartPaletteBundle: PaletteCellView] = [:]
+    private var cellViews: [MandalartPalette: PaletteCellView] = [:]
     
     
-    fileprivate let paletteTypePublisher: PublishRelay<MandalartPaletteBundle> = .init()
+    fileprivate let paletteTypePublisher: PublishRelay<MandalartPalette> = .init()
     
     private let disposeBag: DisposeBag = .init()
     
@@ -38,7 +38,7 @@ class SelectPaletteView: UIView {
     required init?(coder: NSCoder) { nil }
     
     
-    public func update(type: MandalartPaletteBundle) {
+    public func update(type: MandalartPalette) {
         
         cellViews.forEach { palette, view in
             view.update(isFocused: palette == type)
@@ -65,21 +65,21 @@ class SelectPaletteView: UIView {
     
     private func setLayout() {
         
-        var tapObservables: [Observable<MandalartPaletteBundle>] = []
+        var tapObservables: [Observable<MandalartPalette>] = []
         var cellViews: [UIView] = []
         
-        MandalartPaletteBundle.orderedList.forEach { paletteType in
+        MandalartPalette.orderedList.forEach { palette in
             
             let view = PaletteCellView(
-                color1: paletteType.palette.backgroundColor.primaryColor,
-                color2: paletteType.palette.textColor.primaryColor,
-                color3: paletteType.palette.gageColor.primaryColor
+                color1: palette.colors.backgroundColor.primaryColor,
+                color2: palette.colors.textColor.primaryColor,
+                color3: palette.colors.gageColor.primaryColor
             )
             
-            self.cellViews[paletteType] = view
+            self.cellViews[palette] = view
             
             cellViews.append(view)
-            tapObservables.append(view.tap.map { _ in paletteType })
+            tapObservables.append(view.tap.map { _ in palette })
         }
         
         
@@ -145,7 +145,7 @@ class SelectPaletteView: UIView {
 
 extension Reactive where Base == SelectPaletteView {
     
-    var selectedType: Observable<MandalartPaletteBundle> {
+    var selectedType: Observable<MandalartPalette> {
         
         base.paletteTypePublisher.asObservable()
     }

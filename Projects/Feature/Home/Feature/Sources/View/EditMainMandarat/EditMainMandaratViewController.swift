@@ -231,7 +231,7 @@ class EditMainMandaratViewController: UIViewController, View {
         
         // MARK: palette selection
         reactor.state
-            .distinctDriver(\.paletteType)
+            .distinctDriver(\.palette)
             .asObservable()
             .take(1)
             .subscribe(onNext: { [weak self] initialType in

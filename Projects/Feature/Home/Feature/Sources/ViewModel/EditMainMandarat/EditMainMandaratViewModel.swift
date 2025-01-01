@@ -28,13 +28,13 @@ class EditMainMandaratViewModel: NSObject, Reactor, UIColorPickerViewControllerD
         
         self.initialMandarat = mainMandaratVO
         
-        let bundle = MandalartPaletteBundle(rawValue: mainMandaratVO.colorSetId)!
+        let palette = MandalartPalette(identifier: mainMandaratVO.colorSetId)
         
         // Set initial state
         self.initialState = .init(
             titleText: mainMandaratVO.title,
             descriptionText: mainMandaratVO.description ?? "",
-            paletteType: bundle
+            palette: palette
         )
     }
     
@@ -69,10 +69,10 @@ class EditMainMandaratViewModel: NSObject, Reactor, UIColorPickerViewControllerD
             
             return newState
             
-        case .paletteIsSelected(let paletteType):
+        case .paletteIsSelected(let palette):
             
             var newState = state
-            newState.paletteType = paletteType
+            newState.palette = palette
             
             return newState
             
@@ -124,7 +124,7 @@ extension EditMainMandaratViewModel {
         
         // Event
         case editRequestFromOutside(mainMandarat: MainMandaratVO?)
-        case paletteIsSelected(paletteType: MandalartPaletteBundle)
+        case paletteIsSelected(paletteType: MandalartPalette)
         
         // - editing
         case editTitleText(text: String)
@@ -142,7 +142,7 @@ extension EditMainMandaratViewModel {
         var descriptionText: String
         var exitPageTrigger: Bool = false
         
-        var paletteType: MandalartPaletteBundle = .type1
+        var palette: MandalartPalette = .type1
         
         // alert
         var alertData: AlertData? = nil
@@ -167,7 +167,7 @@ private extension EditMainMandaratViewModel {
             id: initialMandarat.id,
             title: state.titleText,
             position: initialMandarat.position,
-            colorSetId: state.paletteType.identifier,
+            colorSetId: state.palette.identifier,
             description: state.descriptionText,
             imageURL: nil
         )
