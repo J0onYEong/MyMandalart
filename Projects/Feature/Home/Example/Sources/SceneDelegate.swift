@@ -9,6 +9,8 @@ import UIKit
 import FeatureHome
 import FeatureHomeTesting
 
+import SharedPresentationExt
+
 import DomainMandaratInterface
 import DomainUserStateInterface
 
@@ -22,7 +24,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         guard let windowScene = scene as? UIWindowScene else { return }
         
-        let navigationController = UINavigationController()
+        let navigationController = SlidableNavigationController()
         navigationController.setNavigationBarHidden(true, animated: false)
         
         window = UIWindow(windowScene: windowScene)

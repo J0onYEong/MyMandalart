@@ -4,6 +4,8 @@ import UIKit
 
 import FeatureInitialization
 
+import SharedPresentationExt
+
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
@@ -15,7 +17,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window = UIWindow(windowScene: windowScene)
         
-        let navigationController: UINavigationController = .init()
+        let navigationController: SlidableNavigationController = .init()
         navigationController.isNavigationBarHidden = true
         
         let rootComponent: RootComponent = .init(navigationController: navigationController)
