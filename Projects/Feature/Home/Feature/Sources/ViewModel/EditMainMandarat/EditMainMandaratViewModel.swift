@@ -68,24 +68,11 @@ class EditMainMandaratViewModel: NSObject, Reactor, UIColorPickerViewControllerD
             newState.descriptionText = text
             
             return newState
-        case .editColor(let paletteType):
+            
+        case .paletteIsSelected(let paletteType):
             
             var newState = state
             newState.paletteType = paletteType
-            
-            return newState
-            
-        case .colorSelectionButtonClicked:
-
-            var newState = state
-            newState.presentColorPicker = true
-            
-            return newState
-            
-        case .colorPickerClosed:
-            
-            var newState = state
-            newState.presentColorPicker = false
             
             return newState
             
@@ -137,15 +124,13 @@ extension EditMainMandaratViewModel {
         
         // Event
         case editRequestFromOutside(mainMandarat: MainMandaratVO?)
-        case colorPickerClosed
+        case paletteIsSelected(paletteType: MandalartPaletteBundle)
         
         // - editing
         case editTitleText(text: String)
         case editDescriptionText(text: String)
-        case editColor(paletteType: MandalartPaletteBundle)
         
         // - touch
-        case colorSelectionButtonClicked
         case exitButtonClicked
         case saveButtonClicked
     }
@@ -155,7 +140,6 @@ extension EditMainMandaratViewModel {
         
         var titleText: String
         var descriptionText: String
-        var presentColorPicker: Bool = false
         var exitPageTrigger: Bool = false
         
         var paletteType: MandalartPaletteBundle = .type1

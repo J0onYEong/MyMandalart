@@ -14,7 +14,7 @@ import SnapKit
 
 // id, imageURL, title, story, hexColor
 
-class EditMainMandaratViewController: UIViewController, View, UIColorPickerViewControllerDelegate {
+class EditMainMandaratViewController: UIViewController, View {
     
     // Sub View
     private let backgroundView: TappableView = .init()
@@ -30,8 +30,6 @@ class EditMainMandaratViewController: UIViewController, View, UIColorPickerViewC
     
     // Reactor
     var reactor: EditMainMandaratViewModel?
-    private let selectedColor: PublishSubject<UIColor> = .init()
-    private let colorPickerClosed: PublishSubject<Void> = .init()
     var disposeBag: DisposeBag = .init()
     
     
@@ -231,42 +229,19 @@ class EditMainMandaratViewController: UIViewController, View, UIColorPickerViewC
             .disposed(by: disposeBag)
         
         
-        // MARK: color selection
-//        reactor.state
-//            .compactMap(\.mandaratTitleColor)
-//            .bind(to: colorSelectionView.rx.color)
-//            .disposed(by: disposeBag)
-//        
-//        reactor.state
-//            .distinctUntilChanged(at: \.presentColorPicker)
-//            .filter(\.presentColorPicker)
-//            .map(\.mandaratTitleColor)
-//            .withUnretained(self)
-//            .subscribe(onNext: { vc, prevColor in
-//                vc.presentColorPicker(
-//                    titleText: "만다라트 대표 색상",
-//                    previousColor: prevColor
-//                )
-//            })
-//            .disposed(by: disposeBag)
-//        
-//        selectedColor
-//            .map { color in
-//                Reactor.Action.editColor(color: color)
-//            }
-//            .bind(to: reactor.action)
-//            .disposed(by: disposeBag)
-        
-        colorPickerClosed
-            .map { _ in
-                Reactor.Action.colorPickerClosed
-            }
-            .bind(to: reactor.action)
+        // MARK: palette selection
+        reactor.state
+            .distinctDriver(\.paletteType)
+            .asObservable()
+            .take(1)
+            .subscribe(onNext: { [weak self] initialType in
+                self?.selectPaletteView.update(type: initialType)
+            })
             .disposed(by: disposeBag)
         
         selectPaletteView.rx.selectedType
-            .map { _ in
-                Reactor.Action.colorSelectionButtonClicked
+            .map { selectedType in
+                Reactor.Action.paletteIsSelected(paletteType: selectedType)
             }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
@@ -364,36 +339,8 @@ private extension EditMainMandaratViewController {
     
 }
 
-// MARK: Color picker
-extension EditMainMandaratViewController {
-    
-    private func presentColorPicker(
-        titleText: String,
-        previousColor: UIColor?
-    ) {
-        
-        let colorPicker = UIColorPickerViewController()
-        colorPicker.title = titleText
-        colorPicker.selectedColor = .blue
-        colorPicker.supportsAlpha = true
-        colorPicker.delegate = self
-        colorPicker.modalPresentationStyle = .popover
-        if let previousColor {
-            colorPicker.selectedColor = previousColor
-        }
-        
-        self.present(colorPicker, animated: true)
-    }
 
-    func colorPickerViewControllerDidFinish(_ viewController: UIColorPickerViewController) {
-        self.colorPickerClosed.onNext(())
-    }
-    
-    func colorPickerViewController(_ viewController: UIColorPickerViewController, didSelect color: UIColor, continuously: Bool) {
-        self.selectedColor.onNext(color)
-    }
-}
-
+// MARK: Keyboard avoidence
 private extension EditMainMandaratViewController {
     
     func subscribeToKeyboardEvent() {

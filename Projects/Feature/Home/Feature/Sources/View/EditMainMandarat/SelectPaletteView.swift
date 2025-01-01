@@ -21,7 +21,7 @@ class SelectPaletteView: UIView {
     private var cellViews: [MandalartPaletteBundle: PaletteCellView] = [:]
     
     
-    fileprivate let paletteTypePublisher: BehaviorRelay<MandalartPaletteBundle> = .init(value: .type1)
+    fileprivate let paletteTypePublisher: PublishRelay<MandalartPaletteBundle> = .init()
     
     private let disposeBag: DisposeBag = .init()
     
@@ -36,6 +36,14 @@ class SelectPaletteView: UIView {
         setReactive()
     }
     required init?(coder: NSCoder) { nil }
+    
+    
+    public func update(type: MandalartPaletteBundle) {
+        
+        cellViews.forEach { palette, view in
+            view.update(isFocused: palette == type)
+        }
+    }
     
     
     private func setUI() {
