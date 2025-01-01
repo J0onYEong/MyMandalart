@@ -21,7 +21,7 @@ class EditMainMandaratViewController: UIViewController, View, UIColorPickerViewC
     private let titleInputView: FocusTextField = .init()
     private let descriptionInputView: FocusTextView = .init()
     private let inputSheetView: UIView = .init()
-    private let colorSelectionView: ColorSelectionView = .init(labelText: "대표 색상 변경")
+    private let selectPaletteView: SelectPaletteView = .init(titleText: "대표 색상 선택")
     
     // - Tool button
     private let exitButton: ImageButton = .init(imageName: "xmark")
@@ -149,19 +149,10 @@ class EditMainMandaratViewController: UIViewController, View, UIColorPickerViewC
             make.trailing.equalToSuperview().inset(20)
         }
         
-        
-        // MARK: colorSelectionView
-        let colorSelectionStackView: UIStackView = .init(
-            arrangedSubviews: [colorSelectionView, UIView()]
-        )
-        colorSelectionStackView.axis = .horizontal
-        colorSelectionStackView.distribution = .fill
-        colorSelectionStackView.alignment = .center
-        
-        
+                
         // MARK: inputStackView
         let inputStackView: UIStackView = .init(arrangedSubviews: [
-            colorSelectionStackView,
+            selectPaletteView,
             titleInputView,
             descriptionInputView,
         ])
@@ -273,7 +264,7 @@ class EditMainMandaratViewController: UIViewController, View, UIColorPickerViewC
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
-        colorSelectionView.rx.colorSelectionTap
+        selectPaletteView.rx.selectedType
             .map { _ in
                 Reactor.Action.colorSelectionButtonClicked
             }

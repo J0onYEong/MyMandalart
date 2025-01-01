@@ -16,6 +16,7 @@ import RxRelay
 class SelectPaletteView: UIView {
     
     // Sub views
+    private let titleLabel: UILabel = .init()
     private let scrollView: UIScrollView = .init()
     private var cellViews: [MandalartPaletteBundle: PaletteCellView] = [:]
     
@@ -24,7 +25,10 @@ class SelectPaletteView: UIView {
     
     private let disposeBag: DisposeBag = .init()
     
-    init() {
+    init(titleText: String) {
+        
+        titleLabel.text = titleText
+        
         super.init(frame: .zero)
         
         setUI()
@@ -36,7 +40,18 @@ class SelectPaletteView: UIView {
     
     private func setUI() {
         
+        // self
+        self.backgroundColor = UIColor.gray.withAlphaComponent(0.1)
+        self.layer.cornerRadius = 15
+        
+        // titleLabel
+        titleLabel.font = .preferredFont(forTextStyle: .caption1)
+        titleLabel.textColor = .black
+        titleLabel.textAlignment = .left
+        
+        // scrollView
         scrollView.backgroundColor = .clear
+        scrollView.showsHorizontalScrollIndicator = false
     }
     
     
@@ -84,9 +99,20 @@ class SelectPaletteView: UIView {
         }
         
         
-        addSubview(scrollView)
+        let mainStack: UIStackView = .init(arrangedSubviews: [titleLabel, scrollView])
+        mainStack.axis = .vertical
+        mainStack.spacing = 10
+        mainStack.distribution = .fill
+        mainStack.alignment = .fill
+        
+        
+        addSubview(mainStack)
+        mainStack.snp.makeConstraints { make in
+            make.edges.equalToSuperview().inset(10)
+        }
+        
         scrollView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.height.equalTo(45).priority(.required)
         }
     }
     
@@ -118,7 +144,7 @@ extension Reactive where Base == SelectPaletteView {
 }
 
 
-#Preview(traits: .fixedLayout(width: 300, height: 65)) {
+#Preview {
     
-    SelectPaletteView()
+    SelectPaletteView(titleText: "만다라트 컬러 선택")
 }

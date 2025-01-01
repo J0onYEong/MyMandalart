@@ -17,7 +17,7 @@ class PaletteCellView: TappableView {
     // Sub view
     private var colorView: UIView!
     
-    
+
     private let colors: [UIColor]
     
     private let disposeBag: DisposeBag = .init()
@@ -49,11 +49,11 @@ class PaletteCellView: TappableView {
         if isFocused {
             
             colorView.alpha = 1
-            layer.borderWidth = 1
+            layer.borderWidth = 2.5
             
         } else {
             
-            colorView.alpha = 0.75
+            colorView.alpha = 0.3
             layer.borderWidth = 0
         }
     }
@@ -61,11 +61,11 @@ class PaletteCellView: TappableView {
     
     private func setUI() {
         
-        self.backgroundColor = .white
+        self.backgroundColor = .gray
         
         clipsToBounds = true
         
-        layer.borderColor = UIColor.gray.cgColor
+        layer.borderColor = UIColor.white.cgColor
         layer.shadowColor = UIColor.gray.cgColor
         layer.shadowOffset = .init(width: 0, height: -2)
     }
