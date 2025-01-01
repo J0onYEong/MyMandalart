@@ -93,6 +93,7 @@ public extension ModulePath {
         case Core
         case DesignSystem
         case PresentationExt
+        case Logger
         
         public static let categoryName: String = "Shared"
         
