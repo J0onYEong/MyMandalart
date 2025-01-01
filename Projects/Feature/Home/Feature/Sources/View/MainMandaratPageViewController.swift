@@ -47,31 +47,12 @@ class MainMandaratPageViewController: UIViewController, MainMandaratPageViewCont
         
         setUI()
         setLayout()
+        setReactive()
     }
     
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-    }
-    
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-        let deviceOrientation = UIDevice.current.orientation
-        
-        switch deviceOrientation {
-        case .portrait:
-            
-            fitLayoutTo(mode: .portrait)
-            
-        case .landscapeRight, .landscapeLeft:
-            
-            fitLayoutTo(mode: .landscape)
-            
-        default:
-            return
-        }
     }
     
     
@@ -102,6 +83,17 @@ class MainMandaratPageViewController: UIViewController, MainMandaratPageViewCont
         settingButton.setImageColor(.lightGray)
     }
     
+    
+    private func setReactive() {
+        
+        self.rx.deviceMode
+            .distinctUntilChanged()
+            .asDriver(onErrorDriveWith: .never())
+            .drive(onNext: { [weak self] deviceMode in
+                self?.fitLayoutTo(mode: deviceMode)
+            })
+            .disposed(by: disposeBag)
+    }
     
     
     func bind(reactor: MainMandaratPageViewModel) {
@@ -438,10 +430,6 @@ private extension MainMandaratPageViewController {
 // MARK: Portrait & Landscape
 private extension MainMandaratPageViewController {
     
-    enum DeviceMode {
-        case portrait, landscape
-    }
-    
     func fitLayoutTo(mode: DeviceMode) {
         
         switch mode {
@@ -498,7 +486,7 @@ private extension MainMandaratPageViewController {
             }
         }
         
-        view.layoutIfNeeded()
+        view.setNeedsLayout()
     }
 }
 
