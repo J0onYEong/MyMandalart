@@ -10,6 +10,8 @@ import UIKit
 import FeatureInitialization
 
 import SharedPresentationExt
+import SharedLoggerInterface
+import SharedLogger	
 
 import DomainMandaratInterface
 import DomainMandarat
@@ -48,6 +50,11 @@ class RootComponent: InitializationDependency {
     let userStateRepository: UserStateRepository = DefaultUserStateRepository()
     
     let coreDataService: CoreDataService = DefaultCoreDataService()
+    
+    
+    // MARK: Shared
+    let logger: Logger = DefaultLogger()
+    
     
     init(navigationController: NavigationControllable) {
         self.navigationController = navigationController

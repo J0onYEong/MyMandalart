@@ -11,6 +11,8 @@ import FeatureSubMandarat
 import FeatureSetting
 
 import SharedPresentationExt
+import SharedLoggerInterface
+
 import DomainMandaratInterface
 import DomainUserStateInterface
 
@@ -27,5 +29,9 @@ class MainMandaratComponent: Componentable<MainMandaratDependency>, SubMandaratP
     
     var navigationController: NavigationControllable {
         dependency.navigationController
+    }
+    
+    var logger: Logger {
+        dependency.logger
     }
 }

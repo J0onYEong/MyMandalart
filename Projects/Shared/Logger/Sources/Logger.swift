@@ -9,7 +9,7 @@ import SharedLoggerInterface
 
 public class DefaultLogger: Logger {
     
-    
+    public init() { }
 }
 
 

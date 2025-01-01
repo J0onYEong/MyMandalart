@@ -8,10 +8,11 @@
 import UIKit
 
 import SharedDesignSystem
+import SharedLoggerInterface
+import SharedCore
 
 import DomainMandaratInterface
 import DomainUserStateInterface
-import SharedCore
 
 import ReactorKit
 import RxSwift
@@ -21,6 +22,7 @@ class SubMandaratPageViewModel: Reactor,  SubMandaratViewModelListener, EditSubM
     // DI
     private let mandaratUseCase: MandaratUseCase
     private let userStateUseCase: UserStateUseCase
+    private let logger: Logger
     
     
     // Listener
@@ -51,10 +53,11 @@ class SubMandaratPageViewModel: Reactor,  SubMandaratViewModelListener, EditSubM
     private let disposeBag: DisposeBag = .init()
     
     
-    init(mandaratUseCase: MandaratUseCase, userStateUseCase: UserStateUseCase, mainMandarat: MainMandaratVO) {
+    init(mandaratUseCase: MandaratUseCase, userStateUseCase: UserStateUseCase, logger: Logger, mainMandarat: MainMandaratVO) {
 
         self.mandaratUseCase = mandaratUseCase
         self.userStateUseCase = userStateUseCase
+        self.logger = logger
         self.mainMandaratVO = mainMandarat
         
         self.initialState = .init(
@@ -230,6 +233,15 @@ extension SubMandaratPageViewModel {
         
         // #2. render
         self.render(subMandarat: subMandarat)
+        
+        
+        // #3. Logging
+        if !userStateUseCase.checkState(.log_initial_sub_mandalart_creation) {
+            
+            logInitialSubMandalartCreation()
+            
+            userStateUseCase.toggleState(.log_initial_sub_mandalart_creation)
+        }
     }
 }
 
@@ -268,5 +280,18 @@ private extension SubMandaratPageViewModel {
         }
         
         return .never()
+    }
+}
+
+
+// MARK: Logging
+private extension SubMandaratPageViewModel {
+    
+    func logInitialSubMandalartCreation() {
+        
+        let builder = DefaultLogObjectBuilder(eventType: "make_first_sub_mandalart")
+        let object = builder.build()
+        
+        logger.send(object)
     }
 }

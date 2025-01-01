@@ -7,5 +7,5 @@
 
 public protocol Logger {
     
-    func send(_ log: LogObjectable)
+    func send(_ log: LogObject)
 }

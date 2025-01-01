@@ -20,20 +20,16 @@ let project = Project(
                 .feature(implements: .Initialization),
                 
                 
-                .domain(interface: .Mandarat),
                 .domain(implements: .Mandarat),
-                
-                .domain(interface: .UserState),
                 .domain(implements: .UserState),
                 
                 
-                .data(interface: .Mandarat),
                 .data(implements: .Mandarat),
-                
-                .data(interface: .CoreData),
                 .data(implements: .CoreData),
-                
                 .data(implements: .UserState),
+                
+                
+                .shared(implements: .Logger),
             ],
             settings: .settings(configurations: [
                 .debug(name: "Debug"),
