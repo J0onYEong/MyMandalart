@@ -50,29 +50,22 @@ class SubMandaratPageViewController: UIViewController, SubMandaratPageViewContro
         
         setUI()
         setLayout()
+        setReactive()
         
         view.layoutIfNeeded()
         reactor?.action.onNext(.viewDidLoad)
     }
     
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
+    private func setReactive() {
         
-        let deviceOrientation = UIDevice.current.orientation
-        
-        switch deviceOrientation {
-        case .portrait:
-            
-            fitLayoutTo(mode: .portrait)
-            
-        case .landscapeRight, .landscapeLeft:
-            
-            fitLayoutTo(mode: .landscape)
-            
-        default:
-            return
-        }
+        self.rx.deviceMode
+            .distinctUntilChanged()
+            .asDriver(onErrorDriveWith: .never())
+            .drive(onNext: { [weak self] deviceMode in
+                self?.fitLayoutTo(mode: deviceMode)
+            })
+            .disposed(by: disposeBag)
     }
     
     
@@ -416,10 +409,6 @@ extension SubMandaratPageViewController {
 // MARK: Portrait & Landscape
 private extension SubMandaratPageViewController {
     
-    enum DeviceMode {
-        case portrait, landscape
-    }
-    
     func fitLayoutTo(mode: DeviceMode) {
         
         switch mode {
@@ -491,7 +480,7 @@ private extension SubMandaratPageViewController {
             }
         }
         
-        view.layoutIfNeeded()
+        view.setNeedsLayout()
     }
 }
 
