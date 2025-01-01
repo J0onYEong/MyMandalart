@@ -17,10 +17,17 @@ public struct DefaultLogObjectBuilder: LogObjectBuildable {
     public let eventType: String
     public private(set) var properties: [String: Any] = [:]
     
+    
+    public init(eventType: String) {
+        self.eventType = eventType
+    }
+    
+    
     public mutating func setProperty(key: String, value: Any) {
         
         self.properties[key] = value
     }
+    
     
     public func build() -> LogObject {
         

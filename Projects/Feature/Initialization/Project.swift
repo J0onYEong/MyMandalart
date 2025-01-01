@@ -70,10 +70,14 @@ let project = Project(
                 
                 .feature(implements: .Home),
                 
+                
                 .domain(interface: .UserState),
                 
+                
+                .shared(interface: .Logger),
                 .shared(implements: .DesignSystem),
                 .shared(implements: .PresentationExt),
+                
                 
                 .thirdParty(library: .RxCocoa),
                 .thirdParty(library: .RxSwift),

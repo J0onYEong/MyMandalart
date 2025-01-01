@@ -68,8 +68,11 @@ let project = Project(
                 .domain(interface: .Mandarat),
                 .domain(interface: .UserState),
                 
+                
+                .shared(interface: .Logger),
                 .shared(implements: .PresentationExt),
                 .shared(implements: .DesignSystem),
+                
                 
                 .thirdParty(library: .RxCocoa),
                 .thirdParty(library: .ReactorKit),

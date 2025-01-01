@@ -41,6 +41,19 @@ let project = Project(
                 .feature(testing: .Home),
             ]
         ),
+        
+        
+        // Testing
+        .target(
+            name: "FeatureHomeTesting",
+            destinations: .iOS,
+            product: .framework,
+            bundleId: "\(Project.Environment.bundlePrefix).feature.Home.testing",
+            sources: ["Testing/**"],
+            dependencies: [
+                .feature(implements: .Home),
+            ]
+        ),
 
 
         // Feature
@@ -64,25 +77,14 @@ let project = Project(
                 .domain(interface: .UserState),
                 
                 
+                .shared(interface: .Logger),
                 .shared(implements: .PresentationExt),
                 .shared(implements: .DesignSystem),
+                
                 
                 .thirdParty(library: .RxCocoa),
                 .thirdParty(library: .ReactorKit),
                 .thirdParty(library: .SnapKit),
-            ]
-        ),
-
-
-        // Testing
-        .target(
-            name: "FeatureHomeTesting",
-            destinations: .iOS,
-            product: .framework,
-            bundleId: "\(Project.Environment.bundlePrefix).feature.Home.testing",
-            sources: ["Testing/**"],
-            dependencies: [
-                .feature(implements: .Home),
             ]
         ),
     ]

@@ -7,6 +7,8 @@
 
 import DomainUserStateInterface
 
+import SharedLoggerInterface
+
 enum TransitionStyle {
     case `default`
     case opacity
@@ -23,14 +25,16 @@ class InitializationInteractor: InitializationInteractable, NickNameInputPageVie
     
     // DI
     private let userStateUseCase: UserStateUseCase
+    private let logger: Logger
     
     
     // Router
     weak var router: InitializationRouting?
     
     
-    init(userStateUseCase: UserStateUseCase) {
+    init(userStateUseCase: UserStateUseCase, logger: Logger) {
         self.userStateUseCase = userStateUseCase
+        self.logger = logger
     }
     
 }
@@ -61,6 +65,26 @@ extension InitializationInteractor {
         
         userStateUseCase.setState(.userNickName, value: nickName)
         
+        if !userStateUseCase.checkState(.log_initial_nickname_creation) {
+            
+            self.logInitialNickNameCreation()
+            
+            userStateUseCase.toggleState(.log_initial_nickname_creation)
+        }
+        
         router?.presentMainMandaratPage(style: .default)
+    }
+}
+
+
+// MARK: Logging
+private extension InitializationInteractor {
+    
+    func logInitialNickNameCreation() {
+        
+        let builder = DefaultLogObjectBuilder(eventType: "make_initial_user_nickname")
+        let object = builder.build()
+        
+        logger.send(object)
     }
 }

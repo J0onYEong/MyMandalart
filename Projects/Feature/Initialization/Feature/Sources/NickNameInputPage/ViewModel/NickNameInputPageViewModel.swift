@@ -7,7 +7,6 @@
 
 import ReactorKit
 
-
 protocol NickNameInputPageViewModelListener: AnyObject {
     
     func nickInputPageFinish(nickName: String)

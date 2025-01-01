@@ -5,6 +5,8 @@
 //  Created by choijunios on 12/30/24.
 //
 
+import UIKit
+
 import FeatureHome
 
 import SharedPresentationExt
@@ -13,8 +15,7 @@ import DomainMandaratInterface
 import DomainUserStateInterface
 
 import SharedPresentationExt
-
-import UIKit
+import SharedLoggerInterface
 
 class InitializationComponent: Componentable<InitializationDependency>, MainMandaratDependency {
     
@@ -28,6 +29,10 @@ class InitializationComponent: Componentable<InitializationDependency>, MainMand
     
     var userStateUseCase: UserStateUseCase {
         dependency.userStateUseCase
+    }
+    
+    var logger: Logger {
+        dependency.logger
     }
 }
 
