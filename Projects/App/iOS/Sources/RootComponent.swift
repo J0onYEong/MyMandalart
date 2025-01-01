@@ -53,7 +53,14 @@ class RootComponent: InitializationDependency {
     
     
     // MARK: Shared
-    let logger: Logger = DefaultLogger()
+    let logger: Logger = {
+       
+        #if DEBUG
+            return MockLogger()
+        #else
+            return DefaultLogger()
+        #endif
+    }()
     
     
     init(navigationController: NavigationControllable) {

@@ -9,6 +9,9 @@ import UIKit
 import FeatureSubMandarat
 import FeatureSubMandaratTesting
 
+import SharedLoggerInterface
+import SharedPresentationExt
+
 import DomainMandaratInterface
 import DomainUserStateInterface
 
@@ -23,12 +26,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = scene as? UIWindowScene else { return }
         window = UIWindow(windowScene: windowScene)
         
-        let navigationController: UINavigationController = .init()
+        let navigationController: NavigationController = .init()
+        navigationController.isNavigationBarHidden = true
         
         let component = RootComponent(
             mandaratUseCase: MockMandaratUseCase(),
             userStateUseCase: MockUserStateUseCase(),
-            navigationController: navigationController
+            navigationController: navigationController,
+            logger: MockLogger()
         )
         
         self.router = SubMandaratPageBuilder(dependency: component)
@@ -41,8 +46,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     struct RootComponent: SubMandaratPageDependency {
+
         var mandaratUseCase: MandaratUseCase
         var userStateUseCase: UserStateUseCase
-        var navigationController: UINavigationController
+        
+        var navigationController: NavigationControllable
+        
+        var logger: Logger
     }
 }
