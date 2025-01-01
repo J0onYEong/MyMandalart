@@ -7,7 +7,26 @@
 
 public protocol LogObjectBuildable {
     
-    associatedtype LogObject: LogObjectable
+    associatedtype Object: LogObject
     
-    func build() -> LogObject
+    func build() -> Object
+}
+
+public struct DefaultLogObjectBuilder: LogObjectBuildable {
+    
+    public let eventType: String
+    public private(set) var properties: [String: Any] = [:]
+    
+    public mutating func setProperty(key: String, value: Any) {
+        
+        self.properties[key] = value
+    }
+    
+    public func build() -> LogObject {
+        
+        return .init(
+            eventType: eventType,
+            properties: properties
+        )
+    }
 }

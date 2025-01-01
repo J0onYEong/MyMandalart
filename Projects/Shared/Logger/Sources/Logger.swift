@@ -16,7 +16,7 @@ public class DefaultLogger: Logger {
 // MARK: Logger
 public extension DefaultLogger {
     
-    func send(_ log: LogObjectable) {
+    func send(_ log: LogObject) {
         
         print(log.description)
         
