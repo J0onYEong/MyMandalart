@@ -36,7 +36,6 @@ class MainMandaratDisplayView: TappableView {
         
         setUI()
         setLayout()
-        setReactive()
         setLongPressGesture()
     }
     required init?(coder: NSCoder) { nil }
@@ -45,9 +44,13 @@ class MainMandaratDisplayView: TappableView {
         
         // text
         titleLabel.text = mandaratRO.title
+        titleLabel.textColor = mandaratRO.textColor
+        
+        // self
+        self.backgroundColor = mandaratRO.titleColor
         
         // gradient
-        createGredientLayer(mandaratRO.titleColor)
+//        createGredientLayer(mandaratRO.titleColor)
     }
     
     private func setUI() {
@@ -76,26 +79,6 @@ class MainMandaratDisplayView: TappableView {
             make.leading.equalToSuperview().inset(10)
             make.trailing.equalToSuperview().inset(10)
         }
-    }
-    
-    private func setReactive() {
-        
-        renderObject
-            .observe(on: MainScheduler.instance)
-            .withUnretained(self)
-            .subscribe(onNext: { view, renderObject in
-                
-                // title label
-                view.titleLabel.text = renderObject.title
-                view.titleLabel.textColor = renderObject.textColor
-                
-                // gradient
-                view.createGredientLayer(renderObject.titleColor)
-                
-                // play gradient variation
-                view.playGradientAnimation()
-            })
-            .disposed(by: disposeBag)
     }
     
     private func createGredientLayer(_ baseColor: UIColor) {
@@ -161,11 +144,6 @@ private extension MainMandaratDisplayView {
 
 // MARK: Reactive+Ext
 extension Reactive where Base == MainMandaratDisplayView {
-    
-    var renderObject: PublishSubject<MainMandaratRO> {
-        
-        base.renderObject
-    }
     
     var longPressEvent: Observable<Void> {
         

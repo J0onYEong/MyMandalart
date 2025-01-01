@@ -63,9 +63,11 @@ final class MainMandaratView: UIView, View {
             .disposed(by: disposeBag)
         
         reactor.state
+            .filter(\.isAvailable)
             .compactMap(\.mandarat)
-            .distinctUntilChanged()
-            .bind(to: mainMandaratDisplayView.rx.renderObject)
+            .subscribe(onNext: { ro in
+                self.mainMandaratDisplayView.bind(ro)
+            })
             .disposed(by: disposeBag)
         
         mainMandaratDisplayView.rx.longPressEvent

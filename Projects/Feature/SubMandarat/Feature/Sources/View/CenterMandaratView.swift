@@ -107,11 +107,14 @@ extension CenterMandaratView {
         titleLabel.text = mandaratVO.title
         titleLabel.textColor = palette.colors.textColor.primaryColor
         
+        // self
+        self.backgroundColor = palette.colors.backgroundColor.primaryColor
+        
         // gradient
-        createGredientLayer(palette.colors.backgroundColor.primaryColor)
+//        createGredientLayer(palette.colors.backgroundColor.primaryColor)
         
         // play gradient variation
-        playGradientAnimation()
+//        playGradientAnimation()
     }
 }
 
