@@ -61,7 +61,6 @@ class MainMandaratDisplayView: TappableView {
         // title label
         titleLabel.font = .systemFont(ofSize: 17, weight: .bold)
         titleLabel.textAlignment = .center
-        titleLabel.textColor = UIColor.black
         titleLabel.adjustsFontSizeToFitWidth = true
         
     }
@@ -88,6 +87,7 @@ class MainMandaratDisplayView: TappableView {
                 
                 // title label
                 view.titleLabel.text = renderObject.title
+                view.titleLabel.textColor = renderObject.textColor
                 
                 // gradient
                 view.createGredientLayer(renderObject.titleColor)

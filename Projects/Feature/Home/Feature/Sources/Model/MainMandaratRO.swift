@@ -17,6 +17,7 @@ struct MainMandaratRO: Equatable {
     let title: String
     let description: String
     let titleColor: UIColor
+    let textColor: UIColor
     
     static func create(from: MainMandaratVO) -> Self {
         
@@ -25,7 +26,8 @@ struct MainMandaratRO: Equatable {
         return .init(
             title: from.title,
             description: from.description ?? "",
-            titleColor: palette.colors.backgroundColor.primaryColor
+            titleColor: palette.colors.backgroundColor.primaryColor,
+            textColor: palette.colors.textColor.primaryColor
         )
     }
 }

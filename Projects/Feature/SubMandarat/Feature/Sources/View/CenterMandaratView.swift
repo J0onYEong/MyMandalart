@@ -101,11 +101,13 @@ extension CenterMandaratView {
     
     public func render(_ mandaratVO: MainMandaratVO) {
         
+        let palette = MandalartPalette(rawValue: mandaratVO.colorSetId)!
+        
         // title label
         titleLabel.text = mandaratVO.title
+        titleLabel.textColor = palette.colors.textColor.primaryColor
         
         // gradient
-        let palette = MandalartPalette(rawValue: mandaratVO.colorSetId)!
         createGredientLayer(palette.colors.backgroundColor.primaryColor)
         
         // play gradient variation
