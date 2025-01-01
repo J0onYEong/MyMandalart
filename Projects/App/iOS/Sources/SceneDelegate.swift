@@ -17,7 +17,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window = UIWindow(windowScene: windowScene)
         
-        let navigationController: SlidableNavigationController = .init()
+        let navigationController: NavigationController = .init()
         navigationController.isNavigationBarHidden = true
         
         let rootComponent: RootComponent = .init(navigationController: navigationController)

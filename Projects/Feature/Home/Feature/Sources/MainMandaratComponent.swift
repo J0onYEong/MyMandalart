@@ -15,6 +15,7 @@ import DomainMandaratInterface
 import DomainUserStateInterface
 
 class MainMandaratComponent: Componentable<MainMandaratDependency>, SubMandaratPageDependency, SettingPageDependency {
+
     
     var mandaratUseCase: MandaratUseCase {
         dependency.mandaratUseCase
@@ -24,7 +25,7 @@ class MainMandaratComponent: Componentable<MainMandaratDependency>, SubMandaratP
         dependency.userStateUseCase
     }
     
-    var navigationController: UINavigationController {
+    var navigationController: NavigationControllable {
         dependency.navigationController
     }
 }

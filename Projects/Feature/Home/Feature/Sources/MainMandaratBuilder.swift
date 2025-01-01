@@ -18,7 +18,7 @@ public class MainMandaratBuilder: Buildable<MainMandaratDependency>, MainMandara
         
         
         let viewModel = MainMandaratPageViewModel(
-            mandaratUseCase: component.mandaratUseCase,
+            mandaratUseCase: component.dependency.mandaratUseCase,
             userStateUseCase: component.dependency.userStateUseCase
         )
         
@@ -39,7 +39,7 @@ public class MainMandaratBuilder: Buildable<MainMandaratDependency>, MainMandara
         let router = MainMandaratRouter(
             subMandaratBuilder: subMandaratBuilder,
             settingPageBuilder: settingPageBuilder,
-            navigationController: component.navigationController,
+            navigationController: component.dependency.navigationController,
             viewModel: viewModel,
             viewController: viewController
         )

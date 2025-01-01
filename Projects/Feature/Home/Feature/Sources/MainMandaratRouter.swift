@@ -15,7 +15,7 @@ import SharedPresentationExt
 
 class MainMandaratRouter: MainMandaratRoutable, MainMandaratPageRouting {
     
-    private let navigationController: UINavigationController
+    private let navigationController: NavigationControllable
     
     private let subMandaratBuilder: SubMandaratPageBuildable
     private let settingPageBuilder: SettingPageBuildable
@@ -24,7 +24,7 @@ class MainMandaratRouter: MainMandaratRoutable, MainMandaratPageRouting {
     init(
         subMandaratBuilder: SubMandaratPageBuildable,
         settingPageBuilder: SettingPageBuildable,
-        navigationController: UINavigationController,
+        navigationController: NavigationControllable,
         viewModel: MainMandaratPageViewModel,
         viewController: MainMandaratPageViewController)
     {
@@ -55,6 +55,7 @@ extension MainMandaratRouter {
         
         let viewController = router.viewController
         
+        navigationController.disableSlidePop()
         navigationController.delegate = viewController.transitionDelegate
         navigationController.pushViewController(viewController, animated: true)
         navigationController.delegate = nil
@@ -118,7 +119,11 @@ extension MainMandaratRouter {
         
         let viewController = router.viewController
         
-        navigationController.pushViewController(viewController, animated: true)
+        navigationController.enableSlidePop()
+        navigationController.pushViewController(
+            viewController,
+            animated: true
+        )
         
         attach(router)
     }

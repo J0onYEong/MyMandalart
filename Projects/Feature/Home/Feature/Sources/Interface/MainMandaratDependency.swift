@@ -7,6 +7,8 @@
 
 import UIKit
 
+import SharedPresentationExt
+
 import DomainMandaratInterface
 import DomainUserStateInterface
 
@@ -14,5 +16,5 @@ public protocol MainMandaratDependency {
     
     var mandaratUseCase: MandaratUseCase { get }
     var userStateUseCase: UserStateUseCase { get }
-    var navigationController: UINavigationController { get }
+    var navigationController: NavigationControllable { get }
 }

@@ -11,10 +11,10 @@ import SharedPresentationExt
 
 class SettingPageRouter: SettingPageRoutable, SettingPageRouting {
     
-    private let navigationController: UINavigationController
+    private let navigationController: NavigationControllable
     
     init(
-        navigationController: UINavigationController,
+        navigationController: NavigationControllable,
         viewModel: SettingPageViewModel,
         viewController: SettingPageViewController) {
         
@@ -42,8 +42,7 @@ extension SettingPageRouter {
         
         let viewController = EditNickNamePageViewController(reactor: viewModel)
         
-        navigationController
-            .pushViewController(viewController, animated: true)
+        navigationController.pushViewController(viewController, animated: true)
     }
     
     

@@ -7,10 +7,12 @@
 
 import UIKit
 
+import SharedPresentationExt
+
 import DomainUserStateInterface
 
 public protocol SettingPageDependency {
     
     var userStateUseCase: UserStateUseCase { get }
-    var navigationController: UINavigationController { get }
+    var navigationController: NavigationControllable { get }
 }

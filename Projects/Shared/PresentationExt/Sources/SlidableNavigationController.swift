@@ -7,30 +7,60 @@
 
 import UIKit
 
-public class SlidableNavigationController: UINavigationController {
+public protocol NavigationControllable: UINavigationController {
     
-    private var duringTransition = false
+    func enableSlidePop()
+    
+    func disableSlidePop()
+    
+    var isSlidable: Bool { get }
+}
+
+
+public class NavigationController: UINavigationController, NavigationControllable, UINavigationControllerDelegate {
+    
+    public private(set) var isSlidable: Bool = false
+    
+    private lazy var gestureDelegate = NavigationControllerGestureRecognizerDelegate(nav: self)
     
     public override func viewDidLoad() {
         super.viewDidLoad()
         
-        interactivePopGestureRecognizer?.delegate = self
+        interactivePopGestureRecognizer?.delegate = gestureDelegate
     }
 }
 
-extension SlidableNavigationController: UINavigationControllerDelegate {
-    public func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
-        self.duringTransition = false
-    }
-}
 
-extension SlidableNavigationController: UIGestureRecognizerDelegate {
-    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        guard gestureRecognizer == interactivePopGestureRecognizer,
-              let _ = topViewController else {
-            return true // default value
+// MARK: NavigationControllerGestureRecognizerDelegate
+class NavigationControllerGestureRecognizerDelegate: NSObject, UIGestureRecognizerDelegate {
+    
+    weak var nav: NavigationControllable!
+    
+    init(nav: NavigationControllable!) {
+        self.nav = nav
+    }
+    
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        
+        guard gestureRecognizer == nav.interactivePopGestureRecognizer,
+              let _ = nav.topViewController else {
+            
+            return true
         }
         
-        return viewControllers.count > 1 && duringTransition == false
+        return nav.viewControllers.count > 1 && nav.isSlidable == true
+    }
+}
+
+
+// MARK: SlidableController
+public extension NavigationController {
+    
+    func enableSlidePop() {
+        isSlidable = true
+    }
+    
+    func disableSlidePop() {
+        isSlidable = false
     }
 }

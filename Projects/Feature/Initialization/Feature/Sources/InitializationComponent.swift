@@ -7,6 +7,8 @@
 
 import FeatureHome
 
+import SharedPresentationExt
+
 import DomainMandaratInterface
 import DomainUserStateInterface
 
@@ -16,16 +18,16 @@ import UIKit
 
 class InitializationComponent: Componentable<InitializationDependency>, MainMandaratDependency {
     
+    var navigationController: NavigationControllable {
+        dependency.navigationController
+    }
+    
     var mandaratUseCase: MandaratUseCase {
         dependency.mandaratUseCase
     }
     
     var userStateUseCase: UserStateUseCase {
         dependency.userStateUseCase
-    }
-    
-    var navigationController: UINavigationController {
-        dependency.navigationController
     }
 }
 

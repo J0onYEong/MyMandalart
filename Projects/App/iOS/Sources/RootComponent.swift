@@ -9,6 +9,8 @@ import UIKit
 
 import FeatureInitialization
 
+import SharedPresentationExt
+
 import DomainMandaratInterface
 import DomainMandarat
 
@@ -27,7 +29,7 @@ class RootComponent: InitializationDependency {
     
     
     // MARK: Presentation
-    let navigationController: UINavigationController
+    let navigationController: NavigationControllable
     
     
     // MARK: Domain
@@ -47,7 +49,7 @@ class RootComponent: InitializationDependency {
     
     let coreDataService: CoreDataService = DefaultCoreDataService()
     
-    init(navigationController: UINavigationController) {
+    init(navigationController: NavigationControllable) {
         self.navigationController = navigationController
     }
 }

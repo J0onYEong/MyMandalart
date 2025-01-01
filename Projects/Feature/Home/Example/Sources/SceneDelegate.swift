@@ -24,7 +24,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         guard let windowScene = scene as? UIWindowScene else { return }
         
-        let navigationController = SlidableNavigationController()
+        let navigationController = NavigationController()
         navigationController.setNavigationBarHidden(true, animated: false)
         
         window = UIWindow(windowScene: windowScene)
@@ -50,7 +50,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     struct RootComponent: MainMandaratDependency {
         
         var mandaratUseCase: MandaratUseCase
-        var navigationController: UINavigationController
+        var navigationController: NavigationControllable
         var userStateUseCase: UserStateUseCase
     }
 }
