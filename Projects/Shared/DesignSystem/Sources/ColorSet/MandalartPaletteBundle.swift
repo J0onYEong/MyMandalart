@@ -5,7 +5,7 @@
 //  Created by choijunios on 1/1/25.
 //
 
-public enum MandalartPaletteBundle: String {
+public enum MandalartPaletteBundle: String, CaseIterable {
     
     case type1
     case type2
@@ -19,6 +19,11 @@ public enum MandalartPaletteBundle: String {
     case type10
     case type11
     case type12
+    
+    public static var orderedList: [Self] {
+        
+        Self.allCases.sorted(by: { $0.rawValue < $1.rawValue })
+    }
     
     public var identifier: String { self.rawValue }
     
