@@ -27,10 +27,16 @@ let package = Package(
         // ReactorKit
         .package(url: "https://github.com/ReactorKit/ReactorKit.git", from: "3.2.0"),
         
+        
         // RxSwift, RxCocoa, etc
         .package(url: "https://github.com/ReactiveX/RxSwift.git", from: "6.8.0"),
         
+        
         // SnapKit
         .package(url: "https://github.com/SnapKit/SnapKit.git", from: "5.7.1"),
+        
+        
+        // Amplitude
+        .package(url: "https://github.com/amplitude/Amplitude-Swift", from: "1.9.2"),
     ]
 )

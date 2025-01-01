@@ -113,6 +113,7 @@ public extension ModulePath {
         case RxTest
         case ReactorKit
         case SnapKit
+        case AmplitudeSwift
         
         public static let categoryName: String = "ThirdParty"
     }

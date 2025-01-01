@@ -33,7 +33,8 @@ let project = Project(
             deploymentTargets: Project.Environment.deploymentTarget,
             sources: ["Interface/**"],
             dependencies: [
-                
+                .thirdParty(library: .RxSwift),
+                .thirdParty(library: .AmplitudeSwift),
             ]
         ),
     ]
