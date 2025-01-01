@@ -93,12 +93,14 @@ public class ConfirmButton: TappableView {
         
         backgroundColor = .color("#FFE6A9")
         titleLabel.textColor = .darkGray
+        self.isUserInteractionEnabled = true
     }
     
     private func setToDisabledAppearance() {
         
         backgroundColor = .lightGray
         titleLabel.textColor = .white
+        self.isUserInteractionEnabled = false
     }
 }
 

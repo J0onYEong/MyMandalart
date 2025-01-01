@@ -478,7 +478,7 @@ private extension MainMandaratPageViewController {
                     
                 make.left.equalTo(view.safeAreaLayoutGuide.snp.left)
                     
-                make.right.lessThanOrEqualTo(mainMandaratContainerView.snp.left)
+                make.right.lessThanOrEqualTo(mainMandaratContainerView.snp.left).priority(.required)
                     
             }
             
