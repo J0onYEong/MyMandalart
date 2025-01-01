@@ -439,10 +439,10 @@ private extension SubMandaratPageViewController {
             // subMandaratContainerView
             subMandaratContainerView.snp.remakeConstraints { make in
                 
-                make.leading.equalTo(view.safeAreaLayoutGuide.snp.leading).priority(.high)
-                make.trailing.equalTo(view.safeAreaLayoutGuide.snp.trailing).priority(.high)
-                make.height.equalTo(subMandaratContainerView.snp.width).priority(.high)
-                make.centerY.equalToSuperview()
+                make.leading.equalTo(view.safeAreaLayoutGuide.snp.leading).priority(.required)
+                make.trailing.equalTo(view.safeAreaLayoutGuide.snp.trailing).priority(.required)
+                make.height.equalTo(subMandaratContainerView.snp.width).priority(.required)
+                make.centerY.equalToSuperview().priority(.required)
             }
             
             
@@ -451,7 +451,7 @@ private extension SubMandaratPageViewController {
                 make.top.equalTo(view.safeAreaLayoutGuide.snp.top).inset(10)
                 make.left.equalTo(view.safeAreaLayoutGuide.snp.left).inset(10)
                 make.right.equalTo(view.safeAreaLayoutGuide.snp.right)
-                make.bottom.lessThanOrEqualTo(subMandaratContainerView.snp.top)
+                make.bottom.lessThanOrEqualTo(subMandaratContainerView.snp.top).priority(.required)
             }
             
         case .landscape:
@@ -471,10 +471,14 @@ private extension SubMandaratPageViewController {
             // subMandaratContainerView
             subMandaratContainerView.snp.remakeConstraints { make in
                 
-                make.top.equalTo(view.safeAreaLayoutGuide.snp.top).priority(.high)
-                make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).priority(.high)
-                make.width.equalTo(subMandaratContainerView.snp.height).priority(.high)
+                make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+                    .priority(.required)
+                make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+                    .priority(.required)
+                make.width.equalTo(subMandaratContainerView.snp.height)
+                    .priority(.required)
                 make.centerX.equalToSuperview()
+                    .priority(.required)
             }
             
             
@@ -482,7 +486,7 @@ private extension SubMandaratPageViewController {
             mainMandaratDescriptionView.snp.remakeConstraints { make in
                 make.top.equalTo(view.safeAreaLayoutGuide.snp.top).inset(10)
                 make.left.equalTo(view.safeAreaLayoutGuide.snp.left)
-                make.right.lessThanOrEqualTo(subMandaratContainerView.snp.left)
+                make.right.lessThanOrEqualTo(subMandaratContainerView.snp.left).priority(.required)
                 make.bottom.lessThanOrEqualTo(view.safeAreaLayoutGuide.snp.bottom)
             }
         }

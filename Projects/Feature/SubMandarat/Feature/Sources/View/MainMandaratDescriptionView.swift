@@ -51,13 +51,13 @@ class MainMandaratDescriptionView: UIStackView {
         titleLabel.textAlignment = .left
         titleLabel.textColor = .black
         titleLabel.adjustsFontSizeToFitWidth = true
+        titleLabel.minimumScaleFactor = 0.5
         
         // descriptionLabel
         descriptionLabel.font = .preferredFont(forTextStyle: .body)
         descriptionLabel.textAlignment = .left
         descriptionLabel.textColor = .black
         descriptionLabel.numberOfLines = 0
-        descriptionLabel.adjustsFontForContentSizeCategory = true
     }
     
     

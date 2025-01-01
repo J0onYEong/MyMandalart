@@ -95,7 +95,6 @@ class MainMandaratPageViewController: UIViewController, MainMandaratPageViewCont
         sloganLabel2.textAlignment = .left
         sloganLabel2.textColor = .black
         sloganLabel2.numberOfLines = 0
-        sloganLabel2.adjustsFontForContentSizeCategory = true
         sloganLabel2.minimumScaleFactor = 0.5
         
         
@@ -447,17 +446,6 @@ private extension MainMandaratPageViewController {
         
         switch mode {
         case .portrait:
-
-            sloganContainer.snp.remakeConstraints { make in
-                
-                make.top.equalTo(view.safeAreaLayoutGuide.snp.top).inset(10)
-                    
-                make.left.equalTo(view.safeAreaLayoutGuide.snp.left).inset(10)
-                    
-                make.right.lessThanOrEqualTo(view.safeAreaLayoutGuide.snp.right).inset(10)
-                    
-            }
-            
             
             mainMandaratContainerView.snp.remakeConstraints { make in
                 
@@ -468,9 +456,35 @@ private extension MainMandaratPageViewController {
                 make.height.equalTo(mainMandaratContainerView.snp.width)
                     .priority(.high)
                 make.centerY.equalToSuperview()
+                    .priority(.high)
+            }
+
+            sloganContainer.snp.remakeConstraints { make in
+                
+                make.top.equalTo(view.safeAreaLayoutGuide.snp.top).inset(10)
+                
+                make.bottom.lessThanOrEqualTo(mainMandaratContainerView.snp.top).inset(10)
+                    .priority(.required)
+                    
+                make.left.equalTo(view.safeAreaLayoutGuide.snp.left).inset(10)
+                    
+                make.right.lessThanOrEqualTo(view.safeAreaLayoutGuide.snp.right).inset(10)
+                    
             }
             
         case .landscape:
+            
+            mainMandaratContainerView.snp.remakeConstraints { make in
+                
+                make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+                    .priority(.required)
+                make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+                    .priority(.required)
+                make.width.equalTo(mainMandaratContainerView.snp.height)
+                    .priority(.required)
+                make.centerX.equalToSuperview()
+                    .priority(.required)
+            }
             
             sloganContainer.snp.remakeConstraints { make in
                 
@@ -478,19 +492,9 @@ private extension MainMandaratPageViewController {
                     
                 make.left.equalTo(view.safeAreaLayoutGuide.snp.left)
                     
-                make.right.lessThanOrEqualTo(mainMandaratContainerView.snp.left).priority(.required)
+                make.right.lessThanOrEqualTo(mainMandaratContainerView.snp.left)
+                    .priority(.required)
                     
-            }
-            
-            mainMandaratContainerView.snp.remakeConstraints { make in
-                
-                make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-                    .priority(.high)
-                make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
-                    .priority(.high)
-                make.width.equalTo(mainMandaratContainerView.snp.height)
-                    .priority(.high)
-                make.centerX.equalToSuperview()
             }
         }
         
