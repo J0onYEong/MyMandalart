@@ -17,7 +17,8 @@ public class InitializationBuilder: Buildable<InitializationDependency>, Initial
         
         
         let interactor = InitializationInteractor(
-            userStateUseCase: component.dependency.userStateUseCase
+            userStateUseCase: component.dependency.userStateUseCase,
+            logger: component.dependency.logger
         )
         
         

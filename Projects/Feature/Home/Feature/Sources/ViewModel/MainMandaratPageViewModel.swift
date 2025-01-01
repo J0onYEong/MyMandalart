@@ -8,7 +8,10 @@
 import UIKit
 
 import FeatureSubMandarat
+
 import SharedPresentationExt
+import SharedLoggerInterface
+
 import DomainMandaratInterface
 import DomainUserStateInterface
 
@@ -35,6 +38,7 @@ class MainMandaratPageViewModel: Reactor, MainMandaratPageViewModelable, MainMan
     // 의존성 주입
     private let mandaratUseCase: MandaratUseCase
     private let userStateUseCase: UserStateUseCase
+    private let logger: Logger
     
     
     // Router
@@ -52,10 +56,11 @@ class MainMandaratPageViewModel: Reactor, MainMandaratPageViewModelable, MainMan
     private var mainMandaratVO: [MandaratPosition: MainMandaratVO] = [:]
     
     
-    init(mandaratUseCase: MandaratUseCase, userStateUseCase: UserStateUseCase) {
+    init(mandaratUseCase: MandaratUseCase, userStateUseCase: UserStateUseCase, logger: Logger) {
         
         self.mandaratUseCase = mandaratUseCase
         self.userStateUseCase = userStateUseCase
+        self.logger = logger
         
         self.initialState = .init(
             slogan1Text: "안녕하세요!",
@@ -267,6 +272,15 @@ extension MainMandaratPageViewModel {
         
         // Present onboarding text
         presentOnboardingToastOnCondition()
+        
+        
+        // Logging
+        if !userStateUseCase.checkState(.log_initial_main_mandalart_creation) {
+            
+            logInitialMainMandalartCreation()
+            
+            userStateUseCase.toggleState(.log_initial_main_mandalart_creation)
+        }
     }
     
     
@@ -341,3 +355,15 @@ extension MainMandaratPageViewModel {
     }
 }
 
+
+// MARK: Logging
+private extension MainMandaratPageViewModel {
+    
+    func logInitialMainMandalartCreation() {
+        
+        let builder = DefaultLogObjectBuilder(eventType: "make_first_main_mandalart")
+        let object = builder.build()
+        
+        logger.send(object)
+    }
+}
