@@ -100,6 +100,9 @@ class MainMandaratDisplayView: TappableView {
     
     private func createGredientLayer(_ baseColor: UIColor) {
         
+        // remove previous
+        gradientLayer.removeFromSuperlayer()
+        
         let subColor: UIColor = baseColor.withAlphaComponent(0.5)
         
         self.gradientLayer = .init(layer: self.layer)

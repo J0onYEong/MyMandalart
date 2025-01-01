@@ -63,11 +63,11 @@ class AcheivementRateView: UIView {
     
     public func update(stickColor: UIColor, backgroundColor: UIColor) {
         
-        // #1. background
-        self.backgroundColor = backgroundColor
+        // #1. stick color
+        rateStick.backgroundColor = stickColor
         
-        // #2. stick color
-        rateStick.backgroundColor = backgroundColor
+        // #2. background
+        self.backgroundColor = backgroundColor
     }
     
     
