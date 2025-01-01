@@ -6,7 +6,7 @@ public extension Project {
     
     enum Environment {
         
-        public static let appName: String = "마이만다라트"
+        public static let appName: String = "MyMandalart"
         public static let deploymentTarget: DeploymentTargets = .iOS("18.0")
         public static let bundlePrefix: String = "com.choijunyeong.mymandalart"
         

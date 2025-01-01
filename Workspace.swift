@@ -5,6 +5,6 @@
 import ProjectDescription
 
 let workspace = Workspace(
-    name : "MyMandaratWorkspace",
+    name : "MyMandalartWorkspace",
     projects: ["Projects/**"]
 )

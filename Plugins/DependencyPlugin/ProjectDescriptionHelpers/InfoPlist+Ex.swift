@@ -14,7 +14,7 @@ extension InfoPlist {
         "NSAppTransportSecurity" : [
             "NSAllowsArbitraryLoads" : true
         ],
-        "UILaunchStoryboardName": "LaunchScreen.storyboard",
+        "UILaunchStoryboardName": "LaunchScreen",
         "CFBundleDisplayName" : "$(BUNDLE_DISPLAY_NAME)",
         "UIApplicationSceneManifest": [
             "UIApplicationSupportsMultipleScenes": false,
