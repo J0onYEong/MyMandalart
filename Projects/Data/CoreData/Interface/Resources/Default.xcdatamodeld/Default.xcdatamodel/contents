@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23507" systemVersion="23F79" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
     <entity name="MainMandaratEntity" representedClassName="MainMandaratEntity" syncable="YES" codeGenerationType="class">
-        <attribute name="hexColor" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="String"/>
         <attribute name="imageURL" optional="YES" attributeType="String"/>
+        <attribute name="paletteId" optional="YES" attributeType="String"/>
         <attribute name="story" optional="YES" attributeType="String"/>
         <attribute name="title" optional="YES" attributeType="String"/>
         <relationship name="position" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MandaratPositionEntity"/>

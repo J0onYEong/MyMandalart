@@ -41,7 +41,7 @@ public class DefaultMandaratRepository: MandaratRepository {
                             id: coreDataEntity.id!,
                             title: coreDataEntity.title!,
                             position: .init(x: mandaratPos.xpos, y: mandaratPos.ypos)!,
-                            hexColor: coreDataEntity.hexColor ?? "#000000",
+                            colorSetId: coreDataEntity.paletteId!,
                             description: coreDataEntity.story,
                             imageURL: coreDataEntity.imageURL
                         )
@@ -131,7 +131,7 @@ public class DefaultMandaratRepository: MandaratRepository {
                         
                         firstEntity.id = mainMandarat.id
                         firstEntity.title = mainMandarat.title
-                        firstEntity.hexColor = mainMandarat.hexColor
+                        firstEntity.paletteId = mainMandarat.colorSetId
                         firstEntity.story = mainMandarat.description
                         firstEntity.imageURL = mainMandarat.imageURL
                         
@@ -265,7 +265,7 @@ public class DefaultMandaratRepository: MandaratRepository {
             mainMandaratEntity.id = mainMandarat.id
             mainMandaratEntity.title = mainMandarat.title
             mainMandaratEntity.position = positionEntity
-            mainMandaratEntity.hexColor = mainMandarat.hexColor
+            mainMandaratEntity.paletteId = mainMandarat.colorSetId
             mainMandaratEntity.story = mainMandarat.description
             mainMandaratEntity.imageURL = mainMandarat.imageURL
             
