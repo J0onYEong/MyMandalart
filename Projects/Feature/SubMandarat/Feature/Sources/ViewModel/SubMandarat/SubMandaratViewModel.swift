@@ -7,6 +7,8 @@
 
 import UIKit
 
+import SharedDesignSystem
+
 import DomainMandaratInterface
 
 import ReactorKit
@@ -20,13 +22,11 @@ class SubMandaratViewModel: Reactor {
     
     weak var listener: SubMandaratViewModelListener!
     
-    init(position: MandaratPosition, color: UIColor) {
+    init(position: MandaratPosition, palette: MandalartPalette) {
         
         self.position = position
         
-        self.initialState = .init(
-            titleColor: color
-        )
+        self.initialState = .init(palette: palette)
     }
     
     func mutate(action: Action) -> Observable<Action> {
@@ -49,10 +49,11 @@ class SubMandaratViewModel: Reactor {
     func reduce(state: State, mutation: Action) -> State {
         
         switch mutation {
-        case .mandaratDataFromOutside(let subMandaratRO):
+        case .mandaratDataFromOutside(let title, let percent):
             
             var newState = state
-            newState.renderObject = subMandaratRO
+            newState.titleText = title
+            newState.acheivementRate = percent
             newState.isAvailable = true
             
             return newState
@@ -67,9 +68,12 @@ class SubMandaratViewModel: Reactor {
 // MARK: public interface
 extension SubMandaratViewModel {
     
-    func render(object: SubMandaratRO) {
+    func render(title: String, acheivementRate: Double) {
         
-        action.onNext(.mandaratDataFromOutside(object))
+        action.onNext(.mandaratDataFromOutside(
+            title: title,
+            acheivementRate: acheivementRate
+        ))
     }
 }
 
@@ -80,15 +84,17 @@ extension SubMandaratViewModel {
     enum Action {
         
         case editSubMandaratButtonClicked
-        case mandaratDataFromOutside(SubMandaratRO)
+        case mandaratDataFromOutside(title: String, acheivementRate: Double)
         case longPress
     }
     
     struct State {
         
         var isAvailable: Bool = false
-        var titleColor: UIColor
         
-        var renderObject: SubMandaratRO?
+        var titleText: String! = nil
+        var acheivementRate: Double! = nil
+        
+        var palette: MandalartPalette
     }
 }

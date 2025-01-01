@@ -7,9 +7,11 @@
 
 import UIKit
 
+import SharedDesignSystem
 import SharedPresentationExt
-import DomainMandaratInterface
 import SharedCore
+
+import DomainMandaratInterface
 
 import ReactorKit
 import RxSwift
@@ -26,13 +28,13 @@ class EditMainMandaratViewModel: NSObject, Reactor, UIColorPickerViewControllerD
         
         self.initialMandarat = mainMandaratVO
         
-        let colorString = mainMandaratVO.hexColor
+        let bundle = MandalartPaletteBundle(rawValue: mainMandaratVO.colorSetId)!
         
         // Set initial state
         self.initialState = .init(
             titleText: mainMandaratVO.title,
             descriptionText: mainMandaratVO.description ?? "",
-            mandaratTitleColor: .color(colorString) ?? .white
+            paletteType: bundle
         )
     }
     
@@ -66,10 +68,10 @@ class EditMainMandaratViewModel: NSObject, Reactor, UIColorPickerViewControllerD
             newState.descriptionText = text
             
             return newState
-        case .editColor(let color):
+        case .editColor(let paletteType):
             
             var newState = state
-            newState.mandaratTitleColor = color
+            newState.paletteType = paletteType
             
             return newState
             
@@ -140,7 +142,7 @@ extension EditMainMandaratViewModel {
         // - editing
         case editTitleText(text: String)
         case editDescriptionText(text: String)
-        case editColor(color: UIColor)
+        case editColor(paletteType: MandalartPaletteBundle)
         
         // - touch
         case colorSelectionButtonClicked
@@ -153,9 +155,10 @@ extension EditMainMandaratViewModel {
         
         var titleText: String
         var descriptionText: String
-        var mandaratTitleColor: UIColor
         var presentColorPicker: Bool = false
         var exitPageTrigger: Bool = false
+        
+        var paletteType: MandalartPaletteBundle = .type1
         
         // alert
         var alertData: AlertData? = nil
@@ -175,11 +178,12 @@ private extension EditMainMandaratViewModel {
     
     func createMandaratVO(state: State) -> MainMandaratVO {
         
+        
         let newMandarat: MainMandaratVO = .init(
             id: initialMandarat.id,
             title: state.titleText,
             position: initialMandarat.position,
-            hexColor: state.mandaratTitleColor.toHexString() ?? "#FFFFFF",
+            colorSetId: state.paletteType.identifier,
             description: state.descriptionText,
             imageURL: nil
         )

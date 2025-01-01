@@ -1,6 +1,6 @@
 //
 //  ColorSet.swift
-//  Home
+//  SharedDesignSystem
 //
 //  Created by choijunios on 1/1/25.
 //
@@ -9,7 +9,7 @@ import UIKit
 
 import SharedPresentationExt
 
-struct ColorSet {
+public struct ColorSet: Equatable {
     
     public let primaryColor: UIColor
     public let secondColor: UIColor

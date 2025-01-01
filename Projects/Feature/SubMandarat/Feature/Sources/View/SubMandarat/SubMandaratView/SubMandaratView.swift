@@ -8,6 +8,7 @@
 import UIKit
 
 import SharedPresentationExt
+import SharedDesignSystem
 
 import ReactorKit
 import SnapKit
@@ -65,7 +66,14 @@ class SubMandaratView: UIView, View {
             .disposed(by: disposeBag)
         
         reactor.state
-            .distinctDriver(\.titleColor, addSubMandaratView.rx.color)
+            .distinctDriver(\.palette)
+            .drive(onNext: { [weak self] palette in
+                
+                self?.addSubMandaratView.update(
+                    backgroundColor: palette.backgroundColor.primaryColor,
+                    imageColor: palette.backgroundColor.secondColor
+                )
+            })
             .disposed(by: disposeBag)
         
         addSubMandaratView.rx.tap
@@ -82,8 +90,15 @@ class SubMandaratView: UIView, View {
             .disposed(by: disposeBag)
         
         reactor.state
-            .compactMap(\.renderObject)
-            .bind(to: subMandaratDisplayView.rx.renderObject)
+            .filter(\.isAvailable)
+            .subscribe(onNext: { [weak self] state in
+                
+                self?.subMandaratDisplayView.update(
+                    title: state.titleText,
+                    percent: state.acheivementRate,
+                    palette: state.palette
+                )
+            })
             .disposed(by: disposeBag)
         
         subMandaratDisplayView.rx.longPressEvent

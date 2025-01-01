@@ -105,7 +105,8 @@ extension CenterMandaratView {
         titleLabel.text = mandaratVO.title
         
         // gradient
-        createGredientLayer(.color(mandaratVO.hexColor) ?? .white)
+        let colorBundle = MandalartPaletteBundle(rawValue: mandaratVO.colorSetId)!
+        createGredientLayer(colorBundle.palette.backgroundColor.primaryColor)
         
         // play gradient variation
         playGradientAnimation()

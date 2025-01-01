@@ -7,6 +7,8 @@
 
 import UIKit
 
+import SharedDesignSystem
+
 import DomainMandaratInterface
 import SharedCore
 
@@ -18,10 +20,12 @@ struct MainMandaratRO: Equatable {
     
     static func create(from: MainMandaratVO) -> Self {
         
+        let palette = MandalartPaletteBundle(identifier: from.colorSetId)
+        
         return .init(
             title: from.title,
             description: from.description ?? "",
-            titleColor: .color(from.hexColor) ?? .white
+            titleColor: palette.palette.backgroundColor.primaryColor
         )
     }
 }

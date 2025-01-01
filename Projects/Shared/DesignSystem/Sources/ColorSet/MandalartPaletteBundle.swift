@@ -1,11 +1,11 @@
 //
 //  MandalartPaletteBundle.swift
-//  Home
+//  SharedDesignSystem
 //
 //  Created by choijunios on 1/1/25.
 //
 
-enum MandalartPaletteBundle: String {
+public enum MandalartPaletteBundle: String {
     
     case type1
     case type2
@@ -20,7 +20,14 @@ enum MandalartPaletteBundle: String {
     case type11
     case type12
     
-    var palette: MandalartPalette {
+    public var identifier: String { self.rawValue }
+    
+    public init(identifier: String) {
+     
+        self = .init(rawValue: identifier)!
+    }
+    
+    public var palette: MandalartPalette {
         switch self {
         case .type1:
             return MandalartPalette(

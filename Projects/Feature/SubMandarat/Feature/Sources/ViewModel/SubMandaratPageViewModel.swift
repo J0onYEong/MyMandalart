@@ -7,6 +7,8 @@
 
 import UIKit
 
+import SharedDesignSystem
+
 import DomainMandaratInterface
 import DomainUserStateInterface
 import SharedCore
@@ -176,9 +178,11 @@ private extension SubMandaratPageViewModel {
         MandaratPosition.allCases.filter({ $0 != .TWO_TWO })
             .forEach { position in
                 
+                let bundle = MandalartPaletteBundle(rawValue: mainMandaratVO.colorSetId)!
+                
                 let viewModel: SubMandaratViewModel = .init(
                     position: position,
-                    color: .color(mainMandaratVO.hexColor) ?? .white
+                    palette: bundle.palette
                 )
                 viewModel.listener = self
                 
@@ -236,11 +240,10 @@ private extension SubMandaratPageViewModel {
     func render(subMandarat: SubMandaratVO) {
         
         let position = subMandarat.position
-        
-        let primaryColor: UIColor! = .color(mainMandaratVO.hexColor)
-        
+    
         subMandaratViewModels[position]?.render(
-            object: .create(vo: subMandarat, primaryColor: primaryColor)
+            title: subMandarat.title,
+            acheivementRate: subMandarat.acheivementRate
         )
     }
 }

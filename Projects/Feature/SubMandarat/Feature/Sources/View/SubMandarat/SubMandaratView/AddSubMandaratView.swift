@@ -23,7 +23,6 @@ class AddSubMandaratView: UIView {
         return view
     }()
     
-    fileprivate let color: PublishSubject<UIColor> = .init()
     private let disposeBag: DisposeBag = .init()
     
     init() {
@@ -31,7 +30,6 @@ class AddSubMandaratView: UIView {
         
         setLayer()
         setLayout()
-        setReactive()
     }
     required init?(coder: NSCoder) { nil }
     
@@ -63,28 +61,15 @@ class AddSubMandaratView: UIView {
         }
     }
     
-    private func setReactive() {
+    
+    public func update(backgroundColor: UIColor, imageColor: UIColor) {
         
-        color
-            .observe(on: MainScheduler.instance)
-            .distinctUntilChanged()
-            .withUnretained(self)
-            .subscribe(onNext: { view, color in
-                
-                view.tapView.backgroundColor = color
-                view.addImageView.tintColor = color.getInvertedColor()
-
-            })
-            .disposed(by: disposeBag)
+        tapView.backgroundColor = backgroundColor
+        addImageView.tintColor = imageColor
     }
 }
 
 extension Reactive where Base == AddSubMandaratView {
-    
-    var color: PublishSubject<UIColor> {
-        
-        base.color
-    }
     
     var tap: PublishSubject<Void> {
         

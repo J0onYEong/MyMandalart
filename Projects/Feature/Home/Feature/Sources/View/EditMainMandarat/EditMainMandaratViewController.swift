@@ -241,30 +241,30 @@ class EditMainMandaratViewController: UIViewController, View, UIColorPickerViewC
         
         
         // MARK: color selection
-        reactor.state
-            .compactMap(\.mandaratTitleColor)
-            .bind(to: colorSelectionView.rx.color)
-            .disposed(by: disposeBag)
-        
-        reactor.state
-            .distinctUntilChanged(at: \.presentColorPicker)
-            .filter(\.presentColorPicker)
-            .map(\.mandaratTitleColor)
-            .withUnretained(self)
-            .subscribe(onNext: { vc, prevColor in
-                vc.presentColorPicker(
-                    titleText: "만다라트 대표 색상",
-                    previousColor: prevColor
-                )
-            })
-            .disposed(by: disposeBag)
-        
-        selectedColor
-            .map { color in
-                Reactor.Action.editColor(color: color)
-            }
-            .bind(to: reactor.action)
-            .disposed(by: disposeBag)
+//        reactor.state
+//            .compactMap(\.mandaratTitleColor)
+//            .bind(to: colorSelectionView.rx.color)
+//            .disposed(by: disposeBag)
+//        
+//        reactor.state
+//            .distinctUntilChanged(at: \.presentColorPicker)
+//            .filter(\.presentColorPicker)
+//            .map(\.mandaratTitleColor)
+//            .withUnretained(self)
+//            .subscribe(onNext: { vc, prevColor in
+//                vc.presentColorPicker(
+//                    titleText: "만다라트 대표 색상",
+//                    previousColor: prevColor
+//                )
+//            })
+//            .disposed(by: disposeBag)
+//        
+//        selectedColor
+//            .map { color in
+//                Reactor.Action.editColor(color: color)
+//            }
+//            .bind(to: reactor.action)
+//            .disposed(by: disposeBag)
         
         colorPickerClosed
             .map { _ in

@@ -21,13 +21,11 @@ class AcheivementRateView: UIView {
     
     // Reactive
     fileprivate let percentPublisher: BehaviorRelay<CGFloat> = .init(value: 0.0)
-    fileprivate let colorPublisher: BehaviorRelay<UIColor> = .init(value: .clear)
     private let disposBag: DisposeBag = .init()
     
     init() {
         super.init(frame: .zero)
         
-        setUI()
         setLayout()
         setReative()
     }
@@ -62,8 +60,14 @@ class AcheivementRateView: UIView {
         self.layer.cornerRadius = self.layer.bounds.height / 3
     }
     
-    private func setUI() {
+    
+    public func update(stickColor: UIColor, backgroundColor: UIColor) {
         
+        // #1. background
+        self.backgroundColor = backgroundColor
+        
+        // #2. stick color
+        rateStick.backgroundColor = backgroundColor
     }
     
     
@@ -84,33 +88,11 @@ class AcheivementRateView: UIView {
                 view.setNeedsLayout()
             })
             .disposed(by: disposBag)
-        
-        
-        colorPublisher
-            .observe(on: MainScheduler.asyncInstance)
-            .withUnretained(self)
-            .subscribe(onNext: { view, color in
-                
-                let mainColor = color
-                let flipColor = color.getInvertedColor()
-                
-                // #1. background
-                view.backgroundColor = flipColor
-                
-                // #2. stick color
-                view.rateStick.backgroundColor = mainColor
-                
-            })
-            .disposed(by: disposBag)
     }
 }
 
 extension Reactive where Base == AcheivementRateView {
-    
-    var color: BehaviorRelay<UIColor> {
-        base.colorPublisher
-    }
-    
+
     var percent: BehaviorRelay<CGFloat> {
         base.percentPublisher
     }
