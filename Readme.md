@@ -93,6 +93,14 @@ Amplitude툴을 이용하여 해당 프로젝트는 유저를 트레킹하고 �
             <b>RxSwift, RxCocoa, ReactorKit, SnapKit</b>
         </td>
     </tr>
+    <tr>
+        <td>
+            <b>CD</b>
+        </td>
+        <td>
+            <b>fastlane</b>
+        </td>
+    </tr>
 </table>
 
 ## 모듈러 아키텍처
