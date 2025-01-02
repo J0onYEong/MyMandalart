@@ -39,19 +39,58 @@
     </tr>
 </table>
 
-## 모듈타입별 의존성 구조
+## 모듈러 아키텍처
 
-**Feature모듈**의 경우 [TMA(The modular architecture)](https://docs.tuist.dev/en/guides/develop/projects/tma-architecture#the-modular-architecture-tma)를 적용하여 구체타입과 인터페이스를 구분하고, 예시앱을 통한 구동테스트 및 단위 테스트코드 작성을 쉽게 처리할 수 있도록 했습니다.
+### #1. 클린아키텍처
+
+해당 프로젝트는 `Presentation`, `Domain`, `Data` 총 3가지로 이루어진 계층으로 분리되었습니다.
+
+아래 사진은 프로젝트에 구현된 기능에 참여하는 객체들의 의존관계를 표현한 것입니다.
+
+<img src="https://github.com/user-attachments/assets/e1e7e2a2-8fe9-4553-b9d8-c644d5f08efc" width=600 />
+
+변경 가능성이 높은 UI, 데이터 저장소의 경우 핵심 로직을 다루는 **Domain과 엄격하게 분리**하고 해당 객체들간 소통은 **protocol을 통해서만 가능**하도록 설계했습니다.
+
+구체적인 구현체는 런타임에 주입되는 **의존성 주입 구조를 설계**하여, 특정 구현체의 변동이 다른 객체의 변동으로 전파되는 상황을 방지했습니다.
+
+해당 프로젝트는 **Swinject**라이브러리를 사용하지 않고 RIBs와 비슷한 구조를 차용하여 
+
+App모듈에 정의된 RootComponent를 통해 하위 모듈(=RIB)로 구현체가 전달되도록 했습니다.
+
+```swift
+class RootComponent: InitializationDependency {
+    
+    // MARK: Presentation
+    let navigationController: NavigationControllable
+    
+    
+    // MARK: Domain
+    lazy var mandaratUseCase: MandaratUseCase = DefaultMandaratUseCase(
+        mandaratRepository: mandaratRepository
+    )
+    lazy var userStateUseCase: UserStateUseCase = DefaultUserStateUseCase(
+        userStateRepository: userStateRepository
+    )
+
+    ...
+```
+
+### #2. The modular architecture
+
+**Feature모듈**의 경우 [TMA(The modular architecture)](https://docs.tuist.dev/en/guides/develop/projects/tma-architecture#the-modular-architecture-tma)를 적용하여 
+
+구체타입과 인터페이스를 구분하고, 예시앱을 통한 구동테스트 및 단위 테스트코드 작성을 쉽게 처리할 수 있도록 했습니다.
 
 ![모둘구조](./DependencyStructure.png)
 
-### 프로젝트 전체 모듈구조
+
+### #3. 프로젝트 전체 모듈구조
 
 ※ TMA구조를 준수하려고 하였으나, Feature모듈에 포함되는 **interface**타겟은 해당 프로젝트에 불필요하다고 판단하여 제거했습니다.
 
 ![전체모둘구조](./graph.png)
 
-## Builder와 Router를 사용한 모듈화
+### #4. Builder와 Router를 사용한 모듈화
 
 Feature모듈의 타겟은 RIBs 라이브러리의 형태를 채용했습니다. 
 
@@ -89,6 +128,7 @@ Feature모듈의 타겟은 RIBs 라이브러리의 형태를 채용했습니다.
 └── ViewModel
     └── ...
 ```
+
 
 ## 유닛테스트
 
