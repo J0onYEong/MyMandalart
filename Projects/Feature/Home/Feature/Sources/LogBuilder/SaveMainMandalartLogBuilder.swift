@@ -27,11 +27,8 @@ class SaveMainMandalartLogBuilder: LogObjectBuilder<LogObject> {
             setDescription(description)
         }
             
-        
         let (x, y) = position.matrixCoordinate
         let positionText = "\(x):\(y)"
-        
-        
         setProperty(key: "main_mandarat_position", value: positionText)
         setProperty(key: "palette_type", value: paletteType)
     }

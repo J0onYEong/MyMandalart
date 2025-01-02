@@ -235,13 +235,22 @@ extension SubMandaratPageViewModel {
         self.render(subMandarat: subMandarat)
         
         
-        // #3. Logging
+        // MARK: Logging
+        
+        // 서브 만다라트 최초 작성
         if !userStateUseCase.checkState(.log_initial_sub_mandalart_creation) {
             
             logInitialSubMandalartCreation(id: subMandarat.id)
             
             userStateUseCase.toggleState(.log_initial_sub_mandalart_creation)
         }
+        
+        
+        // 서브 만다라트 저장
+        logSaveSubMandalart(
+            mainMandalartId: self.mainMandaratVO.id,
+            subMandaratVO: subMandarat
+        )
     }
 }
 
@@ -291,6 +300,22 @@ private extension SubMandaratPageViewModel {
         
         let builder = DefaultLogObjectBuilder(eventType: "make_first_sub_mandalart")
             .setProperty(key: "sub_mandalart_id", value: id)
+        
+        let object = builder.build()
+        
+        logger.send(object)
+    }
+    
+    
+    func logSaveSubMandalart(mainMandalartId: String, subMandaratVO: SubMandaratVO) {
+        
+        let builder = SaveSubMandalartLogBuilder(
+            mainMandalartId: mainMandalartId,
+            subMandalartId: subMandaratVO.id,
+            title: subMandaratVO.title,
+            acheivementRate: subMandaratVO.acheivementRate,
+            position: subMandaratVO.position
+        )
         
         let object = builder.build()
         
