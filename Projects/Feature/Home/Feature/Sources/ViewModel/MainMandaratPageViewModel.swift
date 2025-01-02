@@ -286,6 +286,10 @@ extension MainMandaratPageViewModel {
             
             userStateUseCase.toggleState(.log_initial_main_mandalart_creation)
         }
+        
+        
+        // 저장된 만다라트
+        logSavingMainMandalart(mandalartVO: mainMandarat)
     }
     
     
@@ -367,6 +371,22 @@ private extension MainMandaratPageViewModel {
     func logInitialMainMandalartCreation() {
         
         let builder = DefaultLogObjectBuilder(eventType: "make_first_main_mandalart")
+        let object = builder.build()
+        
+        logger.send(object)
+    }
+    
+    
+    func logSavingMainMandalart(mandalartVO: MainMandaratVO) {
+        
+        let builder = SaveMainMandalartLogBuilder(
+            id: mandalartVO.id,
+            title: mandalartVO.title,
+            description: mandalartVO.description,
+            position: mandalartVO.position,
+            paletteType: mandalartVO.colorSetId
+        )
+        
         let object = builder.build()
         
         logger.send(object)
