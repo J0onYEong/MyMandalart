@@ -16,9 +16,10 @@ class SaveMainMandalartLogBuilder: LogObjectBuilder<LogObject> {
         title: String,
         description: String?,
         position: MandaratPosition,
-        paletteType: String
+        paletteType: String,
+        mainMandaratCount: Int
     ) {
-        super.init(eventType: "save_main_mandalart")
+        super.init(eventType: "saved_main_mandalart")
         
         setProperty(key: "main_mandalart_id", value: id)
         setProperty(key: "main_mandalart_title", value: title)
@@ -31,6 +32,7 @@ class SaveMainMandalartLogBuilder: LogObjectBuilder<LogObject> {
         let positionText = "\(x):\(y)"
         setProperty(key: "main_mandalart_position", value: positionText)
         setProperty(key: "palette_type", value: paletteType)
+        setProperty(key: "saved_main_mandalart_count", value: mainMandaratCount)
     }
     
     

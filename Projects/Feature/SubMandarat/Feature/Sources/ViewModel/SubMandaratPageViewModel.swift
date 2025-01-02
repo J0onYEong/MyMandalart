@@ -247,9 +247,12 @@ extension SubMandaratPageViewModel {
         
         
         // 서브 만다라트 저장
+        let subMandalartCount = self.subMandarats.values.count
+        
         logSaveSubMandalart(
             mainMandalartId: self.mainMandaratVO.id,
-            subMandaratVO: subMandarat
+            subMandalartVO: subMandarat,
+            subMandalartCount: subMandalartCount
         )
     }
 }
@@ -307,14 +310,19 @@ private extension SubMandaratPageViewModel {
     }
     
     
-    func logSaveSubMandalart(mainMandalartId: String, subMandaratVO: SubMandaratVO) {
+    func logSaveSubMandalart(
+        mainMandalartId: String,
+        subMandalartVO: SubMandaratVO,
+        subMandalartCount: Int
+    ) {
         
         let builder = SaveSubMandalartLogBuilder(
             mainMandalartId: mainMandalartId,
-            subMandalartId: subMandaratVO.id,
-            title: subMandaratVO.title,
-            acheivementRate: subMandaratVO.acheivementRate,
-            position: subMandaratVO.position
+            subMandalartId: subMandalartVO.id,
+            title: subMandalartVO.title,
+            acheivementRate: subMandalartVO.acheivementRate,
+            position: subMandalartVO.position,
+            subMandalartCount: subMandalartCount
         )
         
         let object = builder.build()

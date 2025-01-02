@@ -17,10 +17,11 @@ class SaveSubMandalartLogBuilder: LogObjectBuilder<LogObject> {
         subMandalartId: String,
         title: String,
         acheivementRate: Double,
-        position: MandaratPosition
+        position: MandaratPosition,
+        subMandalartCount: Int
     ) {
         
-        super.init(eventType: "save_sub_mandalart")
+        super.init(eventType: "saved_sub_mandalart")
         
         
         setProperty(key: "main_mandalart_id", value: mainMandalartId)
@@ -35,5 +36,6 @@ class SaveSubMandalartLogBuilder: LogObjectBuilder<LogObject> {
         let (x, y) = position.matrixCoordinate
         let positionText = "\(x):\(y)"
         setProperty(key: "sub_mandalart_position", value: positionText)
+        setProperty(key: "saved_sub_mandalart_count", value: subMandalartCount)
     }
 }

@@ -289,7 +289,11 @@ extension MainMandaratPageViewModel {
         
         
         // 저장된 만다라트
-        logSavingMainMandalart(mandalartVO: mainMandarat)
+        let mainMandalartCount = self.mainMandaratVO.values.count
+        logSavingMainMandalart(
+            mandalartVO: mainMandarat,
+            mandalartCount: mainMandalartCount
+        )
     }
     
     
@@ -379,14 +383,15 @@ private extension MainMandaratPageViewModel {
     }
     
     
-    func logSavingMainMandalart(mandalartVO: MainMandaratVO) {
+    func logSavingMainMandalart(mandalartVO: MainMandaratVO, mandalartCount: Int) {
         
         let builder = SaveMainMandalartLogBuilder(
             id: mandalartVO.id,
             title: mandalartVO.title,
             description: mandalartVO.description,
             position: mandalartVO.position,
-            paletteType: mandalartVO.colorSetId
+            paletteType: mandalartVO.colorSetId,
+            mainMandaratCount: mandalartCount
         )
         
         let object = builder.build()
