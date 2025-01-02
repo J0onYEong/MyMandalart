@@ -174,3 +174,22 @@ extension Reactive where Base == SubMandaratDisplayView {
         base.longPressGesture.rx.event.map({ _ in })
     }
 }
+
+
+#Preview(traits: .fixedLayout(width: 100, height: 100)) {
+    
+    let view = SubMandaratDisplayView()
+
+    view.update(
+        title: "테스트",
+        percent: 0.5,
+        palette: .type16
+    )
+    
+    view.snp.makeConstraints { make in
+        
+        make.height.equalTo(view.snp.width)
+    }
+    
+    return view
+}

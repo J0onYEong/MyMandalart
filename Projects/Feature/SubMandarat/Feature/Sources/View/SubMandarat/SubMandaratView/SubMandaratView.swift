@@ -71,7 +71,7 @@ class SubMandaratView: UIView, View {
                 
                 self?.addSubMandaratView.update(
                     backgroundColor: palette.colors.backgroundColor.primaryColor,
-                    imageColor: palette.colors.backgroundColor.secondColor
+                    imageColor: palette.colors.textColor.primaryColor
                 )
             })
             .disposed(by: disposeBag)
