@@ -71,6 +71,7 @@ class NickNameInputPageViewController: UIViewController, View {
         
         // nickNameInputField
         nickNameInputField.setPlaceholderText("닉네임 입력")
+        nickNameInputField.backgroundColor = UIColor.gray.withAlphaComponent(0.1)
         
         
         // confirmButton

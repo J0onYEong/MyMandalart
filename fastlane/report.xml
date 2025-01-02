@@ -5,17 +5,37 @@
     
     
       
-      <testcase classname="fastlane.lanes" name="0: default_platform" time="0.000209">
+      <testcase classname="fastlane.lanes" name="0: default_platform" time="0.000133">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="1: ./changeObjectValue.sh" time="0.013032">
+      <testcase classname="fastlane.lanes" name="1: ./changeObjectValue.sh" time="0.009666">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="2: get_certificates" time="4.174424">
+      <testcase classname="fastlane.lanes" name="2: get_certificates" time="2.192668">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="3: get_provisioning_profile" time="2.16446">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="4: latest_testflight_build_number" time="2.735513">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="5: increment_build_number" time="0.135018">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="6: build_app" time="1.369133">
         
       </testcase>
     
