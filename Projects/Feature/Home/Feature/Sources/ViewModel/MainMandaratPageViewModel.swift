@@ -19,7 +19,7 @@ import ReactorKit
 
 protocol MainMandaratPageRouting: AnyObject {
     
-    func presentEditMainMandaratPage(mainMandarat: MainMandaratVO)
+    func presentEditMainMandaratPage(logger: Logger, mainMandarat: MainMandaratVO)
     
     func dismissEditMainMandaratPage()
 
@@ -204,7 +204,10 @@ private extension MainMandaratPageViewModel {
     /// 메인 만다라트 수정 및 생성 화면
     func presentEditMainMandaratViewController(_ mainMandaratVO: MainMandaratVO) {
         
-        router.presentEditMainMandaratPage(mainMandarat: mainMandaratVO)
+        router.presentEditMainMandaratPage(
+            logger: logger,
+            mainMandarat: mainMandaratVO
+        )
     }
     
     
@@ -274,7 +277,9 @@ extension MainMandaratPageViewModel {
         presentOnboardingToastOnCondition()
         
         
-        // Logging
+        // MARK: Logging
+        
+        // 최초 만다라트 저장
         if !userStateUseCase.checkState(.log_initial_main_mandalart_creation) {
             
             logInitialMainMandalartCreation()

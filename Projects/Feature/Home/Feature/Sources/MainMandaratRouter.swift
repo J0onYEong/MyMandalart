@@ -11,7 +11,9 @@ import FeatureSubMandarat
 import FeatureSetting
 
 import DomainMandaratInterface
+
 import SharedPresentationExt
+import SharedLoggerInterface
 
 class MainMandaratRouter: MainMandaratRoutable, MainMandaratPageRouting {
     
@@ -81,11 +83,13 @@ extension MainMandaratRouter {
     }
     
     
-    func presentEditMainMandaratPage(mainMandarat: MainMandaratVO) {
+    func presentEditMainMandaratPage(logger: Logger, mainMandarat: MainMandaratVO) {
         
         // 메인 만다라트 화면과 결합력이 강해 빌더를 따로 만들지 않았습니다.
         
-        let viewModel: EditMainMandaratViewModel = .init(mainMandarat)
+        let viewModel: EditMainMandaratViewModel = .init(
+            logger: logger, mainMandaratVO: mainMandarat
+        )
         
         if let listener = self.viewModel as? EditMainMandaratViewModelListener {
             

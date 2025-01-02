@@ -9,6 +9,7 @@ import UIKit
 
 import SharedDesignSystem
 import SharedPresentationExt
+import SharedLoggerInterface
 import SharedCore
 
 import DomainMandaratInterface
@@ -18,19 +19,25 @@ import RxSwift
 
 class EditMainMandaratViewModel: NSObject, Reactor, UIColorPickerViewControllerDelegate {
     
+    // DI
+    private let logger: Logger
+    
+    
     let initialState: State
     
     weak var listener: EditMainMandaratViewModelListener!
     
     private let initialMandarat: MainMandaratVO
     
-    init(_ mainMandaratVO: MainMandaratVO) {
+    init(logger: Logger, mainMandaratVO: MainMandaratVO) {
         
+        self.logger = logger
         self.initialMandarat = mainMandaratVO
         
-        let palette = MandalartPalette(identifier: mainMandaratVO.colorSetId)
         
         // Set initial state
+        let palette = MandalartPalette(identifier: mainMandaratVO.colorSetId)
+        
         self.initialState = .init(
             titleText: mainMandaratVO.title,
             descriptionText: mainMandaratVO.description ?? "",
@@ -73,6 +80,11 @@ class EditMainMandaratViewModel: NSObject, Reactor, UIColorPickerViewControllerD
             
             var newState = state
             newState.palette = palette
+            
+            
+            // 선택된 팔레트 로깅
+            logImmediateSelectedPalette(paletteType: palette.identifier)
+            
             
             return newState
             
@@ -173,5 +185,21 @@ private extension EditMainMandaratViewModel {
         )
         
         return newMandarat
+    }
+}
+
+
+// MARK: Logging
+extension EditMainMandaratViewModel {
+    
+    func logImmediateSelectedPalette(paletteType: String) {
+        
+        let builder = ImmediateSelectedPaletteLogBuilder(
+            paletteType: paletteType
+        )
+        
+        let logObject = builder.build()
+        
+        logger.send(logObject)
     }
 }
