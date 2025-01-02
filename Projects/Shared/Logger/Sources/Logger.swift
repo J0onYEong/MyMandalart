@@ -5,6 +5,8 @@
 //  Created by choijunios on 1/2/25.
 //
 
+import Foundation
+
 import SharedLoggerInterface
 
 import AmplitudeSwift
@@ -17,14 +19,22 @@ public class DefaultLogger: SharedLoggerInterface.Logger {
     private let disposeBag: DisposeBag = .init()
     
     private let applitude: Amplitude = {
+        
+        let apiKey = Bundle.main.object(forInfoDictionaryKey: "AMPLITUDE_API_KEY") as! String
+        
         return Amplitude(configuration: Configuration(
-            apiKey: "AMPLITUDE_API_KEY",
+            apiKey: apiKey,
             autocapture: [ .screenViews ]
         ))
     }()
     
-    public init() {
+    public init(userId: String) {
         
+        // set user id
+        applitude.setUserId(userId: userId)
+        
+        
+        // observation
         logCollector
             .delay(.milliseconds(350), scheduler: MainScheduler.asyncInstance)
             .subscribe(onNext: { [weak self] logObject in

@@ -67,7 +67,7 @@ extension InitializationInteractor {
         
         if !userStateUseCase.checkState(.log_initial_nickname_creation) {
             
-            self.logInitialNickNameCreation()
+            self.logInitialNickNameCreation(nickName: nickName)
             
             userStateUseCase.toggleState(.log_initial_nickname_creation)
         }
@@ -80,9 +80,9 @@ extension InitializationInteractor {
 // MARK: Logging
 private extension InitializationInteractor {
     
-    func logInitialNickNameCreation() {
+    func logInitialNickNameCreation(nickName: String) {
         
-        let builder = DefaultLogObjectBuilder(eventType: "make_initial_user_nickname")
+        let builder = UserNickNameLogBuilder(nickName)
         let object = builder.build()
         
         logger.send(object)

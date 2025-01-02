@@ -27,6 +27,9 @@ extension InfoPlist {
                 ]
             ]
         ],
+        
+        // API keys
+        "AMPLITUDE_API_KEY": "$(AMPLITUDE_API_KEY)"
     ]
     
     public static func app_plist(with: [String: ProjectDescription.Plist.Value]) -> InfoPlist {

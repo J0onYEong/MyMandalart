@@ -31,9 +31,16 @@ let project = Project(
                 
                 .shared(implements: .Logger),
             ],
-            settings: .settings(configurations: [
+            settings: .settings(
+            base: [
+                "AMPLITUDE_API_KEY" : "$(inherited)"
+            ],
+            configurations: [
                 .debug(name: "Debug"),
-                .release(name: "Release")
+                .release(
+                    name: "Release",
+                    xcconfig: .relativeToRoot("Secrets/Release.xcconfig")
+                )
             ])
         )
     ],

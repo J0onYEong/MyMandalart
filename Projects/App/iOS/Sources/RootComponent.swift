@@ -53,12 +53,13 @@ class RootComponent: InitializationDependency {
     
     
     // MARK: Shared
-    let logger: Logger = {
+    lazy var logger: Logger = {
        
         #if DEBUG
-            return MockLogger()
+        return MockLogger()
         #else
-            return DefaultLogger()
+        let userId: String = userStateUseCase.checkState(.deviceId)
+        return DefaultLogger(userId: userId)
         #endif
     }()
     
