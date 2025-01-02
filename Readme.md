@@ -2,6 +2,36 @@
 
 만다라트 작성을 도와주는 iOS어플리케이션 입니다.
 
+<table>
+    <tr>
+        <td>
+            <b>메인 만다라트 생성</b>
+        </td>
+        <td>
+            <b>서브 만다라트 생성</b>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <img src="https://github.com/user-attachments/assets/bbcf164e-bd55-47c9-8a9f-f97568233868" width=300 />
+        </td>
+        <td>
+            <img src="https://github.com/user-attachments/assets/31bfa99e-3bdd-4ec7-a45c-e7a7a1458cb2" width=300 />
+        </td>
+    </tr>
+</table>
+
+
+# How to use
+
+해당 프로젝트는 다운로드 후 실행할 수 있습니다.
+
+1. 레포지토리를 다운로드 합니다.
+2. Tuist설치 후 **Tuist.swift파일**이 존재하는 디렉토리로 이동합니다.
+3. `tuist generate`를 CLI에 입력합니다.
+
+> xcconfig파일이 해당 레포지토리에 포함되어 있지않아 따로 생성이 필요합니다. (./Secrets/Release and Debug.swift) **Debug**빌드시 xcconfig파일내 값을 사용하지 않기 때문에 실행시 Debug스킴을 사용하시길 바랍니다.
+
 # Tech features
 
 <table>
