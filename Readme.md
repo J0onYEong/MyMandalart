@@ -12,13 +12,19 @@
         <td>
             <b>서브 만다라트 생성</b>
         </td>
+        <td>
+            <b>Landscape대응</b>
+        </td>
     </tr>
     <tr>
         <td>
-            <img src="https://github.com/user-attachments/assets/bbcf164e-bd55-47c9-8a9f-f97568233868" width=300 />
+            <img src="https://github.com/user-attachments/assets/bbcf164e-bd55-47c9-8a9f-f97568233868" width=275 />
         </td>
         <td>
-            <img src="https://github.com/user-attachments/assets/31bfa99e-3bdd-4ec7-a45c-e7a7a1458cb2" width=300 />
+            <img src="https://github.com/user-attachments/assets/31bfa99e-3bdd-4ec7-a45c-e7a7a1458cb2" width=275 />
+        </td>
+        <td>
+            <img src="https://github.com/user-attachments/assets/ce9ba630-7d08-4cb7-a67a-dabdfc277dc2" width=275 />
         </td>
     </tr>
 </table>
