@@ -39,7 +39,7 @@ platform :ios do
       workspace: "MyMandalartWorkspace.xcworkspace"
     )
     upload_to_testflight
-    
+
   end
 
   lane :release do
@@ -52,6 +52,11 @@ platform :ios do
     increment_build_number(
       build_number: latest_testflight_build_number + 1,
       xcodeproj: ENV["iOS_APP_PROJECT_PATH"]
+    )
+
+    update_project_team(
+      path: ENV["iOS_APP_PROJECT_PATH"],
+      teamid: ENV["TEAM_ID"]
     )
   
     build_app(
