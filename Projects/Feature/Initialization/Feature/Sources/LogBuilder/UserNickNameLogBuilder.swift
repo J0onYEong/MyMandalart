@@ -7,17 +7,19 @@
 
 import SharedLoggerInterface
 
-class UserNickNameLogBuilder: LogObjectBuildable {
-    
-    public let eventType: String = "make_initial_user_nickname"
-    private var properties: [String: Any] = [:]
+class UserNickNameLogBuilder: LogObjectBuilder<LogObject> {
     
     init(_ nickName: String) {
         
-        self.properties["user_nick_name"] = nickName
+        super.init(eventType: "make_initial_user_nickname")
+        
+        self.setProperty(
+            key: "user_nick_name",
+            value: nickName
+        )
     }
     
-    func build() -> LogObject {
+    override func build() -> LogObject {
         
         return .init(
             eventType: eventType,

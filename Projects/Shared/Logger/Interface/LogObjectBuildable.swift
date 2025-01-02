@@ -5,31 +5,37 @@
 //  Created by choijunios on 1/2/25.
 //
 
-public protocol LogObjectBuildable {
+protocol LogObjectable {
     
     associatedtype Object: LogObject
     
     func build() -> Object
 }
 
-public struct DefaultLogObjectBuilder: LogObjectBuildable {
+
+open class LogObjectBuilder<Object: LogObject>: LogObjectable {
     
     public let eventType: String
     public private(set) var properties: [String: Any] = [:]
-    
     
     public init(eventType: String) {
         self.eventType = eventType
     }
     
-    
-    public mutating func setProperty(key: String, value: Any) {
+    public func setProperty(key: String, value: Any) {
         
         self.properties[key] = value
     }
     
+    open func build() -> Object {
+        fatalError()
+    }
+}
+
+
+public class DefaultLogObjectBuilder: LogObjectBuilder<LogObject> {
     
-    public func build() -> LogObject {
+    public override func build() -> LogObject {
         
         return .init(
             eventType: eventType,
