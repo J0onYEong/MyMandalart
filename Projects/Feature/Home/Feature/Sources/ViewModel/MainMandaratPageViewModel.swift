@@ -282,7 +282,7 @@ extension MainMandaratPageViewModel {
         // 최초 만다라트 저장
         if !userStateUseCase.checkState(.log_initial_main_mandalart_creation) {
             
-            logInitialMainMandalartCreation()
+            logInitialMainMandalartCreation(id: mainMandarat.id)
             
             userStateUseCase.toggleState(.log_initial_main_mandalart_creation)
         }
@@ -368,9 +368,11 @@ extension MainMandaratPageViewModel {
 // MARK: Logging
 private extension MainMandaratPageViewModel {
     
-    func logInitialMainMandalartCreation() {
+    func logInitialMainMandalartCreation(id: String) {
         
         let builder = DefaultLogObjectBuilder(eventType: "make_first_main_mandalart")
+            .setProperty(key: "main_mandalart_id", value: id)
+        
         let object = builder.build()
         
         logger.send(object)

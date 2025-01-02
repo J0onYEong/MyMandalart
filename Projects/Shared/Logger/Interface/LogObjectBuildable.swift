@@ -24,9 +24,12 @@ open class LogObjectBuilder<Object: LogObject>: LogObjectable {
         self.eventType = eventType
     }
     
-    public func setProperty(key: String, value: Any) {
+    @discardableResult
+    public func setProperty(key: String, value: Any) -> Self {
         
         self.properties[key] = value
+        
+        return self
     }
     
     open func build() -> Object {

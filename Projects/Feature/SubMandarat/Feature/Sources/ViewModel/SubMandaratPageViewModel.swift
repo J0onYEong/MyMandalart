@@ -238,7 +238,7 @@ extension SubMandaratPageViewModel {
         // #3. Logging
         if !userStateUseCase.checkState(.log_initial_sub_mandalart_creation) {
             
-            logInitialSubMandalartCreation()
+            logInitialSubMandalartCreation(id: subMandarat.id)
             
             userStateUseCase.toggleState(.log_initial_sub_mandalart_creation)
         }
@@ -287,9 +287,11 @@ private extension SubMandaratPageViewModel {
 // MARK: Logging
 private extension SubMandaratPageViewModel {
     
-    func logInitialSubMandalartCreation() {
+    func logInitialSubMandalartCreation(id: String) {
         
         let builder = DefaultLogObjectBuilder(eventType: "make_first_sub_mandalart")
+            .setProperty(key: "sub_mandalart_id", value: id)
+        
         let object = builder.build()
         
         logger.send(object)
