@@ -2,6 +2,8 @@
 
 만다라트 작성을 도와주는 iOS어플리케이션 입니다.
 
+# 시현영상
+
 <table>
     <tr>
         <td>
@@ -21,6 +23,30 @@
     </tr>
 </table>
 
+
+# 프로덕트 로깅
+
+Amplitude툴을 이용하여 해당 프로젝트는 유저를 트레킹하고 있습니다.
+
+### 📶 온보딩 Funnel
+
+1. 닉네임 작성
+2. 메인 만다라트 작성
+3. 서브 만다라트 작성(완료)
+
+[온보딩 Funnel](https://app.amplitude.com/analytics/share/embed/39f8a1bb-07f2-4b4b-b392-a37991317a9e)
+
+### 📶 만다라트 완성율 Funnel
+
+메인 만다라트 작성 수를 기준으로한 유저 Funnel입니다.
+
+[메인 만다라트 완성율 Funnel](https://app.amplitude.com/analytics/share/embed/b2be791a-69e5-4053-aa43-c607284eb5e9)
+
+### 🎨 유저가 선택해본 만다라트 색상과 실제로 저장한 색상 비교
+
+비선호 색상을 업데이트 하기위한 테이블입니다.
+
+[만다라트 색상 선택 데이터](https://app.amplitude.com/analytics/share/embed/81ab0ff6-8b37-4674-8fd1-7da1b056ee7c)
 
 # How to use
 
