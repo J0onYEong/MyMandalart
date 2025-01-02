@@ -128,6 +128,18 @@ class RootComponent: InitializationDependency {
         userStateRepository: userStateRepository
     )
 
+
+    // MARK: Shared
+    lazy var logger: Logger = {
+   
+        #if DEBUG
+        return MockLogger()
+        #else
+        let userId: String = userStateUseCase.checkState(.deviceId)
+        return DefaultLogger(userId: userId)
+        #endif
+    }()
+
     ...
 ```
 
