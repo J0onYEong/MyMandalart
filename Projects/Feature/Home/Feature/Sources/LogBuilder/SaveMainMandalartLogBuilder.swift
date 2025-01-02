@@ -18,7 +18,7 @@ class SaveMainMandalartLogBuilder: LogObjectBuilder<LogObject> {
         position: MandaratPosition,
         paletteType: String
     ) {
-        super.init(eventType: "save_main_mandarat")
+        super.init(eventType: "save_main_mandalart")
         
         setProperty(key: "main_mandalart_id", value: id)
         setProperty(key: "main_mandalart_title", value: title)
@@ -29,7 +29,7 @@ class SaveMainMandalartLogBuilder: LogObjectBuilder<LogObject> {
             
         let (x, y) = position.matrixCoordinate
         let positionText = "\(x):\(y)"
-        setProperty(key: "main_mandarat_position", value: positionText)
+        setProperty(key: "main_mandalart_position", value: positionText)
         setProperty(key: "palette_type", value: paletteType)
     }
     
