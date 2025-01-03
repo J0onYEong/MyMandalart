@@ -18,14 +18,14 @@ class EditMainMandaratViewController: UIViewController, View {
     
     // Sub View
     private let backgroundView: TappableView = .init()
-    private let titleInputView: FocusTextField = .init()
-    private let descriptionInputView: FocusTextView = .init()
+    let titleInputView: FocusTextField = .init()
+    let descriptionInputView: FocusTextView = .init()
     private let inputSheetView: UIView = .init()
     private let selectPaletteView: SelectPaletteView = .init(titleText: "대표 색상 선택")
     
     // - Tool button
     private let exitButton: ImageButton = .init(imageName: "xmark")
-    private let saveButton: TextButton = .init(text: "저장")
+    let saveButton: TextButton = .init(text: "저장")
     
     
     // Reactor
@@ -199,7 +199,9 @@ class EditMainMandaratViewController: UIViewController, View {
         reactor.state
             .map(\.titleText)
             .take(1)
-            .bind(to: titleInputView.rx.text)
+            .subscribe(onNext: { [weak self] initialTitleText in
+                self?.titleInputView.update(initialTitleText)
+            })
             .disposed(by: disposeBag)
         
         titleInputView.rx.text
@@ -216,10 +218,12 @@ class EditMainMandaratViewController: UIViewController, View {
         reactor.state
             .map(\.descriptionText)
             .take(1)
-            .bind(to: descriptionInputView.setText)
+            .subscribe(onNext: { [weak self] initialTitleText in
+                self?.descriptionInputView.update(initialTitleText)
+            })
             .disposed(by: disposeBag)
         
-        descriptionInputView.publishText
+        descriptionInputView.rx.text
             .compactMap({ $0 })
             .distinctUntilChanged()
             .map { text in

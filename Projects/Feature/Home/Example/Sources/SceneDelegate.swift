@@ -35,7 +35,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             mandaratUseCase: MockMandaratUseCase(),
             navigationController: navigationController,
             userStateUseCase: MockUserStateUseCase(),
-            logger: MockLogger()
+            logger: FakeLogger()
         )
         
         let router = MainMandaratBuilder(dependency: component).build()
