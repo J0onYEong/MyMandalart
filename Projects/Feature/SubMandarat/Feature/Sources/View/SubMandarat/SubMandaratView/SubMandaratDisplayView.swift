@@ -171,7 +171,15 @@ extension Reactive where Base == SubMandaratDisplayView {
     
     var longPressEvent: Observable<Void> {
         
-        base.longPressGesture.rx.event.map({ _ in })
+        base.longPressGesture.rx.event.compactMap({ gesture in
+            
+            if gesture.state == .began {
+                
+                return ()
+            }
+            
+            return nil
+        })
     }
 }
 

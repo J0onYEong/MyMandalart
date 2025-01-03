@@ -25,7 +25,7 @@ class EditMainMandaratViewModel: NSObject, Reactor, UIColorPickerViewControllerD
     
     let initialState: State
     
-    weak var listener: EditMainMandaratViewModelListener!
+    weak var listener: EditMainMandaratViewModelListener?
     
     private let initialMandarat: MainMandaratVO
     
@@ -50,33 +50,28 @@ class EditMainMandaratViewModel: NSObject, Reactor, UIColorPickerViewControllerD
         switch action {
         case .exitButtonClicked:
             
-            listener.editFinished()
+            listener?.editFinished()
             
             return .empty()
             
         case .saveButtonClicked:
             
-            return state
-                .withUnretained(self)
-                .map { reator, currentState in
-                    
-                    let titleValidationResult = reator.validateTitle(currentState.titleText)
-                    
-                    if titleValidationResult {
-                        
-                        return .finishEditPage
-                        
-                    } else {
-                        
-                        let toatData: ToastData = .init(
-                            title: "만다라트 저장 실패",
-                            description: "만다라트의 제목은 1자 이상이어야 합니다!",
-                            alertColor: .color("#FB4141")
-                        )
-                        
-                        return .presentToastView(data: toatData)
-                    }
-                }
+            let titleValidationResult = validateTitle(currentState.titleText)
+            
+            if titleValidationResult {
+                
+                return .just(.finishEditPage)
+                
+            } else {
+                
+                let toatData: ToastData = .init(
+                    title: "만다라트 저장 실패",
+                    description: "만다라트의 제목은 1자 이상이어야 합니다!",
+                    alertColor: .color("#FB4141")
+                )
+                
+                return .just(.presentToastView(data: toatData))
+            }
 
         default:
             return .just(action)
@@ -103,7 +98,7 @@ class EditMainMandaratViewModel: NSObject, Reactor, UIColorPickerViewControllerD
         case .finishEditPage:
             
             let mandaratVO: MainMandaratVO = createMandaratVO(state: state)
-            listener.editFinishedWithSavingRequest(edited: mandaratVO)
+            listener?.editFinishedWithSavingRequest(edited: mandaratVO)
             
         case .presentToastView(let toastData):
             

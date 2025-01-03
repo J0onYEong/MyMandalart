@@ -188,12 +188,10 @@ class EditMainMandaratViewController: UIViewController, View {
             .disposed(by: disposeBag)
         
         saveButton.rx.tap
-            .map { _ in
-                Reactor.Action.saveButtonClicked
-            }
+            .map { _ in Reactor.Action.saveButtonClicked }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
-        
+            
 
         // MARK: Bind, titleInputView
         reactor.state
