@@ -344,7 +344,7 @@ func test_mainMandalartDescriptionViewIsSet() {
     )
     
     let presenter = SubMandaratPageViewController(reactor: reactor)
-    presenter.bind(reactor: reactor)
+    
     
     // When
     

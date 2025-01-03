@@ -42,7 +42,7 @@ class SubMandalartFeatureTestCase: XCTestCase {
         )
         
         let presenter = SubMandaratPageViewController(reactor: reactor)
-        presenter.bind(reactor: reactor)
+        
         
         // When
         
