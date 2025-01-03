@@ -85,8 +85,8 @@ let project = Project(
                 .shared(implements: .DesignSystem),
                 
                 
-                .thirdParty(library: .RxCocoa),
-                .thirdParty(library: .RxSwift),
+//                .thirdParty(library: .RxCocoa),
+//                .thirdParty(library: .RxSwift),
                 .thirdParty(library: .ReactorKit),
                 .thirdParty(library: .SnapKit),
             ]

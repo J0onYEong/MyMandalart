@@ -15,6 +15,8 @@ import PackageDescription
             "RxTest": .framework,
             "ReactorKit": .framework,
             "SnapKit": .framework,
+            "RxCocoaRuntime": .framework,
+            "ReactorKitRuntime": .framework,
         ]
     )
 #endif
@@ -31,7 +33,7 @@ let package = Package(
         
         
         // RxSwift, RxCocoa, etc
-//        .package(url: "https://github.com/ReactiveX/RxSwift.git", from: "6.8.0"),
+        .package(url: "https://github.com/ReactiveX/RxSwift.git", from: "6.8.0"),
         
         
         // SnapKit
