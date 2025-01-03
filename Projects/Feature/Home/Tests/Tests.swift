@@ -4,7 +4,7 @@
 //
 
 import UIKit
-import Testing
+import XCTest
 
 @testable import FeatureHomeTesting
 @testable import FeatureHome
@@ -13,43 +13,63 @@ import Testing
 
 import DomainMandaratInterface
 
-struct EditMainMandaratViewModelTest {
+class TestCase: XCTestCase {
     
-    @Test
-    func saveMainMandalartValidation() async {
+    func test_inputEmptyTitleAndSave() {
         
-        // 사용자가 빈 문자열을 입력했을 때, Toast가 표시되는지 검증한다.
+        // 유효한 문자열이 저장된 상태에서 다시 공백을 입력하고 저장하기를 누른 경우
         
-        await MainActor.run {
-            
-            // Given
-            let givenMainMandalart = MainMandaratVO(
-                title: "",
-                position: .ONE_ONE,
-                colorSetId: MandalartPalette.type1.identifier,
-                description: nil,
-                imageURL: nil
-            )
-            let reactor = EditMainMandaratViewModel(
-                logger: FakeLogger(),
-                mainMandaratVO: givenMainMandalart
-            )
-            
-            
-            let view = EditMainMandaratViewController()
-            view.bind(reactor: reactor)
-            #expect(view.reactor != nil)
-            
-            
-            // When
-            
-            // 유저가 빈 문자열을 입력후 저장하기 버튼을 클릭
-            view.titleInputView.update("")
-            view.saveButton.invokeTap()
-            
-            
-            // Then
-            #expect(reactor.currentState.toastData != nil)
-        }
+        // Given
+        let givenMainMandalart = MainMandaratVO(
+            title: "test",
+            position: .ONE_ONE,
+            colorSetId: MandalartPalette.type1.identifier,
+            description: nil,
+            imageURL: nil
+        )
+        let reactor = EditMainMandaratViewModel(
+            logger: FakeLogger(),
+            mainMandaratVO: givenMainMandalart
+        )
+        
+        // When
+        
+        // 유저가 빈 문자열을 입력후 저장하기 버튼을 클릭
+        reactor.action.onNext(.editTitleText(text: ""))
+        reactor.action.onNext(.saveButtonClicked)
+        
+        
+        // Then
+        XCTAssertNotNil(reactor.currentState.toastData)
+    }
+    
+    
+    func test_inputValidTitleAndSave() {
+        
+        // 사용자가 유효한 문자열을 입력했을 때 ToastView가 나타나지 않음
+        
+        // Given
+        let givenMainMandalart = MainMandaratVO(
+            title: "",
+            position: .ONE_ONE,
+            colorSetId: MandalartPalette.type1.identifier,
+            description: nil,
+            imageURL: nil
+        )
+        let reactor = EditMainMandaratViewModel(
+            logger: FakeLogger(),
+            mainMandaratVO: givenMainMandalart
+        )
+        
+        
+        // When
+        
+        // 유저가 유효한 문자열을 입력후 저장하기 버튼을 클릭
+        reactor.action.onNext(.editTitleText(text: "test"))
+        reactor.action.onNext(.saveButtonClicked)
+        
+        
+        // Then
+        XCTAssertNil(reactor.currentState.toastData)
     }
 }

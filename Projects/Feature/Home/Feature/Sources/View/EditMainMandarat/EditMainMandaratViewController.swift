@@ -205,9 +205,7 @@ class EditMainMandaratViewController: UIViewController, View {
         titleInputView.rx.text
             .compactMap({ $0 })
             .distinctUntilChanged()
-            .map { text in
-                return Reactor.Action.editTitleText(text: text)
-            }
+            .map { Reactor.Action.editTitleText(text: $0) }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
             
