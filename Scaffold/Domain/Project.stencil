@@ -17,6 +17,7 @@ let project = Project(
             destinations: .iOS,
             product: .unitTests,
             bundleId: "\(Project.Environment.bundlePrefix).domain.{{ name }}.tests",
+            deploymentTargets: Project.Environment.deploymentTarget,
             sources: ["Tests/**"],
             dependencies: [
                 .domain(implements: .{{ name }}),
@@ -31,6 +32,7 @@ let project = Project(
             destinations: .iOS,
             product: .staticLibrary,
             bundleId: "\(Project.Environment.bundlePrefix).domain.{{ name }}",
+            deploymentTargets: Project.Environment.deploymentTarget,
             sources: ["Sources/**"],
             dependencies: [
                 .domain(interface: .{{ name }}),
@@ -44,6 +46,7 @@ let project = Project(
             destinations: .iOS,
             product: .framework,
             bundleId: "\(Project.Environment.bundlePrefix).domain.{{ name }}.testing",
+            deploymentTargets: Project.Environment.deploymentTarget,
             sources: ["Testing/**"],
             dependencies: [
                 .domain(interface: .{{ name }}),
@@ -57,6 +60,7 @@ let project = Project(
             destinations: .iOS,
             product: .framework,
             bundleId: "\(Project.Environment.bundlePrefix).domain.{{ name }}.interface",
+            deploymentTargets: Project.Environment.deploymentTarget,
             sources: ["Interface/**"],
             dependencies: [
                 

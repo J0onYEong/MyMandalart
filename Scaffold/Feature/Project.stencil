@@ -17,6 +17,7 @@ let project = Project(
             destinations: .iOS,
             product: .app,
             bundleId: "\(Project.Environment.bundlePrefix).feature.{{ name }}.example",
+            deploymentTargets: Project.Environment.deploymentTarget,
             infoPlist: .example_app,
             sources: ["Example/Sources/**"],
             resources: ["Example/Resources/**"],
