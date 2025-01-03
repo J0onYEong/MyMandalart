@@ -96,7 +96,7 @@ Amplitude툴을 이용하여 해당 프로젝트는 유저를 트레킹하고 �
             <b>외부 의존성</b>
         </td>
         <td>
-            <b>RxSwift, RxCocoa, ReactorKit, SnapKit</b>
+            <b>ReactorKit, SnapKit</b>
         </td>
     </tr>
     <tr>
