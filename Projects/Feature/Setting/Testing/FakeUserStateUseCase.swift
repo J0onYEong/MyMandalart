@@ -1,13 +1,11 @@
 //
-//  MockUserStateUseCase.swift
-//  Home
+//  FakeUserStateUseCase.swift
 //
-//  Created by choijunios on 12/30/24.
 //
 
 import DomainUserStateInterface
 
-public class MockUserStateUseCase: UserStateUseCase {
+public class FakeUserStateUseCase: UserStateUseCase {
     
     private var memoryDict: [String: Any] = [:]
     

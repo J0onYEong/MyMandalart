@@ -30,14 +30,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         navigationController.isNavigationBarHidden = true
         
         let component = RootComponent(
-            mandaratUseCase: MockMandaratUseCase(),
-            userStateUseCase: MockUserStateUseCase(),
+            mandaratUseCase: FakeMandaratUseCase(),
+            userStateUseCase: FakeUserStateUseCase(),
             navigationController: navigationController,
-            logger: MockLogger()
+            logger: FakeLogger()
         )
         
         self.router = SubMandaratPageBuilder(dependency: component)
-            .build(mainMandaratVO: .mock)
+            .build(mainMandaratVO: .stub)
         
         navigationController.viewControllers = [ router.viewController ]
         

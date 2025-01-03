@@ -32,9 +32,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
     
         let component: RootComponent = .init(
-            mandaratUseCase: MockMandaratUseCase(),
+            mandaratUseCase: FakeMandaratUseCase(),
             navigationController: navigationController,
-            userStateUseCase: MockUserStateUseCase(),
+            userStateUseCase: FakeUserStateUseCase(),
             logger: FakeLogger()
         )
         

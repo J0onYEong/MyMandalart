@@ -1,11 +1,13 @@
 //
-//  MockUserStateUseCase.swift
+//  FakeUserStateUseCase.swift
+//  SubMandarat
 //
+//  Created by choijunios on 12/30/24.
 //
 
 import DomainUserStateInterface
 
-public class MockUserStateUseCase: UserStateUseCase {
+public class FakeUserStateUseCase: UserStateUseCase {
     
     private var memoryDict: [String: Any] = [:]
     
@@ -15,8 +17,6 @@ public class MockUserStateUseCase: UserStateUseCase {
             
             memoryDict[key.rawValue] = key.initialValue
         }
-        
-        memoryDict[StringUserStateKey.userNickName.rawValue] = "주니오스"
     }
     
     public func checkState(_ key: DomainUserStateInterface.BooleanUserStateKey) -> Bool {
@@ -32,11 +32,11 @@ public class MockUserStateUseCase: UserStateUseCase {
     
     public func checkState(_ key: StringUserStateKey) -> String {
         
-        return memoryDict[key.rawValue] as! String
+        return ""
     }
     
     public func setState(_ key: StringUserStateKey, value: String) {
         
-        memoryDict[key.rawValue] = value
+        
     }
 }

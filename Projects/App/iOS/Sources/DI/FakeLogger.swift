@@ -1,13 +1,13 @@
 //
-//  MockLogger.swift
-//  SubMandarat
+//  FakeLogger.swift
+//  MyMandalart-iOS
 //
 //  Created by choijunios on 1/2/25.
 //
 
 import SharedLoggerInterface
 
-public class MockLogger: Logger {
+public class FakeLogger: Logger {
     
     public init() { }
     

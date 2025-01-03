@@ -1,5 +1,5 @@
 //
-//  MockMandaratUseCase.swift
+//  FakeMandaratUseCase.swift
 //
 //
 
@@ -9,7 +9,7 @@ import DomainMandaratInterface
 
 import RxSwift
 
-public class MockMandaratUseCase: MandaratUseCase {
+public class FakeMandaratUseCase: MandaratUseCase {
     
     private var memoryStore_MM: [MandaratPosition: MainMandaratVO] = [:]
     private var memoryStore_SM: [MandaratPosition: [MandaratPosition: SubMandaratVO]] = [:]
