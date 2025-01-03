@@ -245,35 +245,119 @@ struct EditMainMandaratViewModelTest {
 ```
 ※ 모든 테스트코드 작성은 XCTest프레임워크가 아닌 Testing프레임워크를 사용해 작성했습니다.
 
-### Testing타겟을 사용하여 앱내 로직만을 테스트
+### 테스트 더블즈 기반 유닛테스트
 
-각각의 모듈들은 **Testing**타겟을 가집니다. 해당 타겟의 역할은 유닛 테스트 및 예시앱 테스트에서 오직 앱내 로직만을 테스트하기 위해 사용됩니다.
+각각의 모듈들은 **Testing**타겟을 가집니다. 해당 타겟의 역할은 테스트 타겟 및 예시앱 테스트에서 사용할 수 있는 Fake, Mock, Stub객체를 포함하고 있습니다.
 
-예를들어 ViewModel이 의존하는 Domain, Data레이어의 클래스의 경우 앱외 로직을 포함할 수 있습니다. 따라서 아래와 같이 **Mock객체를 Testing모듈이 포함하고 테스트시 사용**합니다.
+예를들어 ViewModel이 의존하는 Domain, Data레이어의 클래스의 경우 앱외 로직 혹은 미구현 기능을 테스트하기 까다롭습니다.
 
+따라서 아래와 같이 **테스트 더블즈 객체들을 Testing모듈이 포함하고 테스트시 사용**합니다.
+
+- 메모리 저장소를 사용하는 Fake 유스케이스
 ```swift
 import DomainUserStateInterface
 
-public class MockUserStateUseCase: UserStateUseCase {
+public class FakeMandaratUseCase: MandaratUseCase {
     
-    private var memoryDict: [String: Any] = [:]
+    private var memoryStore_MM: [MandaratPosition: MainMandaratVO] = [:]
+    private var memoryStore_SM: [MandaratPosition: [MandaratPosition: SubMandaratVO]] = [:]
     
-    public init() {
+    public init() { }
+    
+    public func requestMainMandarats() -> RxSwift.Single<[DomainMandaratInterface.MainMandaratVO]> {
         
-        BooleanUserStateKey.allCases.forEach { key in
-            
-            memoryDict[key.rawValue] = key.initialValue
-        }
+        return .just(memoryStore_MM.values.map({ $0 }))
+    }
+
 ...
+```
 
-// Testing모듈을 사용하는 Example앱 코드의 일부입니다.
-
+- 테스트용 객체를 주입
+```swift
 let component: RootComponent = .init(
-    mandaratUseCase: MockMandaratUseCase(),
+    mandaratUseCase: FakeMandaratUseCase(),
     navigationController: navigationController,
-    userStateUseCase: MockUserStateUseCase()
+    userStateUseCase: FakeUserStateUseCase(),
+    logger: FakeLogger()
 )
 
-let router = MainMandaratBuilder(dependency: component).build()
+...
+```
 
+### 액션기반 상태 테스트
+
+- View를 통해 전달받은 액션이 예상된 상태를 만들어 내는지 확인합니다.
+
+EX) 유저의 입력 및 저장 액션이 올바른 에러 상태를 만들어내는지 확인
+```swift
+func test_inputEmptyTitleAndSave() {
+    
+    // 유효한 문자열이 저장된 상태에서 다시 공백을 입력하고 저장하기를 누른 경우
+    
+    // Given
+    let givenMainMandalart = MainMandaratVO(
+        title: "test",
+        position: .ONE_ONE,
+        colorSetId: MandalartPalette.type1.identifier,
+        description: nil,
+        imageURL: nil
+    )
+    let reactor = EditMainMandaratViewModel(
+        logger: FakeLogger(),
+        mainMandaratVO: givenMainMandalart
+    )
+    
+    // When
+    
+    // 유저가 빈 문자열을 입력후 저장하기 버튼을 클릭
+    reactor.action.onNext(.editTitleText(text: ""))
+    reactor.action.onNext(.saveButtonClicked)
+    
+    
+    // Then
+    XCTAssertNotNil(reactor.currentState.toastData)
+}
+```
+
+- Reactor로부터 전달받은 상태가 View객체에 적용되는지 확인합니다.
+
+```swift
+func test_mainMandalartDescriptionViewIsSet() {
+    
+    // 전달한 메인 만다라트 정보가 올바르게 DescriptionView에 적용되는 지 확인한다.
+    
+    // Given
+    let stubTitle = "stubTitle"
+    let stubDescription = "stubDescription"
+    
+    let reactor = SubMandaratPageViewModel(
+        mandaratUseCase: FakeMandaratUseCase(),
+        userStateUseCase: FakeUserStateUseCase(),
+        logger: FakeLogger(),
+        mainMandarat: .init(
+            title: stubTitle,
+            position: .ONE_ONE,
+            colorSetId: MandalartPalette.type1.identifier,
+            description: stubDescription,
+            imageURL: nil
+        )
+    )
+    
+    let presenter = SubMandaratPageViewController(reactor: reactor)
+    presenter.bind(reactor: reactor)
+    
+    // When
+    
+    
+    // Then
+    XCTAssertEqual(
+        presenter.mainMandaratDescriptionView.titleLabel.text,
+        stubTitle
+    )
+    
+    XCTAssertEqual(
+        presenter.mainMandaratDescriptionView.descriptionLabel.text,
+        stubDescription
+    )
+}
 ```
