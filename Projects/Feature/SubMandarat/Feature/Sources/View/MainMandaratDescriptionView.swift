@@ -10,8 +10,8 @@ import UIKit
 class MainMandaratDescriptionView: UIStackView {
     
     // Sub view
-    private let titleLabel: UILabel = .init()
-    private let descriptionLabel: UILabel = .init()
+    let titleLabel: UILabel = .init()
+    let descriptionLabel: UILabel = .init()
     
     init() {
         super.init(frame: .zero)

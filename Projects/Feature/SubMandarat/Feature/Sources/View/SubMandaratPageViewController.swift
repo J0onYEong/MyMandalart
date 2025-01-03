@@ -17,7 +17,7 @@ import RxCocoa
 class SubMandaratPageViewController: UIViewController, SubMandaratPageViewControllable, View {
     
     // Sub view
-    private let mainMandaratDescriptionView: MainMandaratDescriptionView = .init()
+    let mainMandaratDescriptionView: MainMandaratDescriptionView = .init()
     fileprivate var subMandaratViews: [MandaratPosition: SubMandaratView] = [:]
     fileprivate var subMandaratViewsExceptForCenter: [MandaratPosition: SubMandaratView] {
         subMandaratViews.filter { key, _ in key != .TWO_TWO }
@@ -35,13 +35,15 @@ class SubMandaratPageViewController: UIViewController, SubMandaratPageViewContro
     
     
     // Reactor
-    var reactor: SubMandaratPageViewModel?
     var disposeBag: DisposeBag = .init()
     
-    init() {
+    init(reactor: SubMandaratPageViewModel) {
+        
         super.init(nibName: nil, bundle: nil)
         
         createSubMandaratViews()
+        
+        self.reactor = reactor
     }
     required init?(coder: NSCoder) { nil }
     
@@ -105,8 +107,6 @@ class SubMandaratPageViewController: UIViewController, SubMandaratPageViewContro
     
     
     func bind(reactor: SubMandaratPageViewModel) {
-        
-        self.reactor = reactor
         
         view.layoutIfNeeded()
         

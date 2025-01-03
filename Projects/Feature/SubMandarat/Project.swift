@@ -17,6 +17,7 @@ let project = Project(
             destinations: .iOS,
             product: .app,
             bundleId: "\(Project.Environment.bundlePrefix).feature.SubMandarat.example",
+            deploymentTargets: Project.Environment.deploymentTarget,
             infoPlist: .example_app,
             sources: ["Example/Sources/**"],
             resources: ["Example/Resources/**"],
@@ -33,6 +34,7 @@ let project = Project(
             destinations: .iOS,
             product: .unitTests,
             bundleId: "\(Project.Environment.bundlePrefix).feature.SubMandarat.tests",
+            deploymentTargets: Project.Environment.deploymentTarget,
             sources: ["Tests/**"],
             dependencies: [
                 .feature(implements: .SubMandarat),
@@ -47,6 +49,7 @@ let project = Project(
             destinations: .iOS,
             product: .framework,
             bundleId: "\(Project.Environment.bundlePrefix).feature.SubMandarat.testing",
+            deploymentTargets: Project.Environment.deploymentTarget,
             sources: ["Testing/**"],
             dependencies: [
                 .feature(implements: .SubMandarat),

@@ -23,8 +23,7 @@ public class SubMandaratPageBuilder: Buildable<SubMandaratPageDependency>, SubMa
             mainMandarat: mainMandaratVO
         )
         
-        let viewController = SubMandaratPageViewController()
-        viewController.bind(reactor: viewModel)
+        let viewController = SubMandaratPageViewController(reactor: viewModel)
         
         let router = SubMandaratPageRouter(
             navigationController: component.dependency.navigationController,
