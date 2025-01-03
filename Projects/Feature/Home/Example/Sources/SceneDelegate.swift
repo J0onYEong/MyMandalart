@@ -32,10 +32,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
     
         let component: RootComponent = .init(
-            mandaratUseCase: MockMandaratUseCase(),
+            mandaratUseCase: FakeMandaratUseCase(),
             navigationController: navigationController,
-            userStateUseCase: MockUserStateUseCase(),
-            logger: MockLogger()
+            userStateUseCase: FakeUserStateUseCase(),
+            logger: FakeLogger()
         )
         
         let router = MainMandaratBuilder(dependency: component).build()

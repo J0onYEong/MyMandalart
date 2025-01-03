@@ -56,7 +56,7 @@ class RootComponent: InitializationDependency {
     lazy var logger: Logger = {
        
         #if DEBUG
-        return MockLogger()
+        return FakeLogger()
         #else
         let userId: String = userStateUseCase.checkState(.deviceId)
         return DefaultLogger(userId: userId)

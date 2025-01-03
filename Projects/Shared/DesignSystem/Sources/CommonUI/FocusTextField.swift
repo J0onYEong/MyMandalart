@@ -13,7 +13,7 @@ import SnapKit
 
 public class FocusTextField: UIView {
     
-    private let textField: UITextField = .init()
+    fileprivate let textField: UITextField = .init()
     
     private var focusLineLayer1: CAShapeLayer?
     private var focusLineLayer2: CAShapeLayer?
@@ -22,8 +22,6 @@ public class FocusTextField: UIView {
     private var focusColor: CGColor = UIColor.black.cgColor
     
     private let disposeBag: DisposeBag = .init()
-    
-    public var rx: Reactive<UITextField> { textField.rx }
     
     public init() {
         
@@ -64,6 +62,11 @@ public class FocusTextField: UIView {
             )
             focusLineLayer2?.strokeEnd = 1
         }
+    }
+    
+    
+    public func update(_ text: String) {
+        textField.text = text
     }
     
     
@@ -322,6 +325,18 @@ private extension FocusTextField {
     }
 }
 
+
+// MARK: Reactive + FocusTextField
+public extension Reactive where Base == FocusTextField {
+    
+    var text: Observable<String?> {
+        
+        base.textField.rx.text.asObservable()
+    }
+}
+
+
+// MARK: Reactive + UITextField
 fileprivate extension Reactive where Base == UITextField {
     
     var isFirstResponder: Observable<Bool> {
@@ -334,6 +349,8 @@ fileprivate extension Reactive where Base == UITextField {
     }
 }
 
+
+// MARK: Preview
 #Preview {
     
     let stack: UIStackView = .init(arrangedSubviews: [

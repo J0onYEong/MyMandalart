@@ -25,8 +25,7 @@ public class FocusTextView: UIView, UITextViewDelegate {
     
     private let disposeBag: DisposeBag = .init()
     
-    public let setText: BehaviorSubject<String?> = .init(value: nil)
-    public let publishText: BehaviorSubject<String?> = .init(value: nil)
+    fileprivate let publishText: PublishRelay<String> = .init()
     
     
     public init() {
@@ -38,16 +37,6 @@ public class FocusTextView: UIView, UITextViewDelegate {
         setLayer()
         
         setLayout()
-        
-        setText
-            .subscribe(onNext: { [weak self] text in
-                
-                guard let self else { return }
-                
-                textView.text = text
-                updatePlaceholderLabel(onTextState: text ?? "")
-            })
-            .disposed(by: disposeBag)
     }
     public required init?(coder: NSCoder) { nil }
     
@@ -76,6 +65,13 @@ public class FocusTextView: UIView, UITextViewDelegate {
             )
             focusLineLayer2?.strokeEnd = 1
         }
+    }
+    
+    
+    public func update(_ text: String) {
+        
+        textView.text = text
+        updatePlaceholderLabel(onTextState: text)
     }
     
     
@@ -202,7 +198,7 @@ extension FocusTextView {
             
             let updatedText = currentText.replacingCharacters(in: textRange, with: text)
             
-            self.publishText.onNext(updatedText)
+            self.publishText.accept(updatedText)
             updatePlaceholderLabel(onTextState: updatedText)
         }
         
@@ -397,5 +393,14 @@ private extension FocusTextView {
     @objc func doneWithNumberPad() {
         
         textView.resignFirstResponder()
+    }
+}
+
+
+public extension Reactive where Base == FocusTextView {
+    
+    var text: Observable<String> {
+        
+        base.publishText.asObservable()
     }
 }

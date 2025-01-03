@@ -8,7 +8,10 @@ import UIKit
 
 import FeatureSetting
 import FeatureSettingTesting
+
 import DomainUserStateInterface
+
+import SharedPresentationExt
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate, SettingPageViewModelListener {
     
@@ -22,15 +25,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SettingPageViewModelLis
         
         window = UIWindow(windowScene: windowScene)
         
-        let navigationController: UINavigationController = .init()
+        let navigationController: NavigationController = .init()
         navigationController.isNavigationBarHidden = true
         
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
         
         let rootComponent = RootComponent(
-            userStateUseCase: MockUserStateUseCase(),
-            navigationController: navigationController
+            navigationController: navigationController,
+            userStateUseCase: FakeUserStateUseCase()
         )
         
         router = SettingPageBuilder(dependency: rootComponent)
@@ -42,8 +45,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SettingPageViewModelLis
     
     struct RootComponent: SettingPageDependency {
         
+        var navigationController: NavigationControllable
         var userStateUseCase: UserStateUseCase
-        var navigationController: UINavigationController
     }
 }
 

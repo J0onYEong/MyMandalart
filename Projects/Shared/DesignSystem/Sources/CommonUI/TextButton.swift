@@ -31,6 +31,7 @@ public class TextButton: TappableView {
     }
     public required init?(coder: NSCoder) { nil }
     
+    
     private func setAppearance() {
         
         labelView.text = text

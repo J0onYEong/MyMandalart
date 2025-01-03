@@ -18,14 +18,14 @@ class EditMainMandaratViewController: UIViewController, View {
     
     // Sub View
     private let backgroundView: TappableView = .init()
-    private let titleInputView: FocusTextField = .init()
-    private let descriptionInputView: FocusTextView = .init()
+    let titleInputView: FocusTextField = .init()
+    let descriptionInputView: FocusTextView = .init()
     private let inputSheetView: UIView = .init()
     private let selectPaletteView: SelectPaletteView = .init(titleText: "대표 색상 선택")
     
     // - Tool button
     private let exitButton: ImageButton = .init(imageName: "xmark")
-    private let saveButton: TextButton = .init(text: "저장")
+    let saveButton: TextButton = .init(text: "저장")
     
     
     // Reactor
@@ -188,26 +188,24 @@ class EditMainMandaratViewController: UIViewController, View {
             .disposed(by: disposeBag)
         
         saveButton.rx.tap
-            .map { _ in
-                Reactor.Action.saveButtonClicked
-            }
+            .map { _ in Reactor.Action.saveButtonClicked }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
-        
+            
 
         // MARK: Bind, titleInputView
         reactor.state
             .map(\.titleText)
             .take(1)
-            .bind(to: titleInputView.rx.text)
+            .subscribe(onNext: { [weak self] initialTitleText in
+                self?.titleInputView.update(initialTitleText)
+            })
             .disposed(by: disposeBag)
         
         titleInputView.rx.text
             .compactMap({ $0 })
             .distinctUntilChanged()
-            .map { text in
-                return Reactor.Action.editTitleText(text: text)
-            }
+            .map { Reactor.Action.editTitleText(text: $0) }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
             
@@ -216,10 +214,12 @@ class EditMainMandaratViewController: UIViewController, View {
         reactor.state
             .map(\.descriptionText)
             .take(1)
-            .bind(to: descriptionInputView.setText)
+            .subscribe(onNext: { [weak self] initialTitleText in
+                self?.descriptionInputView.update(initialTitleText)
+            })
             .disposed(by: disposeBag)
         
-        descriptionInputView.publishText
+        descriptionInputView.rx.text
             .compactMap({ $0 })
             .distinctUntilChanged()
             .map { text in
@@ -249,16 +249,16 @@ class EditMainMandaratViewController: UIViewController, View {
         
         // MARK: Bind, alert
         reactor.state
-            .compactMap(\.alertData)
+            .compactMap(\.toastData)
             .distinctUntilChanged()
             .subscribe(onNext: { [weak self] alertData in
                 
                 guard let self else { return }
                 
-                let alertView = createAlertView()
+                let toastView = createToastView()
                 
                 // set ui
-                alertView.update(
+                toastView.update(
                     title: alertData.title,
                     description: alertData.description,
                     backgroundColor: alertData.alertColor
@@ -266,26 +266,26 @@ class EditMainMandaratViewController: UIViewController, View {
                 
                 
                 // present anim
-                alertView.layoutIfNeeded()
-                let height = alertView.bounds.height
+                toastView.layoutIfNeeded()
+                let height = toastView.bounds.height
                 
-                alertView.transform = alertView.transform.translatedBy(x: 0, y: height)
-                alertView.alpha = 0
+                toastView.transform = toastView.transform.translatedBy(x: 0, y: height)
+                toastView.alpha = 0
                 
                 UIView.animate(withDuration: 0.35) {
                     
-                    alertView.alpha = 1
-                    alertView.transform = .identity
+                    toastView.alpha = 1
+                    toastView.transform = .identity
                     
                 } completion: { _ in
                     
                     UIView.animate(withDuration: 0.35, delay: 1.5) {
                         
-                        alertView.alpha = 0
+                        toastView.alpha = 0
                         
                     } completion: { _ in
                         
-                        alertView.removeFromSuperview()
+                        toastView.removeFromSuperview()
                     }
                 }
             })
@@ -479,7 +479,7 @@ private extension EditMainMandaratViewController {
 // MARK: Alert
 extension EditMainMandaratViewController {
     
-    func createAlertView() -> ToastView {
+    func createToastView() -> ToastView {
         
         let toastView: ToastView = .init()
         

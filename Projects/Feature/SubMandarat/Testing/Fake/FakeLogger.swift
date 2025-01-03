@@ -1,13 +1,13 @@
 //
-//  MockLogger.swift
-//  Home
+//  FakeLogger.swift
+//  SubMandarat
 //
 //  Created by choijunios on 1/2/25.
 //
 
 import SharedLoggerInterface
 
-public class MockLogger: Logger {
+public class FakeLogger: Logger {
     
     public init() { }
     

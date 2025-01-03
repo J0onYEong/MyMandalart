@@ -167,7 +167,10 @@ extension EditSubMandaratViewController {
         // Bind, textfield
         reactor.state
             .map(\.titleText)
-            .bind(to: titleInputView.rx.text)
+            .take(1)
+            .subscribe(onNext: { [weak self] initialTitleText in
+                self?.titleInputView.update(initialTitleText)
+            })
             .disposed(by: disposeBag)
         
         titleInputView.rx.text
