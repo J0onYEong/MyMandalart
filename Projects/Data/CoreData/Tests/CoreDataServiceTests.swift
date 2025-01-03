@@ -9,7 +9,6 @@ import CoreData
 @testable import DataCoreData
 @testable import DataCoreDataInterface
 
-import RxTest
 import RxSwift
 
 class CoreDataServiceTests: XCTestCase {
@@ -24,16 +23,16 @@ class CoreDataServiceTests: XCTestCase {
     
     func testCreateAndRead() {
         
-        let testEntityName = "MainMandarat"
+        let testEntityName = "TestEntity"
         let testProperty = "TestValue"
         
         // When: 엔티티를 저장합니다.
         let saveExpectation = expectation(description: "Save Entity")
         coreDataService.save { context, completion in
             
-            let entity = NSEntityDescription.insertNewObject(forEntityName: testEntityName, into: context) as! MainMandaratEntity
+            let entity = NSEntityDescription.insertNewObject(forEntityName: testEntityName, into: context) as! TestEntity
             
-            entity.title = testProperty
+            entity.testProperty = testProperty
             
             do {
                 try context.save()
@@ -49,18 +48,18 @@ class CoreDataServiceTests: XCTestCase {
         })
         .disposed(by: disposeBag)
         
-        wait(for: [saveExpectation], timeout: 5.0)
+        wait(for: [saveExpectation])
         
         // Then: 저장된 데이터를 fetch하고, 저장 전후의 데이터를 비교합니다.
         let fetchExpectation = expectation(description: "Fetch Entity")
         coreDataService.fetch(predicate: nil)
-            .subscribe(onSuccess: { (entities: [MainMandaratEntity]) in
+            .subscribe(onSuccess: { (entities: [TestEntity]) in
                 guard let fetchedEntity = entities.first else {
                     XCTFail("No entities found")
                     return
                 }
                 
-                XCTAssertEqual(fetchedEntity.title, testProperty, "테스트 프로퍼티가 일치하지 않습니다.")
+                XCTAssertEqual(fetchedEntity.testProperty, testProperty, "테스트 프로퍼티가 일치하지 않습니다.")
                 
                 fetchExpectation.fulfill()
             }, onFailure: { error in
@@ -68,6 +67,6 @@ class CoreDataServiceTests: XCTestCase {
             })
             .disposed(by: disposeBag)
         
-        wait(for: [fetchExpectation], timeout: 5.0)
+        wait(for: [fetchExpectation])
     }
 }

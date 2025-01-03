@@ -86,6 +86,7 @@ let project = Project(
                 
                 
                 .thirdParty(library: .RxCocoa),
+                .thirdParty(library: .RxSwift),
                 .thirdParty(library: .ReactorKit),
                 .thirdParty(library: .SnapKit),
             ]

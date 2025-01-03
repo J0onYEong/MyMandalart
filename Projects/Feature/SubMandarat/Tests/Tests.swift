@@ -14,7 +14,10 @@ import DomainMandaratInterface
 
 import SharedDesignSystem
 
-class TestCase: XCTestCase {
+import ReactorKit
+import RxSwift
+
+class SubMandalartFeatureTestCase: XCTestCase {
     
     
     func test_mainMandalartDescriptionViewIsSet() {

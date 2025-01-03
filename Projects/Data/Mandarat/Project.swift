@@ -17,6 +17,7 @@ let project = Project(
             destinations: .iOS,
             product: .unitTests,
             bundleId: "\(Project.Environment.bundlePrefix).data.Mandarat.tests",
+            deploymentTargets: Project.Environment.deploymentTarget,
             sources: ["Tests/**"],
             dependencies: [
                 .data(implements: .Mandarat),
@@ -45,6 +46,7 @@ let project = Project(
             destinations: .iOS,
             product: .framework,
             bundleId: "\(Project.Environment.bundlePrefix).data.Mandarat.testing",
+            deploymentTargets: Project.Environment.deploymentTarget,
             sources: ["Testing/**"],
             dependencies: [
                 .data(interface: .Mandarat),

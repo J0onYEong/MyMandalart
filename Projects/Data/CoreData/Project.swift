@@ -17,6 +17,7 @@ let project = Project(
             destinations: .iOS,
             product: .unitTests,
             bundleId: "\(Project.Environment.bundlePrefix).data.CoreData.tests",
+            deploymentTargets: Project.Environment.deploymentTarget,
             sources: ["Tests/**"],
             dependencies: [
                 .data(implements: .CoreData),
@@ -46,6 +47,7 @@ let project = Project(
             destinations: .iOS,
             product: .framework,
             bundleId: "\(Project.Environment.bundlePrefix).data.CoreData.testing",
+            deploymentTargets: Project.Environment.deploymentTarget,
             sources: ["Testing/**"],
             dependencies: [
                 .data(interface: .CoreData),

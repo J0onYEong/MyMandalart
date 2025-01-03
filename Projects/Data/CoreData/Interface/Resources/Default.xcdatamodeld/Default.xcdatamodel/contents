@@ -29,4 +29,7 @@
             </uniquenessConstraint>
         </uniquenessConstraints>
     </entity>
+    <entity name="TestEntity" representedClassName="TestEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="testProperty" optional="YES" attributeType="String"/>
+    </entity>
 </model>
