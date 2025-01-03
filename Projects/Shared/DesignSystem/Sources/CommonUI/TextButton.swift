@@ -31,6 +31,14 @@ public class TextButton: TappableView {
     }
     public required init?(coder: NSCoder) { nil }
     
+    
+    // for test
+    func invokeTap() {
+        
+        self.tap.onNext(())
+    }
+    
+    
     private func setAppearance() {
         
         labelView.text = text

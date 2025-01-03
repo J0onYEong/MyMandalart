@@ -253,16 +253,16 @@ class EditMainMandaratViewController: UIViewController, View {
         
         // MARK: Bind, alert
         reactor.state
-            .compactMap(\.alertData)
+            .compactMap(\.toastData)
             .distinctUntilChanged()
             .subscribe(onNext: { [weak self] alertData in
                 
                 guard let self else { return }
                 
-                let alertView = createAlertView()
+                let toastView = createToastView()
                 
                 // set ui
-                alertView.update(
+                toastView.update(
                     title: alertData.title,
                     description: alertData.description,
                     backgroundColor: alertData.alertColor
@@ -270,26 +270,26 @@ class EditMainMandaratViewController: UIViewController, View {
                 
                 
                 // present anim
-                alertView.layoutIfNeeded()
-                let height = alertView.bounds.height
+                toastView.layoutIfNeeded()
+                let height = toastView.bounds.height
                 
-                alertView.transform = alertView.transform.translatedBy(x: 0, y: height)
-                alertView.alpha = 0
+                toastView.transform = toastView.transform.translatedBy(x: 0, y: height)
+                toastView.alpha = 0
                 
                 UIView.animate(withDuration: 0.35) {
                     
-                    alertView.alpha = 1
-                    alertView.transform = .identity
+                    toastView.alpha = 1
+                    toastView.transform = .identity
                     
                 } completion: { _ in
                     
                     UIView.animate(withDuration: 0.35, delay: 1.5) {
                         
-                        alertView.alpha = 0
+                        toastView.alpha = 0
                         
                     } completion: { _ in
                         
-                        alertView.removeFromSuperview()
+                        toastView.removeFromSuperview()
                     }
                 }
             })
@@ -483,7 +483,7 @@ private extension EditMainMandaratViewController {
 // MARK: Alert
 extension EditMainMandaratViewController {
     
-    func createAlertView() -> ToastView {
+    func createToastView() -> ToastView {
         
         let toastView: ToastView = .init()
         

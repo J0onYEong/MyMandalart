@@ -4,29 +4,52 @@
 //
 
 import UIKit
+import Testing
 
 @testable import FeatureHomeTesting
 @testable import FeatureHome
 
-import Testing
+@testable import SharedDesignSystem
 
+import DomainMandaratInterface
 
 struct EditMainMandaratViewModelTest {
     
     @Test
-    func saveValidation() {
+    func saveMainMandalartValidation() async {
         
-        let editViewModel = EditMainMandaratViewModel(.createEmpty(with: .ONE_ONE))
+        // 사용자가 빈 문자열을 입력했을 때, Toast가 표시되는지 검증한다.
         
-        let testState: EditMainMandaratViewModel.State = .init(
-            titleText: "",
-            descriptionText: "",
-            mandaratTitleColor: .white
-        )
-        
-        // 타이틀 문자열이 비어있는 상태에서 세이브 버튼 클릭
-        let resultState = editViewModel.reduce(state: testState, mutation: .saveButtonClicked)
-        
-        #expect(resultState.alertData != nil)
+        await MainActor.run {
+            
+            // Given
+            let givenMainMandalart = MainMandaratVO(
+                title: "",
+                position: .ONE_ONE,
+                colorSetId: MandalartPalette.type1.identifier,
+                description: nil,
+                imageURL: nil
+            )
+            let reactor = EditMainMandaratViewModel(
+                logger: FakeLogger(),
+                mainMandaratVO: givenMainMandalart
+            )
+            
+            
+            let view = EditMainMandaratViewController()
+            view.bind(reactor: reactor)
+            #expect(view.reactor != nil)
+            
+            
+            // When
+            
+            // 유저가 빈 문자열을 입력후 저장하기 버튼을 클릭
+            view.titleInputView.update("")
+            view.saveButton.invokeTap()
+            
+            
+            // Then
+            #expect(reactor.currentState.toastData != nil)
+        }
     }
 }

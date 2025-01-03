@@ -53,6 +53,30 @@ class EditMainMandaratViewModel: NSObject, Reactor, UIColorPickerViewControllerD
             listener.editFinished()
             
             return .empty()
+            
+        case .saveButtonClicked:
+            
+            return state
+                .withUnretained(self)
+                .map { reator, currentState in
+                    
+                    let titleValidationResult = reator.validateTitle(currentState.titleText)
+                    
+                    if titleValidationResult {
+                        
+                        return .finishEditPage
+                        
+                    } else {
+                        
+                        let toatData: ToastData = .init(
+                            title: "만다라트 저장 실패",
+                            description: "만다라트의 제목은 1자 이상이어야 합니다!",
+                            alertColor: .color("#FB4141")
+                        )
+                        
+                        return .presentToastView(data: toatData)
+                    }
+                }
 
         default:
             return .just(action)
@@ -61,61 +85,35 @@ class EditMainMandaratViewModel: NSObject, Reactor, UIColorPickerViewControllerD
     
     func reduce(state: State, mutation: Action) -> State {
         
+        var newState = state
+        
         switch mutation {
         case .editTitleText(let text):
-            
-            var newState = state
             newState.titleText = text
             
-            return newState
-            
         case .editDescriptionText(let text):
-            
-            var newState = state
             newState.descriptionText = text
             
-            return newState
-            
         case .paletteIsSelected(let palette):
-            
-            var newState = state
             newState.palette = palette
-            
             
             // 선택된 팔레트 로깅
             logImmediateSelectedPalette(paletteType: palette.identifier)
             
+        case .finishEditPage:
             
-            return newState
+            let mandaratVO: MainMandaratVO = createMandaratVO(state: state)
+            listener.editFinishedWithSavingRequest(edited: mandaratVO)
             
-        case .saveButtonClicked:
+        case .presentToastView(let toastData):
             
-            if validateTitle(state.titleText) {
-                
-                // 만다라트 저장 및 수정화면 종료
-                
-                let mandaratVO: MainMandaratVO = createMandaratVO(state: state)
-                listener.editFinishedWithSavingRequest(edited: mandaratVO)
-                
-                return state
-                
-            } else {
-                
-                // 인풋 벨리데이션 통과 실패
-                
-                var newState = state
-                newState.alertData = .init(
-                    title: "만다라트 저장 실패",
-                    description: "만다라트의 제목은 1자 이상이어야 합니다!",
-                    alertColor: .color("#FB4141")
-                )
-                
-                return newState
-            }
+            newState.toastData = toastData
             
         default:
-            return state
+            break
         }
+        
+        return newState
     }
 }
 
@@ -137,6 +135,8 @@ extension EditMainMandaratViewModel {
         // Event
         case editRequestFromOutside(mainMandarat: MainMandaratVO?)
         case paletteIsSelected(paletteType: MandalartPalette)
+        case finishEditPage
+        case presentToastView(data: ToastData)
         
         // - editing
         case editTitleText(text: String)
@@ -157,11 +157,11 @@ extension EditMainMandaratViewModel {
         var palette: MandalartPalette = .type1
         
         // alert
-        var alertData: AlertData? = nil
+        var toastData: ToastData? = nil
     }
     
     
-    struct AlertData: Equatable {
+    struct ToastData: Equatable {
         let id = UUID()
         let title: String
         let description: String?
