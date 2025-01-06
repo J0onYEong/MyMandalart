@@ -2,6 +2,9 @@
 
 만다라트 작성을 도와주는 iOS어플리케이션 입니다.
 
+📱 [앱스토어에서 설치](https://apps.apple.com/us/app/%EB%A7%88%EC%9D%B4%EB%A7%8C%EB%8B%A4%EB%9D%BC%ED%8A%B8/id6740050518)
+
+
 ### Table of contents
 1. [시현영상](#시현영상)
 2. [프로덕트 로깅](#프로덕트-로깅)   
