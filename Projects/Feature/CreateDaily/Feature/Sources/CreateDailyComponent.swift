@@ -7,6 +7,6 @@
 
 import SharedPresentationExt
 
-class CreateDailyComponent: Componentable<CreateDailyDependency> {
+final class CreateDailyComponent: Componentable<CreateDailyDependency> {
     
 }

@@ -18,7 +18,9 @@ let project = Project(
             product: .app,
             bundleId: "\(Project.Environment.bundlePrefix).feature.CreateDaily.example",
             deploymentTargets: Project.Environment.deploymentTarget,
-            infoPlist: .example_app,
+            infoPlist: .app_plist(with: [
+                "NSSpeechRecognitionUsageDescription" : "일기를 작성하기 위해 사용합니다."
+            ]),
             sources: ["Example/Sources/**"],
             resources: ["Example/Resources/**"],
             dependencies: [

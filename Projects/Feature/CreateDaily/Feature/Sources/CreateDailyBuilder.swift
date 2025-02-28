@@ -7,7 +7,7 @@
 
 import SharedPresentationExt
 
-public class CreateDailyBuilder: Buildable<CreateDailyDependency>, CreateDailyBuildable {
+public final class CreateDailyBuilder: Buildable<CreateDailyDependency>, CreateDailyBuildable {
     
     public override init(dependency: CreateDailyDependency) {
         super.init(dependency: dependency)
