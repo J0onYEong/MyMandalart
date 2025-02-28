@@ -10,12 +10,13 @@ public extension InfoPlist {
 extension InfoPlist {
     
     private static let app_plist: [String: ProjectDescription.Plist.Value] = [
-        
         "NSAppTransportSecurity" : [
             "NSAllowsArbitraryLoads" : true
         ],
+        "UIUserInterfaceStyle": "Light",
+        "CFBundleShortVersionString": "1.0.0",
         "UILaunchStoryboardName": "LaunchScreen",
-        "CFBundleDisplayName" : "$(BUNDLE_DISPLAY_NAME)",
+        "CFBundleDisplayName" : "\(Project.Environment.appName)",
         "UIApplicationSceneManifest": [
             "UIApplicationSupportsMultipleScenes": false,
             "UISceneConfigurations": [

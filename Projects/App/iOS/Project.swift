@@ -9,7 +9,6 @@ let project = Project(
             name: "MyMandalart-iOS",
             destinations: .iOS,
             product: .app,
-            productName: Project.Environment.appName,
             bundleId: "\(Project.Environment.bundlePrefix).app",
             deploymentTargets: Project.Environment.deploymentTarget,
             infoPlist: InfoPlist.app,
