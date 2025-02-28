@@ -13,7 +13,7 @@ import SharedPresentationExt
 import ReactorKit
 import SnapKit
 
-final class CreateDailyViewController: BaseViewController, View, CreateDailyViewControllable {
+final class CreateDailyViewController: UIViewController, View, CreateDailyViewControllable {
     // Views
     private let startSpeechRecognizationButton = IconButton(style: .init(size: .flexible))
     private let audioAuthorizationFailedView = AudioAuthorizationFailedView()
@@ -70,26 +70,26 @@ private extension CreateDailyViewController {
     }
     
     func setupInput(reactor: Reactor) {
+        typealias Action = Reactor.Action
+        
         // startAudioRecognizationButton
         startSpeechRecognizationButton.tap
-            .map({ _ in .startSpeechReconizationButtonTapped })
+            .convert(Action.startSpeechReconizationButtonTapped)
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
         
         // Life cycle
-        lifeCycleEvent
-            .filter({ $0 == .viewDidLoad })
-            .map({ _ in .viewDidLoad })
+        self.rx.viewDidLoad
+            .convert(Action.checkSpeechReconizationAuthorizationStatus)
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
     }
     
     func setupOutput(reactor: Reactor) {
-        
         // 음성인식 불가화면
         reactor.state
-            .map(\.isSpeechDisabledPagePresented)
+            .map(\.presentation.unauthorizedPage)
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] isPresented in
                 guard let self else { return }

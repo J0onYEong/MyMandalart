@@ -17,7 +17,11 @@ final class CreateDailyViewModel: Reactor, CreateDailyViewModelable {
     var initialState: State
     
     init() {
-        self.initialState = .init(isSpeechDisabledPagePresented: false)
+        self.initialState = .init(
+            presentation: .init(
+                unauthorizedPage: false
+            )
+        )
     }
     
     
@@ -36,18 +40,16 @@ final class CreateDailyViewModel: Reactor, CreateDailyViewModelable {
     func reduce(state: State, mutation: Action) -> State {
         var newState = state
         switch mutation {
-        case .viewDidLoad:
+        case .checkSpeechReconizationAuthorizationStatus:
             let status = SFSpeechRecognizer.authorizationStatus()
-            var presentSpeechPage: Bool!
             switch status {
             case .notDetermined, .authorized:
-                presentSpeechPage = true
+                newState.presentation.unauthorizedPage = false
             default:
-                presentSpeechPage = false
+                newState.presentation.unauthorizedPage = true
             }
-            newState.isSpeechDisabledPagePresented = !presentSpeechPage
         case .presentSpeechDisabledPage:
-            newState.isSpeechDisabledPagePresented = true
+            newState.presentation.unauthorizedPage = true
         default:
             return newState
         }
@@ -60,14 +62,18 @@ final class CreateDailyViewModel: Reactor, CreateDailyViewModelable {
 // MARK: Public interface
 extension CreateDailyViewModel {
     enum Action {
-        case viewDidLoad
+        case checkSpeechReconizationAuthorizationStatus
         case startSpeechReconizationButtonTapped
         
         // Internal
         case presentSpeechDisabledPage
     }
     struct State {
-        var isSpeechDisabledPagePresented: Bool
+        var presentation: Presentation
+        
+        struct Presentation {
+            var unauthorizedPage: Bool
+        }
     }
 }
 
