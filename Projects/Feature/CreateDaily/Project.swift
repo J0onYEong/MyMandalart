@@ -1,86 +1,75 @@
 //
 //  Project.swift
 //
-//  Created by choijunios on 2024/12/03
+//  Created by choijunios on 2025/02/28
 //
 
 import ProjectDescription
 import DependencyPlugin
 
 let project = Project(
-    name: "Home",
+    name: "CreateDaily",
     targets: [
         
         // Example
         .target(
-            name: "FeatureHomeExample",
+            name: "FeatureCreateDailyExample",
             destinations: .iOS,
             product: .app,
-            bundleId: "\(Project.Environment.bundlePrefix).feature.Home.example",
+            bundleId: "\(Project.Environment.bundlePrefix).feature.CreateDaily.example",
             deploymentTargets: Project.Environment.deploymentTarget,
             infoPlist: .example_app,
             sources: ["Example/Sources/**"],
             resources: ["Example/Resources/**"],
             dependencies: [
-                
-                .feature(implements: .Home),
-                .feature(testing: .Home),
+                .feature(implements: .CreateDaily),
+                .feature(testing: .CreateDaily),
             ]
         ),
 
 
         // Tests
         .target(
-            name: "FeatureHomeTests",
+            name: "FeatureCreateDailyTests",
             destinations: .iOS,
             product: .unitTests,
-            bundleId: "\(Project.Environment.bundlePrefix).feature.Home.tests",
+            bundleId: "\(Project.Environment.bundlePrefix).feature.CreateDaily.tests",
             deploymentTargets: Project.Environment.deploymentTarget,
             sources: ["Tests/**"],
             dependencies: [
-                
-                .feature(implements: .Home),
-                .feature(testing: .Home),
+                .feature(implements: .CreateDaily),
+                .feature(testing: .CreateDaily),
             ]
         ),
-        
-        
+
+
         // Testing
         .target(
-            name: "FeatureHomeTesting",
+            name: "FeatureCreateDailyTesting",
             destinations: .iOS,
             product: .framework,
-            bundleId: "\(Project.Environment.bundlePrefix).feature.Home.testing",
+            bundleId: "\(Project.Environment.bundlePrefix).feature.CreateDaily.testing",
             deploymentTargets: Project.Environment.deploymentTarget,
             sources: ["Testing/**"],
             dependencies: [
-                .feature(implements: .Home),
+                .feature(implements: .CreateDaily),
             ]
         ),
 
 
         // Feature
         .target(
-            name: "FeatureHome",
+            name: "FeatureCreateDaily",
             destinations: .iOS,
             product: .staticFramework,
-            bundleId: "\(Project.Environment.bundlePrefix).feature.Home",
+            bundleId: "\(Project.Environment.bundlePrefix).feature.CreateDaily",
             deploymentTargets: Project.Environment.deploymentTarget,
             sources: ["Feature/Sources/**"],
             resources: ["Feature/Resources/**"],
             dependencies: [
                 
-                // Feature
-                .feature(implements: .SubMandarat),
-                .feature(implements: .Setting),
                 
                 
-                // Domain
-                .domain(interface: .Mandarat),
-                .domain(interface: .UserState),
-                
-                
-                .shared(interface: .Logger),
                 .shared(implements: .PresentationExt),
                 .shared(implements: .DesignSystem),
                 
